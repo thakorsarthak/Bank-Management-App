@@ -1,0 +1,12 @@
+package com.example.bankapp.DTO;
+
+import lombok.Data;
+
+@Data
+public class TransferRequestDTO {
+	private String fromAccountNumber;
+	private String toAccountNumber;
+	private String pin;
+	private Double amount;
+
+}

@@ -1,0 +1,19 @@
+package com.example.bankapp.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data  // Generates getters, setters, toString, equals, hashCode
+@NoArgsConstructor
+@AllArgsConstructor
+public class AccountResponseDTO {
+    private Long account_number;
+    private String account_hname;
+    private Double balance;
+    private String email;
+    private Long contact;
+    private String account_type;
+}
+
+

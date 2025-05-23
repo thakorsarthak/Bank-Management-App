@@ -1,0 +1,17 @@
+package com.example.bankapp.DTO;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public class ChangePinDTO {
+
+	@NotBlank(message = "Old PIN is required")
+	String oldPin;
+	
+	@NotBlank(message = "New PIN is required")
+	@Size(min = 4,max = 8, message = "PIN must be 4 to 8 digist")
+	String newPin;
+	
+	@NotBlank(message = "Confirm PIN required")
+	String confirsmPin;
+}

@@ -1,0 +1,15 @@
+package com.example.bankapp.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data  // Generates getters, setters, toString, equals, hashCode
+@NoArgsConstructor
+@AllArgsConstructor
+public class TransactionRequuestDTO {
+private Long account_number;
+private Double amount;
+private String pin;
+
+}

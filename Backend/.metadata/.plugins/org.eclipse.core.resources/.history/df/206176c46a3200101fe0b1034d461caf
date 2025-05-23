@@ -1,0 +1,97 @@
+package com.example.bankapp.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table
+public class Account {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long account_number;
+	private String account_hname;
+	private Double balance;
+	private String email;
+	private String pin;
+	private Long contact;
+
+	public Account() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+	public Account(Long account_number, String account_hname, Double balance, String email, String pin,
+			Long contact) {
+		super();
+		this.account_number= account_number;
+		this.account_hname = account_hname;
+		this.balance = balance;
+		this.email = email;
+		this.pin = pin;
+		this.contact = contact;
+	}
+
+	public String getPin() {
+		return pin;
+	}
+
+
+	public void setPin(String pin) {
+		this.pin = pin;
+	}
+
+
+	public Long getAccount_number() {
+		return account_number;
+	}
+
+	public void setAccount_number(Long account_number) {
+		this.account_number = account_number;
+	}
+
+	public String getAccount_hname() {
+		return Account_hname;
+	}
+
+	public void setAccount_hname(String Account_hname) {
+		this.Account_hname = Account_hname;
+	}
+
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	
+
+	public Long getContact() {
+		return contact;
+	}
+
+	public void setContact(Long contact) {
+		this.contact = contact;
+	}
+
+	@Override
+	public String toString() {
+		return "Account [account_number=" + account_number + ", Account_hname=" + Account_hname + ", balance=" + balance
+				+ ", email=" + email + ", pin=" + pin + ", contact=" + contact + "]";
+	}
+
+}

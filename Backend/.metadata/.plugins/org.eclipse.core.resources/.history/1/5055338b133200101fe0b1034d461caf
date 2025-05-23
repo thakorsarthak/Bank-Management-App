@@ -1,0 +1,12 @@
+package com.example.bankapp.DTO;
+
+public class AccountResponseDTO {
+    private Long account_number;
+    private String acount_hname;
+    private Double balance;
+    private String email;
+    private Long contact;
+
+    // Getters and setters
+}
+

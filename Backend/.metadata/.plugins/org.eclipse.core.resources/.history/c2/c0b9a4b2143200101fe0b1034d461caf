@@ -1,0 +1,18 @@
+package com.example.bankapp.services;
+
+import java.util.List;
+
+import com.example.bankapp.DTO.AccountRequestDTO;
+import com.example.bankapp.entity.Account;
+
+public interface AccountService {
+
+	 Account createAccount(AccountRequestDTO accountDto);
+	Account getAccountDetailByAccountNo(Long accountNumber);
+	 List<Account> getAllAccountDetails();
+	 Account depositAmount(Long accountNumber,Double amount);
+	 Account withdrawAmount(Long accontNumber, Double amount);
+	 Boolean closeAccount(Long accountNumber);
+	
+	
+}

@@ -1,0 +1,95 @@
+package com.example.bankapp.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.bankapp.DTO.AccountRequestDTO;
+import com.example.bankapp.DTO.AccountResponseDTO;
+import com.example.bankapp.DTO.TransactionRequuestDTO;
+import com.example.bankapp.entity.Account;
+import com.example.bankapp.services.AccountService;
+
+
+
+@RestController
+@RequestMapping("/account")
+
+public class AccountController {
+
+	@Autowired
+	AccountService aService;
+
+
+	//create account
+	@PostMapping("/create")
+	public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody AccountRequestDTO account) {
+		AccountResponseDTO	 createAccount = aService.createAccount(account);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createAccount);
+	}
+
+
+	@GetMapping("/{accountNumber}")
+	public ResponseEntity<AccountResponseDTO>  getAccountDetailByAccountNo(@PathVariable Long accountNumber) {
+		AccountResponseDTO accountDetailByAccountNo = aService.getAccountDetailByAccountNo(accountNumber);
+		return ResponseEntity.ok(accountDetailByAccountNo);
+	}
+
+	@GetMapping("/getallaccount")
+	public List<Account> getAllAccount(){
+		List<Account> listOfAccount = aService.getAllAccountDetails();
+		return listOfAccount;
+	}
+
+	@PutMapping("/deposit/{accountNumber}/{balance}")
+	public Account depositAmount(@PathVariable Long accountNumber,@PathVariable Double balance)
+	{
+		Account depositAmount = aService.depositAmount(accountNumber, balance);
+		return depositAmount;
+	}
+
+	/* this is simple method of withdraw amount
+	 * @PutMapping("/withdraw/{accountNumber}/{balance}") public Account
+	 * withDrawAmount(@PathVariable Long accountNumber, @PathVariable Double
+	 * balance) {
+	 *
+	 * Account withdrawAmount = aService.withdrawAmount(accountNumber, balance);
+	 * return withdrawAmount;
+	 *
+	 * }
+	 */
+
+	@PutMapping("withdraw")
+	public ResponseEntity<String> withDrawAmount(@RequestBody TransactionRequuestDTO request){
+		String result = aService.withdrawAmount(request);
+
+		return ResponseEntity.ok(result);
+
+
+	}
+
+
+
+	@DeleteMapping("/delete/{accountNumber}")
+	 public ResponseEntity<String> closeAccount(@PathVariable Long accountNumber){
+
+		Boolean isDeleted = aService.closeAccount(accountNumber);
+		if(isDeleted) {
+
+			return ResponseEntity.ok("Account with "+accountNumber+ " deleted successfully");
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account with"+accountNumber+"is not Exist");
+
+
+	}
+}

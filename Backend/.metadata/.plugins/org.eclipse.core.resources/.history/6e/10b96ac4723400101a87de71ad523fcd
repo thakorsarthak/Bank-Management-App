@@ -1,0 +1,62 @@
+package com.example.bankapp.DTO;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public class AccountRequestDTO {
+		 @Schema(example = "")
+		private String account_hname;
+		 @Schema(example = "")
+	    private Double balance;
+		 @Schema(example = "")
+	    private String email;
+		 @Schema(example = "")
+	    private String pin;
+		 @Schema(example = "")
+	    private String confirmPin;
+		 @Schema(example = "")
+	    private Long contact;
+
+	    public String getAccount_hname() {
+			return account_hname;
+		}
+		public void setAccount_hname(String account_hname) {
+			this.account_hname = account_hname;
+		}
+		public Double getBalance() {
+			return balance;
+		}
+		public void setBalance(Double balance) {
+			this.balance = balance;
+		}
+		public String getEmail() {
+			return email;
+		}
+		public void setEmail(String email) {
+			this.email = email;
+		}
+		public String getPin() {
+			return pin;
+		}
+		public void setPin(String pin) {
+			this.pin = pin;
+		}
+		public String getConfirmPin() {
+			return confirmPin;
+		}
+		public void setConfirmPin(String confirmPin) {
+			this.confirmPin = confirmPin;
+		}
+		public Long getContact() {
+			return contact;
+		}
+		public void setContact(Long contact) {
+			this.contact = contact;
+		}
+
+	    // Getters and Setters
+	}
+
+
+
+
+

@@ -1,0 +1,19 @@
+package com.example.bankapp.DTO;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data  // Generates getters, setters, toString, equals, hashCode
+@NoArgsConstructor
+@AllArgsConstructor
+public class TransactionRequestDTO {
+	 @Schema(example = "")
+private Long account_number;
+	 @Schema(example = "")
+private Double amount;
+	 @Schema(example = "")
+private String pin;
+
+}

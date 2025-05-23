@@ -1,0 +1,167 @@
+package com.example.bankapp.implementation;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.bankapp.DTO.AccountRequestDTO;
+import com.example.bankapp.DTO.AccountResponseDTO;
+import com.example.bankapp.DTO.ChangePinDTO;
+import com.example.bankapp.DTO.TransactionRequestDTO;
+import com.example.bankapp.entity.Account;
+import com.example.bankapp.repository.AccountRepo;
+import com.example.bankapp.services.AccountService;
+
+@Service
+public class AccountServiceImp implements AccountService {
+
+	@Autowired
+	AccountRepo repo;
+
+	@Override
+	public AccountResponseDTO createAccount(AccountRequestDTO accountdto) {
+
+		if (!accountdto.getPin().equals(accountdto.getConfirmPin())) {
+
+			throw new RuntimeException("pin and confirm pin must be similar");
+		}
+		Account account = new Account();
+
+		account.setAccount_hname(accountdto.getAccount_hname());
+		account.setContact(accountdto.getContact());
+		account.setBalance(accountdto.getBalance());
+		account.setEmail(accountdto.getEmail());
+		account.setPin(accountdto.getPin());
+
+		Account save = repo.save(account);
+
+		AccountResponseDTO response = new AccountResponseDTO();
+
+		response.setAccount_number(save.getAccount_number());
+		response.setAccount_hname(save.getAccount_hname());
+		response.setBalance(save.getBalance());
+		response.setContact(save.getContact());
+		response.setEmail(save.getEmail());
+
+		return response;
+
+	}
+
+	@Override
+	public AccountResponseDTO getAccountDetailByAccountNo(Long accountNumber) {
+		Optional<Account> account = repo.findById(accountNumber);
+		if (account.isEmpty()) {
+
+			throw new RuntimeException("Account doesn't Exist");
+		}
+		Account account_found = account.get();
+
+		AccountResponseDTO response = new AccountResponseDTO();
+		response.setAccount_number(account_found.getAccount_number());
+		response.setAccount_hname(account_found.getAccount_hname());
+		response.setBalance(account_found.getBalance());
+		response.setEmail(account_found.getEmail());
+		response.setContact(account_found.getContact());
+
+		return response;
+	}
+
+	@Override
+	public List<Account> getAllAccountDetails() {
+
+		List<Account> allaccount = repo.findAll();
+
+		return allaccount;
+	}
+
+//	@Override
+//	public Account depositAmount(Long accountNumber, Double amount) {
+//		Optional<Account> byId = repo.findById(accountNumber);
+//		if (byId.isEmpty()) {
+//			throw new RuntimeException("Account Not Exist");
+//		}
+//
+//		Account accountFound = byId.get();
+//		Double netBalance = accountFound.getBalance() + amount;
+//		accountFound.setBalance(netBalance);
+//		Account account = repo.save(accountFound);
+//		return account;
+//	}
+
+	@Override
+	public String depositAmount(TransactionRequestDTO request) {
+		Optional<Account> byId = repo.findById(request.getAccount_number());
+
+		if (byId.isEmpty()) {
+			throw new RuntimeException("Account Not Exist");
+		}
+
+		Account account = byId.get();
+		if (!account.getPin().equals(request.getPin())) {
+			throw new RuntimeException("Pin is Inccorect");
+		}
+
+		account.setBalance(account.getBalance() + request.getAmount());
+		repo.save(account);
+		return "Succesfully Deposit. NetBalance : ₹" + account.getBalance();
+	}
+
+	/*
+	 * @Override public Account withdrawAmount(Long accontNumber, Double amount) {
+	 *
+	 * Optional<Account> byId = repo.findById(accontNumber); if (byId.isEmpty()) {
+	 * throw new RuntimeException("Acccount not Exist"); }
+	 *
+	 * Account accountFound = byId.get(); Double netBalance =
+	 * accountFound.getBalance() - amount; accountFound.setBalance(netBalance);
+	 * Account account = repo.save(accountFound); return account; }
+	 */
+
+	@Override
+	public String withdrawAmount(TransactionRequestDTO request) {
+
+		Optional<Account> accountopt = repo.findById(request.getAccount_number());
+		if (accountopt.isEmpty()) {
+
+			throw new RuntimeException("Account Not Exist");
+		}
+
+		Account account = accountopt.get();
+
+		if (!account.getPin().equals(request.getPin())) {
+
+			throw new RuntimeException("Pin is Inccorect!");
+
+		}
+
+		account.setBalance(account.getBalance() - request.getAmount());
+		repo.save(account);
+
+		return "Withdrawal successful. New balance: ₹" + account.getBalance();
+
+	}
+	
+	@Override
+	public String changePin(ChangePinDTO changePin) {
+		
+		
+		
+		
+		return null;
+	}
+
+	@Override
+	public Boolean closeAccount(Long accountNumber) {
+		Optional<Account> byId = repo.findById(accountNumber);
+
+		if (byId.isPresent()) {
+
+			repo.deleteById(accountNumber);
+			return true;
+		}
+		return false;
+	}
+
+}

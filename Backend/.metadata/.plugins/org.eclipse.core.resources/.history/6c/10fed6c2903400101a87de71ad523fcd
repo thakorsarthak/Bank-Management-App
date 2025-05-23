@@ -1,0 +1,13 @@
+package com.example.bankapp.DTO;
+
+public class AccountUpdateRequestDTO {
+
+	private Long account_number;
+	private String pin;
+	private String account_hname;
+
+	private String email;
+
+	private Long contact;
+
+}

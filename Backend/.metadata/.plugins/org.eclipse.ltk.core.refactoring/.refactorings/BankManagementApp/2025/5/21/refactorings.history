@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Extract local variable &apos;aService2&apos; from expression &apos;aService&apos;&#x0D;&#x0A;- Original project: &apos;BankManagementApp&apos;&#x0D;&#x0A;- Variable name: &apos;aService2&apos;&#x0D;&#x0A;- Destination method: &apos;com.example.bankapp.controller.AccountController.tranferAmount(...)&apos;&#x0D;&#x0A;- Variable expression: &apos;aService&apos;&#x0D;&#x0A;- Replace occurrences of expression with variable" description="Extract local variable &apos;aService2&apos;" final="false" id="org.eclipse.jdt.ui.extract.temp" input="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.example.bankapp.controller{AccountController.java" name="aService2" replace="true" replaceAllInThisFile="false" selection="3675 8" stamp="1747716667820" varType="false" version="1.0"/>
+</session>

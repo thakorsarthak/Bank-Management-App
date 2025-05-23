@@ -1,0 +1,24 @@
+package com.example.bankapp.DTO;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+@Data
+public class TransferRequestDTO {
+	@NotNull(message = "Account No is required")
+	private Long fromAccountNumber;
+
+	@NotNull(message = "Account No is required")
+	private Long toAccountNumber;
+
+	@NotNull(message = "Amount is required")
+	@Min(value = 1, message = "Minimum transfer amount is 1")
+	private Double amount;
+
+	@NotBlank(message = "PIN is required")
+	private String pin;
+
+
+}
