@@ -1,0 +1,39 @@
+<h1>Dashboard</h1>
+
+<p-card header="Account Overview" class="card" [style]="{ width: '800px', marginLeft: '100px' }">
+  <div class="p-grid p-dir-col">
+
+    <div class="p-col-12 p-md-6">
+      <strong>Account Holder:</strong> {{ account?.accountHolderName }}
+    </div>
+
+    <div class="p-col-12 p-md-6">
+      <strong>Email:</strong> {{ account?.email }}
+    </div>
+
+    <div class="p-col-12 p-md-6">
+      <strong>Phone:</strong> {{ account?.contact }}
+    </div>
+
+    <div class="p-col-12 p-md-6">
+      <strong>Account Number:</strong> {{ account?.accountNumber }}
+    </div>
+
+    <div class="p-col-12 p-md-6">
+      <strong>Account Type:</strong> {{ account?.productType }}
+    </div>
+
+    <div class="p-col-12 p-md-6">
+      <strong>Branch:</strong> {{ account?.branchName }}
+    </div>
+
+    <div class="p-col-12 p-md-6">
+      <strong>IFSC Code:</strong> SBIN{{ account?.branchCode }}  <!-- Hardcoded prefix -->
+    </div>
+
+    <div class="p-col-12 p-md-6">
+      <strong>Current Balance:</strong> ₹{{ account?.balance  }}
+    </div>
+
+  </div>
+</p-card>

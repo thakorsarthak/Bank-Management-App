@@ -1,0 +1,255 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterOutlet } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { PaginatorModule } from 'primeng/paginator';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { PrivateHeaderComponent } from '../../../core-component/core-component/private-header/private-header.component';
+import { TransactionService } from '../../services/transaction.service';
+import { Transaction } from '../../Models/Transaction';
+import { GlobalAPIResponse } from '../../Models/global-api-response';
+import { AuthServiceService } from '../../services/auth-service.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+@Component({
+  selector: 'app-transaction',
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    CommonModule,
+    FormsModule,
+    CardModule,
+    TableModule,
+    TagModule,
+    CalendarModule,
+    ButtonModule,
+    InputTextModule,
+    DropdownModule,
+    PaginatorModule,
+    PrivateHeaderComponent
+  ],
+  templateUrl: './transaction.component.html',
+  styleUrl: './transaction.component.css'
+})
+export class TransactionComponent implements OnInit {
+  transactions: Transaction[] = [];
+  filteredTransactions: Transaction[] = [];
+
+  // Filter states
+  searchTerm = '';
+  selectedType: string = '';
+  selectedStatus: string = '';
+  dateFrom: Date | null = null;
+  dateTo: Date | null = null;
+  direction: string = '';// 'all', 'credit', 'debit'
+
+  showFilters = true;
+
+  // Dropdown options
+  typeOptions = [
+    { label: 'All Types', value: '' },
+    { label: 'Credit', value: 'credit' },
+    { label: 'Debit', value: 'debit' },
+  ];
+
+  statusOptions = [
+    { label: 'All Status', value: '' },
+    { label: 'Completed', value: 'completed' },
+    { label: 'Failed', value: 'failed' },
+    { label: 'Cancelled', value: 'cancelled' }
+  ];
+
+  constructor(
+    private router: Router,
+    private transactionService: TransactionService,
+    private authService: AuthServiceService
+  ) { }
+
+  ngOnInit(): void {
+    const accountNumber = this.authService.getAccountNumber();
+    if (accountNumber) {
+      this.loadTransactions(accountNumber);
+    } else {
+      console.error('No account number found!');
+    }
+  }
+
+  loadTransactions(accountNumber: string): void {
+    this.transactionService.getTransactionHistory(accountNumber).subscribe({
+      next: (response) => {
+        this.transactions = Array.isArray(response.data) ? response.data : [];
+        this.applyFilters();
+      },
+      error: (err) => {
+        console.error('Failed to fetch transactions', err);
+      }
+    });
+  }
+
+  applyFilters(): void {
+    const searchLower = this.searchTerm.trim().toLowerCase();
+
+    this.filteredTransactions = this.transactions.filter(transaction => {
+      const description = transaction.description?.toLowerCase() || '';
+      const counterParty = transaction.counterPartyName?.toLowerCase() || '';
+      const status = transaction.status?.toLowerCase() || '';
+      const type = transaction.direction?.toLowerCase() || '';
+      const txnDate = new Date(transaction.timestamp);
+
+
+      const matchesSearch =
+        !this.searchTerm ||
+        description.includes(searchLower) ||
+        counterParty.includes(searchLower);
+
+  
+      const matchesType = !this.direction || type === this.direction.toLowerCase();
+      const matchesStatus = !this.selectedStatus || status === this.selectedStatus.toLowerCase();
+
+      const matchesDateFrom = !this.dateFrom || txnDate >= this.normalizeDate(this.dateFrom);
+      const matchesDateTo = !this.dateTo || txnDate <= this.normalizeDate(this.dateTo, true);
+
+      return matchesSearch && matchesType && matchesStatus && matchesDateFrom && matchesDateTo;
+    });
+  }
+  normalizeDate(date: Date, endOfDay = false): Date {
+    const normalized = new Date(date);
+    if (endOfDay) {
+      normalized.setHours(23, 59, 59, 999);
+    } else {
+      normalized.setHours(0, 0, 0, 0);
+    }
+    return normalized;
+  }
+
+
+  clearFilters(): void {
+    this.searchTerm = '';
+    this.selectedType = '';
+    this.selectedStatus = '';
+    this.direction = '';
+    this.dateFrom = null;
+    this.dateTo = null;
+    this.applyFilters();
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR'
+    }).format(Math.abs(amount));
+  }
+
+  getTransactionSeverity(direction: string): 'success' | 'danger' {
+    return direction?.toLowerCase() === 'credit' ? 'success' : 'danger';
+  }
+
+  getStatusSeverity(status: string): 'success' | 'warning' | 'danger' {
+    switch (status?.toLowerCase()) {
+      case 'completed': return 'success';
+      case 'failed': return 'danger';
+      case 'cancelled': return 'warning';
+      default: return 'success';
+    }
+  }
+
+  getStatusIcon(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'completed': return 'pi-check-circle';
+      case 'failed': return 'pi-times-circle';
+      case 'cancelled': return 'pi-ban';
+      default: return 'pi-question-circle';
+    }
+  }
+
+  toggleFilters(): void {
+    this.showFilters = !this.showFilters;
+  }
+
+  getCreditCount(): number {
+    return this.filteredTransactions.filter(t => t.direction?.toLowerCase() === 'credit').length;
+  }
+
+  getDebitCount(): number {
+    return this.filteredTransactions.filter(t => t.direction?.toLowerCase() === 'debit').length;
+  }
+
+  refreshTransactions(): void {
+    const accountNumber = this.authService.getAccountNumber();
+    if (accountNumber) {
+      this.loadTransactions(accountNumber);
+    }
+  }
+
+  onBackToDashboard(): void {
+    this.router.navigate(['/privateMain/dashBoard']);
+  }
+
+  onExportTransactions() {
+  const doc = new jsPDF();
+
+  
+  // Title
+  doc.text('Transaction History', 14, 15);
+
+  // Define table columns
+  const headers = [['Date', 'Description', 'Type', 'Amount', 'Status', 'From/To', 'After Balance']];
+
+  // Prepare rows from filtered transactions
+  const data = this.filteredTransactions.map(tx => [
+    new Date(tx.timestamp).toLocaleString(),
+    tx.description || '',
+    tx.type,
+    this.formatCurrency(tx.amount),
+    tx.status,
+    tx.counterPartyName || '',
+    this.formatCurrency(tx.afterBalance)
+  ]);
+
+  // Add table to PDF
+  autoTable(doc, {
+    head: headers,
+    body: data,
+    startY: 20,
+    styles: {
+    fontSize: 10,
+    cellPadding: 4,
+    halign: 'center'
+  },
+  });
+
+  // Save PDF file
+  doc.save('transaction-history.pdf');
+}
+  // onExportTransactions(): void {
+  //   const csvRows: string[] = [];
+  //   csvRows.push('Date,Description,Type,Amount,Status,From/To,After Balance');
+
+  //   for (const tx of this.filteredTransactions) {
+  //     const row = [
+  //       new Date(tx.timestamp).toLocaleString(),
+  //       `"${tx.description}"`,
+  //       tx.type,
+  //       this.formatCurrency(tx.amount),
+  //       tx.status,
+  //       tx.counterPartyName || '',
+  //       this.formatCurrency(tx.afterBalance)
+  //     ];
+  //     csvRows.push(row.join(','));
+  //   }
+
+  //   const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+  //   const link = document.createElement('a');
+  //   link.href = URL.createObjectURL(blob);
+  //   link.download = 'transaction-history.csv';
+  //   link.click();
+  // }
+}
+

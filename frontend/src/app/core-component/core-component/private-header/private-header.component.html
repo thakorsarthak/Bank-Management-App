@@ -1,0 +1,19 @@
+<div class="private-header">
+  <p-menubar [model]="items">
+    <ng-template pTemplate="start">
+      <h1 class="logo">SecureBank</h1>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <div class="header-actions">
+        <div class="session-timer">
+    Auto logout in: {{ remainingTime }}
+</div>
+
+        <p-button label="Profile" severity="secondary" icon="pi pi-user" />
+        <p-button label="Logout" icon="pi pi-sign-out" severity="secondary" (onClick)="onLogout()"
+          styleClass="logout-btn">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-menubar>
+</div>

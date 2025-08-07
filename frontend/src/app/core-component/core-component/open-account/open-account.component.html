@@ -1,0 +1,225 @@
+<p-toast></p-toast>
+<app-public-header></app-public-header>
+<div class="signup-container">
+  <p-card header="Create Account" [style]="{ width: '360px' }">
+    <form [formGroup]="signupForm" (ngSubmit)="onCreateAccount()" class="signup-form">
+
+      <!-- Full Name -->
+      <div class="form-field">
+        <label for="accountHolderName">Full Name</label>
+        <span class="p-input-icon-right w-full">
+          <i class="pi pi-user" style="padding-right: 10px;"></i>
+          <input 
+            id="name"
+            type="text" 
+            pInputText 
+            formControlName="accountHolderName"
+            placeholder="Enter your full name"
+            class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('accountHolderName')}">
+        </span>
+        <small class="error-message" *ngIf="isFieldInvalid('accountHolderName')">
+          {{ getErrorMessage('accountHolderName') }}
+        </small>
+      </div>
+
+      <!-- Email -->
+      <div class="form-field">
+        <label for="email">Email Address</label>
+        <span class="p-input-icon-right w-full">
+          <i class="pi pi-envelope" style="padding-right: 10px;"></i>
+          <input 
+            id="email"
+            type="email" 
+            pInputText 
+            formControlName="email"
+            placeholder="Enter your email"
+            class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('email')}">
+        </span>
+        <small class="error-message" *ngIf="isFieldInvalid('email')">
+          {{ getErrorMessage('email') }}
+        </small>
+      </div>
+
+      <!-- PIN -->
+      <div class="form-field">
+        <label for="pin">PIN (4 to 6 digits)</label>
+        <span class="p-input-icon-right w-full">
+          <i class="pi pi-lock" style="padding-right: 10px;"></i>
+          <input 
+            id="pin"
+            type="password" 
+            pInputText 
+            formControlName="pin"
+            placeholder="Enter 6-digit PIN"
+            class="w-full"
+            maxlength="6"
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('pin')}">
+        </span>
+        <small class="error-message" *ngIf="isFieldInvalid('pin')">
+          {{ getErrorMessage('pin') }}
+        </small>
+      </div>
+
+      <!-- Confirm PIN -->
+      <div class="form-field">
+        <label for="confirmPin">Confirm PIN</label>
+        <span class="p-input-icon-right w-full">
+          <i class="pi pi-lock" style="padding-right: 10px;"></i>
+          <input 
+            id="confirmPin"
+            type="password" 
+            pInputText 
+            formControlName="confirmPin"
+            placeholder="Confirm PIN"
+            class="w-full"
+            maxlength="6"
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('confirmPin')}">
+        </span>
+        <small class="error-message" *ngIf="isFieldInvalid('confirmPin') || signupForm.errors?.['pinMisMatch']">
+          {{ getErrorMessage('confirmPin') }}
+        </small>
+      </div>
+
+      <!-- Contact -->
+      <div class="form-field">
+        <label for="contact">Contact Number</label>
+        <span class="p-input-icon-right w-full">
+          <i class="pi pi-phone" style="padding-right: 10px;"></i>
+          <input 
+            id="contact"
+            type="tel" 
+            pInputText 
+            formControlName="contact"
+            placeholder="Enter contact number"
+            class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('contact')}">
+        </span>
+        <small class="error-message" *ngIf="isFieldInvalid('contact')">
+          {{ getErrorMessage('contact') }}
+        </small>
+      </div>
+
+      <!-- Branch Dropdown -->
+      <div class="form-field">
+        <label for="branch">Select Branch</label>
+        <p-dropdown 
+          id="branch"
+          [options]="branches"
+          formControlName="branch"
+          placeholder="Select branch"
+          [style]="{ 'width': '70%' }"
+          [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('branch') }">
+        </p-dropdown>
+        <small class="error-message" *ngIf="isFieldInvalid('branch')">
+          {{ getErrorMessage('branch') }}
+        </small>
+      </div>
+
+      <!-- Account Type Dropdown -->
+      <div class="form-field">
+        <label for="accountType">Account Type</label>
+        <p-dropdown 
+          id="accountType"
+          [options]="accountTypes"
+          formControlName="accountType"
+          placeholder="Select account type"
+          [style]="{'width': '70%'}"
+          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('accountType')}">
+        </p-dropdown>
+        <small class="error-message" *ngIf="isFieldInvalid('accountType')">
+          {{ getErrorMessage('accountType') }}
+        </small>
+      </div>
+
+      <!-- Create Button -->
+      <div class="form-actions">
+        <p-button 
+          type="submit"
+          label="Create Account" 
+          icon="pi pi-user-plus"
+          severity="success"
+          [style]="{ 'width': '70%' }">
+        </p-button>
+      </div>
+    </form>
+  </p-card>
+
+  <!-- Confirmation Dialog -->
+  <p-dialog 
+    header="Confirm Account Details" 
+    [(visible)]="showConfirmationDialog" 
+    [modal]="true" 
+    [closable]="false"
+    [style]="{ width: '90vw', maxWidth: '500px' }"
+    styleClass="confirmation-dialog">
+
+    <div class="confirmation-content">
+      <div class="confirmation-header">
+        <i class="pi pi-info-circle confirmation-icon"></i>
+        <p>Please review your account details before confirming:</p>
+      </div>
+
+      <div class="details-summary">
+        <div class="detail-row">
+          <span class="detail-label">Full Name:</span>
+          <span class="detail-value">{{ signupForm.get('accountHolderName')?.value }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Email Address:</span>
+          <span class="detail-value">{{ signupForm.get('email')?.value }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Contact Number:</span>
+          <span class="detail-value">{{ signupForm.get('contact')?.value }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Branch:</span>
+          <span class="detail-value">
+           <span class="detail-value">
+  {{ getBranchLabel(signupForm.get('branch')?.value) }}
+</span>
+
+          </span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Account Type:</span>
+          <span class="detail-value">{{ getAccountTypeLabel(signupForm.get('accountType')?.value) }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">PIN:</span>
+          <span class="detail-value">****</span>
+        </div>
+      </div>
+
+      <div class="confirmation-notice">
+        <i class="pi pi-exclamation-triangle notice-icon"></i>
+        <p>By confirming, you agree to create an account with the above details.</p>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="dialog-actions">
+        <p-button 
+          label="Cancel" 
+          icon="pi pi-times" 
+          severity="secondary"
+          (onClick)="onCancelConfirmation()"
+          [style]="{ 'margin-right': '0.5rem' }">
+        </p-button>
+        <p-button 
+          label="Confirm & Create Account" 
+          icon="pi pi-check" 
+          severity="success"
+          (onClick)="onSubmit()">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>

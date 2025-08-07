@@ -1,0 +1,142 @@
+.footer {
+  background-color: #0A2463;
+  color: white;
+  padding: 64px 0 32px;
+  /* position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%; */
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  margin-bottom: 48px;
+}
+
+.footer-column h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.footer-column h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px;
+  color: #3AAFA9;
+}
+
+.footer-column p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.social-links {
+  display: flex;
+  gap: 16px;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.social-links a:hover {
+  background-color: #3AAFA9;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 8px;
+}
+
+.footer-column ul li a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.footer-column ul li a:hover {
+  color: #3AAFA9;
+}
+
+.footer-bottom {
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer-bottom p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.legal-links a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.legal-links a:hover {
+  color: white;
+}
+
+/* Responsive Styles */
+@media (min-width: 576px) {
+  .footer-top {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .footer-top {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+  
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .legal-links {
+    justify-content: flex-end;
+  }
+}

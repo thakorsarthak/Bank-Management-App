@@ -1,0 +1,121 @@
+.private-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--surface-card);
+  box-shadow: var(--card-shadow);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0;
+  padding: 0 1rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+:host ::ng-deep {
+  .p-menubar {
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+  }
+
+  .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+
+  .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:hover {
+    background: var(--surface-hover);
+  }
+
+  .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link {
+    background: var(--primary-color);
+    color: var(--primary-color-text);
+  }
+
+  .p-submenu-list {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    padding: 0.5rem 0;
+  }
+
+  .p-submenu-list .p-menuitem-link {
+    padding: 0.75rem 1rem;
+    transition: background 0.2s ease;
+  }
+
+  .p-submenu-list .p-menuitem-link:hover {
+    background: var(--surface-hover);
+  }
+
+  .logout-btn {
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+  }
+
+  .logout-btn:hover {
+    background: var(--red-100);
+    border-color: var(--red-300);
+    color: var(--red-600);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .logo {
+    font-size: 1.25rem;
+    padding: 0 0.5rem;
+  }
+
+  .header-actions {
+    gap: 0.5rem;
+  }
+
+  :host ::ng-deep {
+    .p-menubar {
+      padding: 0.5rem;
+    }
+
+    .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .logout-btn {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .logout-btn .p-button-label {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  :host ::ng-deep {
+    .p-menubar .p-menubar-root-list {
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+      padding: 0.375rem 0.5rem;
+      font-size: 0.8rem;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+# Ignore Eclipse/STS metadata
+.metadata/
+*.classpath
+*.project
+*.settings/
+
+# Spring Boot build artifacts
+/target/
+/bin/
+/build/
+
+# Logs
+*.log
+
+# Secret config
+BankManagementApp/src/main/resources/application-secret.properties

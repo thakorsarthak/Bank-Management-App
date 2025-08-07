@@ -1,0 +1,232 @@
+<app-private-header></app-private-header>
+
+<div class="transactions-container">
+  <!-- Modern Header with Gradient Background -->
+  <div class="transactions-header">
+    <div class="header-content">
+      <h1>Transaction History</h1>
+      <p>View and manage your past transactions</p>
+    </div>
+    <div class="header-actions">
+      <p-button label="Back to Dashboard" icon="pi pi-arrow-left" severity="secondary" (onClick)="onBackToDashboard()">
+      </p-button>
+      <p-button label="Export" icon="pi pi-download" severity="info" (onClick)="onExportTransactions()">
+      </p-button>
+    </div>
+  </div>
+
+  <!-- Enhanced Summary Cards (moved above filters) -->
+  <div class="summary-cards">
+    <p-card styleClass="summary-card total">
+      <div class="summary-content">
+        <div class="summary-info">
+          <div class="summary-label">
+            <i class="pi pi-chart-bar"></i>
+            <h3>Total Transactions</h3>
+          </div>
+          <p class="summary-number">{{ filteredTransactions.length }}</p>
+          <span class="summary-subtitle">All records</span>
+        </div>
+        <div class="summary-icon-wrapper">
+          <i class="pi pi-list summary-icon"></i>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="summary-card credit">
+      <div class="summary-content">
+        <div class="summary-info">
+          <div class="summary-label">
+            <i class="pi pi-plus-circle"></i>
+            <h3>Credit Transactions</h3>
+          </div>
+          <p class="summary-number">{{ getCreditCount() }}</p>
+          <span class="summary-subtitle">Money received</span>
+        </div>
+        <div class="summary-icon-wrapper credit-bg">
+          <i class="pi pi-arrow-up summary-icon"></i>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="summary-card debit">
+      <div class="summary-content">
+        <div class="summary-info">
+          <div class="summary-label">
+            <i class="pi pi-minus-circle"></i>
+            <h3>Debit Transactions</h3>
+          </div>
+          <p class="summary-number">{{ getDebitCount() }}</p>
+          <span class="summary-subtitle">Money spent</span>
+        </div>
+        <div class="summary-icon-wrapper debit-bg">
+          <i class="pi pi-arrow-down summary-icon"></i>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Enhanced Filters Section with Collapsible Design -->
+  <p-card styleClass="filters-card">
+    <ng-template pTemplate="header">
+      <div class="filter-header" (click)="toggleFilters()">
+        <div class="filter-title">
+          <i class="pi pi-filter"></i>
+          <span>Filter Transactions</span>
+        </div>
+        <i class="pi" [ngClass]="showFilters ? 'pi-chevron-up' : 'pi-chevron-down'"
+          [style.transform]="showFilters ? 'rotate(180deg)' : 'rotate(0deg)'"></i>
+      </div>
+    </ng-template>
+
+    <div class="filters-content" [class.expanded]="showFilters">
+      <div class="filters-grid">
+        <div class="filter-field">
+          <label for="search">
+            <i class="pi pi-search"></i>
+            Search
+          </label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-search"></i>
+            <input id="search" type="text" pInputText [(ngModel)]="searchTerm" (input)="applyFilters()"
+              placeholder="Search by description, reference, or category" class="w-full modern-input">
+          </span>
+        </div>
+
+        <div class="filter-field">
+          <label for="direction">
+            <i class="pi pi-tags"></i>
+            Transaction Type
+          </label>
+          <p-dropdown id="direction" [options]="typeOptions" [(ngModel)]="direction" (onChange)="applyFilters()"
+            placeholder="Select type" styleClass="modern-dropdown" [style]="{'width': '100%'}"></p-dropdown>
+        </div>
+
+        <div class="filter-field">
+          <label for="status">
+            <i class="pi pi-flag"></i>
+            Status
+          </label>
+          <p-dropdown id="status" [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="applyFilters()"
+            placeholder="Select status" styleClass="modern-dropdown" [style]="{'width': '100%'}"></p-dropdown>
+        </div>
+
+        <div class="filter-field">
+          <label for="dateFrom">
+            <i class="pi pi-calendar"></i>
+            From Date
+          </label>
+          <p-calendar id="dateFrom" [(ngModel)]="dateFrom" (onSelect)="applyFilters()" placeholder="Select start date"
+            styleClass="modern-calendar" [style]="{'width': '100%'}" dateFormat="dd/mm/yy"></p-calendar>
+        </div>
+
+        <div class="filter-field">
+          <label for="dateTo">
+            <i class="pi pi-calendar"></i>
+            To Date
+          </label>
+          <p-calendar id="dateTo" [(ngModel)]="dateTo" (onSelect)="applyFilters()" placeholder="Select end date"
+            styleClass="modern-calendar" [style]="{'width': '100%'}" dateFormat="dd/mm/yy"></p-calendar>
+        </div>
+
+        <div class="filter-field filter-actions">
+          <p-button label="Clear All Filters" icon="pi pi-times" severity="secondary" (onClick)="clearFilters()"
+            styleClass="clear-btn" [style]="{'width': '100%', 'margin-top': '1.5rem'}"></p-button>
+        </div>
+      </div>
+    </div>
+  </p-card>
+
+  <!--Transactions Table -->
+  <p-card styleClass="transactions-table-card">
+    <ng-template pTemplate="header">
+      <div class="table-header">
+        <div class="table-title">
+          <i class="pi pi-table"></i>
+          <span>Recent Transactions</span>
+        </div>
+        <div class="table-actions">
+          <p-button icon="pi pi-refresh" severity="secondary" [text]="true" (onClick)="refreshTransactions()"
+            pTooltip="Refresh data">
+          </p-button>
+        </div>
+      </div>
+    </ng-template>
+
+    <p-table [value]="filteredTransactions" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+      [sortField]="'timestamp'" [sortOrder]="-1" responsiveLayout="scroll"
+      styleClass="p-datatable-striped modern-table">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="timestamp">
+            <i class="pi pi-calendar"></i> Date & Time <p-sortIcon field="timestamp" />
+          </th>
+          <th pSortableColumn="description">
+            <i class="pi pi-file-edit"></i> Description <p-sortIcon field="description" />
+          </th>
+          <th>
+            <i class="pi pi-user"></i> To/From
+          </th>
+          <th pSortableColumn="amount">
+            <i class="pi pi-dollar"></i> Amount <p-sortIcon field="amount" />
+          </th>
+          <th>
+            <i class="pi pi-wallet"></i> After Balance
+          </th>
+          <th>
+            <i class="pi pi-tags"></i> Type
+          </th>
+          <th pSortableColumn="status">
+            <i class="pi pi-flag"></i> Status <p-sortIcon field="status" />
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-transaction let-rowIndex="rowIndex">
+        <tr [class.highlight-row]="rowIndex % 2 === 0">
+          <td>
+            <div class="date-wrapper">
+              <span>{{ transaction.timestamp | date: 'dd/MM/yyyy' }}</span>
+              <small class="date-time">{{ transaction.timestamp | date: 'HH:mm' }}</small>
+            </div>
+          </td>
+          <td>{{ transaction.description }}</td>
+          <td>{{ transaction.counterPartyName || '-' }}</td>
+          <td>
+            <p-tag [value]="formatCurrency(transaction.amount)" [severity]="getTransactionSeverity(transaction.direction)"
+              [icon]="transaction.direction === 'CREDIT' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'" styleClass="amount-tag">
+            </p-tag>
+          </td>
+          <td>₹{{ transaction.afterBalance | number: '1.2-2' }}</td>
+          <td>
+            <p-tag [value]="transaction.type | titlecase" [severity]="getTransactionSeverity(transaction.type)">
+            </p-tag>
+          </td>
+          <td>
+            <p-tag [value]="transaction.status | titlecase" [severity]="getStatusSeverity(transaction.status)">
+            </p-tag>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center">
+            <div class="empty-state modern-empty">
+              <div class="empty-icon-wrapper">
+                <i class="pi pi-inbox empty-icon"></i>
+              </div>
+              <h3>No transactions found</h3>
+              <p>Try adjusting your filters to see more results.</p>
+              <p-button label="Reset Filters" icon="pi pi-refresh" severity="secondary" (onClick)="clearFilters()"
+                [text]="true">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </p-card>
+</div>

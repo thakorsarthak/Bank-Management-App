@@ -1,0 +1,90 @@
+.login-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  justify-content: center;
+  display: flex;
+  padding-top: 30px;
+  
+}
+
+.signup-card {
+  background: var(--surface-card);
+  border-radius: 1rem;
+  box-shadow: var(--card-shadow);
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;  
+}
+
+.form-field label {
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+}
+
+:host ::ng-deep {
+  .p-inputtext,
+  .p-dropdown {
+    width: 100%;
+  }
+
+  .p-dropdown {
+    border-radius: 6px;
+  }
+
+  .p-button {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .p-card {
+    .p-card-header {
+      padding: 1.5rem;
+      width: 60%;
+      background: var(--surface-section);
+      border-radius: 1rem 1rem 0 0;
+    }
+
+    .p-card-content {
+      padding: 1.5rem;
+    }
+  }
+}
+
+.error-message {
+  color: var(--red-500);
+  font-size: 0.875rem;
+}
+
+.form-actions {
+  margin-top: 1rem;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .signup-container {
+    margin: 1rem auto;
+  }
+
+  :host ::ng-deep {
+    .p-card {
+      .p-card-header {
+        padding: 1rem;
+      }
+
+      .p-card-content {
+        padding: 1rem;
+      }
+    }
+  }
+}

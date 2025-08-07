@@ -1,0 +1,225 @@
+.signup-container {
+  max-width: 600px;
+  margin: auto;
+  justify-content: center;
+  display: flex;
+}
+
+.signup-card {
+  background: var(--surface-card);
+  border-radius: 1rem;
+  box-shadow: var(--card-shadow);
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  
+}
+
+.form-field label {
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+}
+
+:host ::ng-deep {
+  .p-inputtext,
+  .p-dropdown {
+    width: 100%;
+  }
+
+  .p-dropdown {
+    border-radius: 6px;
+  }
+
+  .p-button {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .p-card {
+    .p-card-header {
+      padding: 1.5rem;
+      width: 60%;
+      background: var(--surface-section);
+      border-radius: 1rem 1rem 0 0;
+    }
+
+    .p-card-content {
+      padding: 1.5rem;
+    }
+  }
+}
+
+.error-message {
+  color: var(--red-500);
+  font-size: 0.875rem;
+}
+
+.form-actions {
+  margin-top: 1rem;
+}
+
+/* Confirmation Dialog Styles */
+:host ::ng-deep {
+  .confirmation-dialog {
+    .p-dialog-header {
+      background: var(--primary-color);
+      color: white;
+      border-radius: 12px 12px 0 0;
+      padding: 1.5rem;
+    }
+
+    .p-dialog-content {
+      padding: 0;
+    }
+
+    .p-dialog-footer {
+      padding: 1.5rem;
+      background: var(--surface-section);
+      border-radius: 0 0 12px 12px;
+    }
+  }
+}
+
+.confirmation-content {
+  padding: 2rem;
+}
+
+.confirmation-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.confirmation-icon {
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.confirmation-header p {
+  font-size: 1.1rem;
+  color: var(--text-color-secondary);
+  margin: 0;
+}
+
+.details-summary {
+  background: var(--surface-section);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 500;
+  color: var(--text-color-secondary);
+  flex: 1;
+}
+
+.detail-value {
+  font-weight: 600;
+  color: var(--text-color);
+  flex: 1;
+  text-align: right;
+  word-break: break-word;
+}
+
+.confirmation-notice {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 1px solid #f39c12;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.notice-icon {
+  color: #f39c12;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.confirmation-notice p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #856404;
+  line-height: 1.4;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Responsive Design for Dialog */
+@media (max-width: 640px) {
+  .confirmation-content {
+    padding: 1.5rem;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .detail-value {
+    text-align: left;
+  }
+
+  .dialog-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .dialog-actions .p-button {
+    width: 100%;
+  }
+
+  .confirmation-notice {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .signup-container {
+    margin: 1rem auto;
+  }
+
+  :host ::ng-deep {
+    .p-card {
+      .p-card-header {
+        padding: 1rem;
+      }
+
+      .p-card-content {
+        padding: 1rem;
+      }
+    }
+  }
+}

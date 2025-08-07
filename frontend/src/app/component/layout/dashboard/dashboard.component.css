@@ -1,0 +1,23 @@
+:host ::ng-deep .p-card {
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card{
+margin-left: 800px;
+
+}
+.account-summary {
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 1rem;
+}
+
+.p-grid > .p-col-12 {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.p-col-12:last-child {
+  border-bottom: none;
+}
