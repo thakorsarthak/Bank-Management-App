@@ -16,7 +16,7 @@ import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
 
 @Component({
   selector: 'app-transfer-money',
-  imports: [ CommonModule,
+  imports: [CommonModule,
     ReactiveFormsModule,
     InputTextModule,
     InputNumberModule,
@@ -30,13 +30,13 @@ import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
   providers: [MessageService]
 })
 export class TransferMoneyComponent implements OnInit {
-  
+
   constructor(
     private fb: FormBuilder,
     private authservice: AuthServiceService,
     private transactionService: TransactionService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
 
   transactionForm!: FormGroup;
@@ -48,26 +48,26 @@ export class TransferMoneyComponent implements OnInit {
       accountNumber: ['', [Validators.required, Validators.pattern(/^\d{12}$/)]],
       amount: [null, [Validators.required, Validators.min(1), Validators.max(50000)]],
       pin: ['', [Validators.required, Validators.pattern(/^\d{4,6}$/)]],
-       description: ['']
+      description: ['']
     });
 
     this.transactionForm.get('accountNumber')?.valueChanges.pipe(
-    debounceTime(500),
-    distinctUntilChanged(),
-    filter(value => /^\d{12}$/.test(value))
-  )
-  .subscribe(accountNumber => {
-    this.transactionService.getAccountHolderName(accountNumber).subscribe({
-      next: (res) => {
-        this.receiverName = res.success ? res.data : null;
-      },
-      error: () => {
-        this.receiverName = null;
-      }
-    });
-  });
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(value => /^\d{12}$/.test(value))
+    )
+      .subscribe(accountNumber => {
+        this.transactionService.getAccountHolderName(accountNumber).subscribe({
+          next: (res) => {
+            this.receiverName = res.success ? res.data : null;
+          },
+          error: () => {
+            this.receiverName = null;
+          }
+        });
+      });
 
-    
+
 
   }
 
@@ -118,7 +118,7 @@ export class TransferMoneyComponent implements OnInit {
       toAccountNumber: this.transactionForm.value.accountNumber,
       amount: this.transactionForm.value.amount,
       pin: this.transactionForm.value.pin,
-      description: this.transactionForm.value.description || null 
+      description: this.transactionForm.value.description || null
     };
 
     this.isProcessing = true;

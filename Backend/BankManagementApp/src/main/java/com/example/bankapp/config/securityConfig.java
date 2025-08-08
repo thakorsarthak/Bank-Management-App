@@ -33,7 +33,10 @@ public class securityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 
-		return http.csrf(customizer -> customizer.disable())
+		return http
+				 .cors(Customizer.withDefaults()) //to enable CORS 
+		  
+				.csrf(customizer -> customizer.disable())
 				.authorizeHttpRequests(request -> request
 						.requestMatchers("/account/**","/transaction/**","/main/**","/otp/**")
 						.permitAll()

@@ -153,10 +153,10 @@ public class AccountServiceImp implements AccountService {
 				if (optionAcc.isPresent()) {
 
 					Account acc = optionAcc.get();
-					String token = jService.generateToken(account.getEmail(), acc.getAccountNumber());
+					String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber());
 					System.out.println("Token From verify: " + token);
 					
-				 String	accountNum= acc.getAccountNumber();
+				 String	accountNum= acc.getEmail();
 					redisTemplate.opsForValue().set("session:" + accountNum , token, 10, TimeUnit.MINUTES); // TTL should match token
 
 					return token;

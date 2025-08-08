@@ -48,7 +48,11 @@ public class JwtFilter extends OncePerRequestFilter {
 		if (
 		    requestURI.contains("/bankapp/main/login-account") ||
 		    requestURI.contains("/bankapp/main/create") ||
-		    requestURI.contains("/bankapp/otp")
+		    requestURI.contains("/bankapp/otp") ||
+		    requestURI.contains("/swagger-ui") ||           // Swagger UI
+		    requestURI.contains("/v3/api-docs") ||          // OpenAPI JSON
+		    requestURI.contains("/swagger-resources") ||    // Swagger configs
+		    requestURI.contains("/webjars/")  
 		) {
 		    filterChain.doFilter(request, response);
 		    return;
@@ -58,50 +62,29 @@ public class JwtFilter extends OncePerRequestFilter {
 		 System.out.println(">> JwtFilter triggered for path: " + request.getRequestURI());
 
 		String authHeader = request.getHeader("Authorization");
-		String token = null;
-		String username= null;
-
+		String token=null ;
+		String username=null;
+	
 		  System.out.println(">> Authorization header(JWT filter): " + authHeader);
 
+		  
+		  	token = jwtService.extractTokenFromRequest(request); // your existing logic
+		  if (token != null) {
+		      username = jwtService.extractUserName(token); // This should return the email (sub)
+		      System.out.println(">> Extracted username (JWT filter): " + username);
 
-		if(authHeader != null && authHeader.startsWith("Bearer ")) {
-			token = authHeader.substring(7);
-			username = jwtService.extractUserName(token);
-			System.out.println(">> Extracted username (JWT filter): " + username);
-		}else {
-	        System.out.println(">> No valid Authorization header found");
-	    }
+		      String redisKey = "session:" + username;
+		      String storedToken = redisTemplate.opsForValue().get(redisKey);
 
-		
+		      if (storedToken != null && storedToken.equals(token)) {
+		          // Valid session: setup AuthenticationContext
+		      } else {
+		          System.out.println(">> Token not found in Redis or session expired");
+		      }
+		  }
 
-		String Token = jwtService.extractTokenFromRequest(request);
-		String accountNumber = jwtService.extractAccountNumber(Token);
-		
-		
-		if (accountNumber != null) {
-		    String redisToken = redisTemplate.opsForValue().get("session:" + accountNumber);
 
-		    if (redisToken == null || !redisToken.equals(token)) {
-		        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		        response.getWriter().write("Session expired or invalidated");
-		        return;
-		    }
-		}
-		
-		
 
-		 String jwt = jwtService.extractTokenFromRequest(request);
-
-	        if (jwt == null || jwt.isEmpty()) {
-	            filterChain.doFilter(request, response);
-	            return; // no token, just proceed (will hit @Secured or SecurityConfig)
-	        }
-		
-	     // ✅ 2. Check if token exists in Redis (i.e., still valid session)
-	        if (!Boolean.TRUE.equals(redisTemplate.hasKey(jwt))) {
-	            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-	            return; // 🔐 auto logout — token expired or deleted
-	        }
 		
 		
 		if(username != null && SecurityContextHolder.getContext().getAuthentication()== null) {
@@ -118,7 +101,12 @@ public class JwtFilter extends OncePerRequestFilter {
 				 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-			 }
+			 } else {
+		            System.out.println(">> Invalid token during validation");
+		            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		            response.getWriter().write("Invalid token");
+		            return;
+		        }
 		}
 
 		filterChain.doFilter(request, response);

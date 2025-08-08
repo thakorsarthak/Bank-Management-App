@@ -10,31 +10,33 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
  const lowerUrl = req.url.toLowerCase();
 
+
 if (lowerUrl.includes('/login') || lowerUrl.includes('/register')) {
   return next(req);
 }
 
   console.log('Outgoing URL: ', req.url);
+ // console.log('Auth Interceptor Token:', token);
 
-
-  console.log('Auth Interceptor Token:', token);
-
-    const authReq = token
     
-    ? req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-    : req;
+//   if (token) {
+//     console.log('Adding Authorization header with token:', token);
+//   const cloned = req.clone({
+//   headers: req.headers
+//     .set('Authorization', `Bearer ${token}`)
+//     .set('Content-Type', 'application/json')
+// });
 
-     return next(authReq).pipe(
-    catchError((error) => {
-      if (error.status === 401) {
-        authService.logout(); // clear localStorage and redirect
-      }
-      return throwError(() => error);
-    })
-  );
+ if (token) {
+     const cloned = req.clone({
+  headers: req.headers
+    .set('Authorization', `Bearer ${token}`)
+    .set('Content-Type', 'application/json')
+});
+
+    return next(cloned);
+  }
+
+  return next(req); 
   
 };
