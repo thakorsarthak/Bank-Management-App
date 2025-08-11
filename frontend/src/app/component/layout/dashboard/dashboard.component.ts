@@ -11,22 +11,6 @@ import { AuthServiceService } from '../../services/auth-service.service';
 import { MessageService } from 'primeng/api';
 import { TransactionService } from '../../services/transaction.service';
 
-interface Transaction {
-  id: string;
-  date: Date;
-  description: string;
-  amount: number;
-  type: 'credit' | 'debit';
-  balance: number;
-}
-
-interface SavingsGoal {
-  id: string;
-  name: string;
-  targetAmount: number;
-  currentAmount: number;
-  targetDate: Date;
-}
 
 @Component({
   selector: 'app-dashboard',
@@ -44,21 +28,29 @@ export class DashboardComponent implements OnInit{
     private transactionService: TransactionService
   ) { }
    ngOnInit(): void {
-    //decoding token to get account number
-    const accountNumber = this.authservice.getAccountNumber(); // Or get from JWT or route
-    console.log('Account Number:', accountNumber);
-    if (accountNumber) {
-    this.transactionService.getAccountHolderDetails(accountNumber).subscribe(data => {
+
+    console.log('dashboard component');
+    this.transactionService.getAccountHolderDetails().subscribe(data => {
       this.account = data;
-    });
-  } else {
-    // Handle the case where accountNumber is null (e.g., show an error or redirect)
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Account Error',
-      detail: 'No account number found.'
-    });
-  }
+      });
+  //     this.account = data;
+    //decoding token to get account number
+  //   const accountNumber = this.authservice.getAccountNumber(); // Or get from JWT or route
+  //   console.log('Account Number:', accountNumber);
+  //   if (accountNumber) {
+  //   this.transactionService.getAccountHolderDetails(accountNumber).subscribe(data => {
+  //     this.account = data;
+  //   });
+  // } else {
+  //   // Handle the case where accountNumber is null (e.g., show an error or redirect)
+  //   this.messageService.add({
+  //     severity: 'error',
+  //     summary: 'Account Error',
+  //     detail: 'No account number found.'
+  //   });
+  // }
+
+
 
 }
 }

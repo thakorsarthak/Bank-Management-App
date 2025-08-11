@@ -29,14 +29,12 @@ public class AccountController {
 
 	@Autowired
 	AccountService aService;
-	
-	
+
 	@Autowired
 	JWTservices jwtService;
-	
-	@Autowired
-    private RedisTemplate<String, String> redisTemplate;
 
+	@Autowired
+	private RedisTemplate<String, String> redisTemplate;
 
 	@PutMapping("/updateAccount")
 	public ResponseEntity<AccountResponseDTO> updateAccount(@RequestBody AccountUpdateRequestDTO dto) {
@@ -44,8 +42,6 @@ public class AccountController {
 
 		return ResponseEntity.ok(details);
 	}
-
-
 
 	@PutMapping("/change-pin")
 	public ResponseEntity<String> changePin(@RequestBody @Valid ChangePinRequestDTO changePin) {
@@ -60,26 +56,22 @@ public class AccountController {
 
 		return aService.ChangePinWithOtp(resetPin);
 	}
-	
+
 	@PostMapping("/logout")
 	public ResponseEntity<?> logout(HttpServletRequest request) {
-	    String token = jwtService.extractTokenFromRequest(request);
-	    String accountNumber = jwtService.extractAccountNumber(token);
+		String token = jwtService.extractTokenFromRequest(request);
+		String accountNumber = jwtService.extractAccountNumber(token);
 
-	    redisTemplate.delete("session:" + accountNumber);
+		redisTemplate.delete("session:" + accountNumber);
 
-	    return ResponseEntity.ok("Logged out successfully");
+		return ResponseEntity.ok("Logged out successfully");
 	}
-
-
-
 
 //	@GetMapping("/{accountNo}")
 //	public ResponseEntity<AccountResponseDTO> getAccountDetailByAccountNo(@PathVariable String accountNumber) {
 //		AccountResponseDTO accountDetailByAccountNo = aService.getAccountDetailByAccountNo(accountNumber);
 //		return ResponseEntity.ok(accountDetailByAccountNo);
 //	}
-
 
 	@GetMapping("/accountHolderName/{accountNumber}")
 	public ResponseEntity<?> getAccountHolderName(@PathVariable String accountNumber) {
@@ -88,15 +80,28 @@ public class AccountController {
 
 	}
 
-	@GetMapping("/accountHolderDetail/{accountNumber}")
-	public ResponseEntity<AccountResponseDTO> getAccountHolderDetails(@PathVariable String accountNumber){
+//	@GetMapping("/accountHolderName")
+//	public ResponseEntity<?> getAccountHolderName(HttpServletRequest request) {
+//
+//		return aService.getAccountHolderN(request);
+//
+//	}
+
+//	@GetMapping("/accountHolderDetail/{accountNumber}")
+//	public ResponseEntity<AccountResponseDTO> getAccountHolderDetails(@PathVariable String accountNumber) {
+//		System.out.println("detail fetch api triggered");
+//
+//		AccountResponseDTO accountDetailByAccountNo = aService.getAccountDetailByAccountNo(accountNumber);
+//		return ResponseEntity.ok(accountDetailByAccountNo);
+//	}
+	
+	@GetMapping("/accountHolderDetail")
+	public ResponseEntity<AccountResponseDTO> getAccountHolderD(HttpServletRequest request) {
 		System.out.println("detail fetch api triggered");
 
-
-		AccountResponseDTO accountDetailByAccountNo = aService.getAccountDetailByAccountNo(accountNumber);
-		return ResponseEntity.ok(accountDetailByAccountNo) ;
+		AccountResponseDTO accountDetailByAccountNo = aService.getAccountDetailByAccNo(request);
+		return ResponseEntity.ok(accountDetailByAccountNo);
 	}
-
 
 
 	@DeleteMapping("/delete/{accountNumber}")

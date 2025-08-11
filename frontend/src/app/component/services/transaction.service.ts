@@ -23,11 +23,11 @@ constructor(private http: HttpClient) {}
   //   return this.http.get<any>(`http://localhost:6011/bankapp/transaction/history/${accountNumber}`);
   // }
 
-  getTransactionHistory(accountNumber: string ): Observable<GlobalAPIResponse<Transaction[]>> {
-    return this.http.get<GlobalAPIResponse<Transaction[]>>(`http://localhost:6011/bankapp/transaction/history/${accountNumber}`);
+  getTransactionHistory( ): Observable<GlobalAPIResponse<Transaction[]>> {
+    return this.http.get<GlobalAPIResponse<Transaction[]>>(`http://localhost:6011/bankapp/transaction/history`);
   }
 
-  getAccountHolderDetails(accountNumber: string): Observable<any> {
-    return this.http.get<any>(`http://localhost:6011/bankapp/account/accountHolderDetails/${accountNumber}`);
+  getAccountHolderDetails(): Observable<any> {
+    return this.http.get<any>(`http://localhost:6011/bankapp/account/accountHolderDetails`);
   }
 }

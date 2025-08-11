@@ -35,6 +35,8 @@ import com.example.bankapp.repository.TransactionRepo;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
 public class AccountServiceImp implements AccountService {
 
@@ -51,6 +53,7 @@ public class AccountServiceImp implements AccountService {
 	TransactionRepo Trepo;
 	
 
+	
 	@Autowired
     private RedisTemplate<String, String> redisTemplate;
 
@@ -187,27 +190,25 @@ public class AccountServiceImp implements AccountService {
 		String name = account.get().getAccountHolderName();
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Sucsess", true, name));
 	}
-
-	// old api for fetching account details
+	
 //	@Override
-//	public AccountResponseDTO getAccountDetailByAccountNo(Long accountNumber) {
-//		Optional<Account> account = repo.findById(accountNumber);
+//	public ResponseEntity<?> getAccountHolderN(HttpServletRequest request) {
+//
+//		String token = jService.extractTokenFromRequest(request);
+//	    String accountNumber = jService.extractAccountNumber(token);
+//
+//	    Optional<Account> account = repo.findByAccountNumber(accountNumber);
+//	    
 //		if (account.isEmpty()) {
-//
-//			throw new RuntimeException("Account doesn't Exist");
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//					.body(new GlobalAPIResponseDTO<>("Account not found", false));
 //		}
-//		Account account_found = account.get();
-//
-//		AccountResponseDTO response = new AccountResponseDTO();
-//		response.setAccountNumber(account_found.getAccountNumber());
-//		response.setAccountHolderName(account_found.getAccountHolderName());
-//		//response.setAccountType(account_found.getAccountType());
-//		response.setBalance(account_found.getBalance());
-//		response.setEmail(account_found.getEmail());
-//		response.setContact(account_found.getContact());
-//
-//		return response;
+//		String name = account.get().getAccountHolderName();
+//		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Sucsess", true, name));
 //	}
+
+	
+
 
 	@Override
 	public AccountResponseDTO getAccountDetailByAccountNo(String accountNumber) {
@@ -238,6 +239,40 @@ public class AccountServiceImp implements AccountService {
 
 	}
 
+	
+	
+	@Override
+	public AccountResponseDTO getAccountDetailByAccNo(HttpServletRequest request) {
+	
+		String token = jService.extractTokenFromRequest(request);
+	    String accountNumber = jService.extractAccountNumber(token);
+	    
+	    Optional<Account> account = repo.findByAccountNumber(accountNumber);
+
+		if (account.isEmpty()) {
+			throw new RuntimeException("Account doesn't Exist");
+		}
+
+		Account accountFound = account.get();
+
+		AccountResponseDTO response = new AccountResponseDTO();
+
+		response.setAccountHolderName(accountFound.getAccountHolderName());
+		response.setAccountNumber(accountFound.getAccountNumber());
+		response.setEmail(accountFound.getEmail());
+		response.setBalance(accountFound.getBalance());
+		response.setContact(accountFound.getContact());
+
+		response.setBranchCode(accountFound.getBranchCode());
+		response.setBranchName(Branch.getNameByCode(accountFound.getBranchCode()));
+
+		response.setProductCode(accountFound.getProductCode());
+		response.setProductType(ProductType.getNameByCode(accountFound.getProductCode()));
+
+		return response;
+	}
+	
+	
 	@Override
 	public List<Account> getAllAccountDetails() {
 
@@ -392,5 +427,7 @@ public class AccountServiceImp implements AccountService {
 		}
 		return false;
 	}
+
+	
 
 }

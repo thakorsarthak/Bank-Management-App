@@ -38,7 +38,7 @@ public class securityConfig {
 		  
 				.csrf(customizer -> customizer.disable())
 				.authorizeHttpRequests(request -> request
-						.requestMatchers("/account/**","/transaction/**","/main/**","/otp/**")
+						.requestMatchers("/account/**","/transaction/**","/main/**","/otp/**","/swagger-ui/**","/v3/api-docs/**","/swagger-resources/**")
 						.permitAll()
 						.anyRequest().authenticated())
 				// .formLogin(Customizer.withDefaults())
@@ -48,15 +48,7 @@ public class securityConfig {
 				.build();
 	}
 
-//	  @Bean public UserDetailsService userDetailsService () {
-//
-//
-//	  UserDetails user1= User .withDefaultPasswordEncoder() .username("rahul")
-//	  .password("r@123") .roles("user") .build();
-//
-//	  UserDetails user2= User .withDefaultPasswordEncoder() .username("john")
-//	  .password("j@123") .roles("Admin") .build(); return new
-//	  InMemoryUserDetailsManager(user1,user2); }
+	
 
 	@Bean
 	public AuthenticationProvider authenticationProvider() {

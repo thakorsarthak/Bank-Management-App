@@ -73,16 +73,11 @@ export class TransactionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const accountNumber = this.authService.getAccountNumber();
-    if (accountNumber) {
-      this.loadTransactions(accountNumber);
-    } else {
-      console.error('No account number found!');
-    }
+  this.loadTransactions();
   }
 
-  loadTransactions(accountNumber: string): void {
-    this.transactionService.getTransactionHistory(accountNumber).subscribe({
+  loadTransactions(): void {
+    this.transactionService.getTransactionHistory().subscribe({
       next: (response) => {
         this.transactions = Array.isArray(response.data) ? response.data : [];
         this.applyFilters();
@@ -182,10 +177,9 @@ export class TransactionComponent implements OnInit {
   }
 
   refreshTransactions(): void {
-    const accountNumber = this.authService.getAccountNumber();
-    if (accountNumber) {
-      this.loadTransactions(accountNumber);
-    }
+    
+      this.loadTransactions();
+    
   }
 
   onBackToDashboard(): void {

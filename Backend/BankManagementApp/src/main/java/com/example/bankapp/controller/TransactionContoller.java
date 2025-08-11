@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,13 +31,21 @@ public class TransactionContoller {
 	@Autowired
 	JWTservices jwtService;
 
-	@GetMapping("/history/{accountNumber}")
-	public ResponseEntity<?> transactionHistoryByAccNo(@PathVariable String accountNumber){
+//	@GetMapping("/history/{accountNumber}")
+//	public ResponseEntity<?> transactionHistoryByAccNo(@PathVariable String accountNumber){
+//
+//		List<TransactionResponseDTO> history = tService.getTransactionHistoryByAccountNum(accountNumber);
+//		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Transaction history fetched Successfuly", true, history));
+//	}
 
-		List<TransactionResponseDTO> history = tService.getTransactionHistoryByAccountNum(accountNumber);
+	@GetMapping("/history")
+	public ResponseEntity<?> transactionHistoryByAccNum(HttpServletRequest request){
+
+		List<TransactionResponseDTO> history = tService.getTransactionHistoryByAccountNum(request);
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Transaction history fetched Successfuly", true, history));
 	}
 
+	
 
 
 	@PutMapping("/tranfer")

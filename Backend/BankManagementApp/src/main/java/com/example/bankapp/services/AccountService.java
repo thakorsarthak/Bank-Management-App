@@ -12,13 +12,17 @@ import com.example.bankapp.DTO.ChangePinRequestDTO;
 import com.example.bankapp.DTO.SetPinWithOtpDTO;
 import com.example.bankapp.entity.Account;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public interface AccountService {
 
 
 
 	AccountResponseDTO createAccount(AccountRequestDTO accountDto);
 
-	 AccountResponseDTO getAccountDetailByAccountNo(String accountNumber);
+	AccountResponseDTO getAccountDetailByAccountNo(String accountNumber);
+	 
+	AccountResponseDTO getAccountDetailByAccNo(HttpServletRequest request);
 
 	ResponseEntity<?> getAccountHolderName(String accountNumber);
 
@@ -31,7 +35,7 @@ public interface AccountService {
 
 	AccountResponseDTO updateAccountDetails(AccountUpdateRequestDTO dto);
 
-
+	
 
 	ResponseEntity<?> ChangePinWithOtp(SetPinWithOtpDTO resestPin);
 

@@ -8,11 +8,14 @@ import com.example.bankapp.DTO.TransactionReqDTO;
 import com.example.bankapp.DTO.TransactionResponseDTO;
 import com.example.bankapp.DTO.TransferRequestDTO;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public interface TransactionService {
 
 
-	 List<TransactionResponseDTO> getTransactionHistoryByAccountNum(String accountNumber);
+	// List<TransactionResponseDTO> getTransactionHistoryByAccountNum(String accountNumber);
 
+	 List<TransactionResponseDTO> getTransactionHistoryByAccountNum(HttpServletRequest request);
 
 
 
@@ -23,7 +26,7 @@ public interface TransactionService {
 
 		// Account withdrawAmount(Long accontNumber, Double amount);
 
-		 List<TransactionResponseDTO> getTransactionHistory(String accountNumber);
+		
 
 		 ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request);
 

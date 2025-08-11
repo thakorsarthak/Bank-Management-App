@@ -24,6 +24,8 @@ import com.example.bankapp.repository.TransactionRepo;
 import com.example.bankapp.services.JWTservices;
 import com.example.bankapp.services.TransactionService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
 public class TransactionServiceImp implements TransactionService {
 
@@ -42,14 +44,26 @@ public class TransactionServiceImp implements TransactionService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	@Override
-	public List<TransactionResponseDTO> getTransactionHistoryByAccountNum(String accountNumber) {
+//	@Override
+//	public List<TransactionResponseDTO> getTransactionHistoryByAccountNum(String accountNumber) {
+//
+//		List<Transaction> transactions = transactionRepo.findByAccount_AccountNumberOrderByTimestampDesc(accountNumber);
+//
+//		return transactions.stream().map(TransactionResponseDTO::from).collect(Collectors.toList());
+//	}
 
+	
+	@Override
+	public List<TransactionResponseDTO> getTransactionHistoryByAccountNum(HttpServletRequest request) {
+		
+		String token = jService.extractTokenFromRequest(request);
+	    String accountNumber= jService.extractAccountNumber(token);
+		
 		List<Transaction> transactions = transactionRepo.findByAccount_AccountNumberOrderByTimestampDesc(accountNumber);
 
 		return transactions.stream().map(TransactionResponseDTO::from).collect(Collectors.toList());
+		
 	}
-
 	private void saveFailedTransaction(Account from, Account to, TransferRequestDTO request, TransactionStatus status,
 			String reason, String counterPartyName) {
 		Transaction failedTransaction = new Transaction();
@@ -245,11 +259,9 @@ public class TransactionServiceImp implements TransactionService {
 
 	}
 
-	@Override
-	public List<TransactionResponseDTO> getTransactionHistory(String accountNumber) {
+	
 
-		return null;
-	}
+	
 
 
 
