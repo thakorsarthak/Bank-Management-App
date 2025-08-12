@@ -16,16 +16,7 @@ if (lowerUrl.includes('/login') || lowerUrl.includes('/register')) {
 }
 
   console.log('Outgoing URL: ', req.url);
- // console.log('Auth Interceptor Token:', token);
-
-    
-//   if (token) {
-//     console.log('Adding Authorization header with token:', token);
-//   const cloned = req.clone({
-//   headers: req.headers
-//     .set('Authorization', `Bearer ${token}`)
-//     .set('Content-Type', 'application/json')
-// });
+  console.log('Auth Interceptor Token:', token);
 
  if (token) {
      const cloned = req.clone({

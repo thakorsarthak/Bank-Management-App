@@ -96,10 +96,9 @@ public class AccountController {
 //	}
 	
 	@GetMapping("/accountHolderDetail")
-	public ResponseEntity<AccountResponseDTO> getAccountHolderD(HttpServletRequest request) {
-		System.out.println("detail fetch api triggered");
-
-		AccountResponseDTO accountDetailByAccountNo = aService.getAccountDetailByAccNo(request);
+	public ResponseEntity<AccountResponseDTO> getAccountHolderDetails(HttpServletRequest request) {
+		System.out.println("Inside Holder detail fetch api");
+		AccountResponseDTO accountDetailByAccountNo = aService.getAccountDetailByAccountNo(request);
 		return ResponseEntity.ok(accountDetailByAccountNo);
 	}
 

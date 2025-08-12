@@ -210,42 +210,44 @@ public class AccountServiceImp implements AccountService {
 	
 
 
-	@Override
-	public AccountResponseDTO getAccountDetailByAccountNo(String accountNumber) {
-
-		Optional<Account> account = repo.findByAccountNumber(accountNumber);
-
-		if (account.isEmpty()) {
-			throw new RuntimeException("Account doesn't Exist");
-		}
-
-		Account accountFound = account.get();
-
-		AccountResponseDTO response = new AccountResponseDTO();
-
-		response.setAccountHolderName(accountFound.getAccountHolderName());
-		response.setAccountNumber(accountFound.getAccountNumber());
-		response.setEmail(accountFound.getEmail());
-		response.setBalance(accountFound.getBalance());
-		response.setContact(accountFound.getContact());
-
-		response.setBranchCode(accountFound.getBranchCode());
-		response.setBranchName(Branch.getNameByCode(accountFound.getBranchCode()));
-
-		response.setProductCode(accountFound.getProductCode());
-		response.setProductType(ProductType.getNameByCode(accountFound.getProductCode()));
-
-		return response;
-
-	}
+//	@Override
+//	public AccountResponseDTO getAccountDetailByAccountNo(String accountNumber) {
+//
+//		Optional<Account> account = repo.findByAccountNumber(accountNumber);
+//
+//		if (account.isEmpty()) {
+//			throw new RuntimeException("Account doesn't Exist");
+//		}
+//
+//		Account accountFound = account.get();
+//
+//		AccountResponseDTO response = new AccountResponseDTO();
+//
+//		response.setAccountHolderName(accountFound.getAccountHolderName());
+//		response.setAccountNumber(accountFound.getAccountNumber());
+//		response.setEmail(accountFound.getEmail());
+//		response.setBalance(accountFound.getBalance());
+//		response.setContact(accountFound.getContact());
+//
+//		response.setBranchCode(accountFound.getBranchCode());
+//		response.setBranchName(Branch.getNameByCode(accountFound.getBranchCode()));
+//
+//		response.setProductCode(accountFound.getProductCode());
+//		response.setProductType(ProductType.getNameByCode(accountFound.getProductCode()));
+//
+//		return response;
+//
+//	}
 
 	
 	
 	@Override
-	public AccountResponseDTO getAccountDetailByAccNo(HttpServletRequest request) {
+	public AccountResponseDTO getAccountDetailByAccountNo(HttpServletRequest request) {
 	
 		String token = jService.extractTokenFromRequest(request);
 	    String accountNumber = jService.extractAccountNumber(token);
+	    
+	    System.out.println("Inside get AccountDetails (service)");
 	    
 	    Optional<Account> account = repo.findByAccountNumber(accountNumber);
 
@@ -269,6 +271,7 @@ public class AccountServiceImp implements AccountService {
 		response.setProductCode(accountFound.getProductCode());
 		response.setProductType(ProductType.getNameByCode(accountFound.getProductCode()));
 
+		System.out.println("Details fetched succesfully"+response);
 		return response;
 	}
 	

@@ -20,9 +20,9 @@ public interface AccountService {
 
 	AccountResponseDTO createAccount(AccountRequestDTO accountDto);
 
-	AccountResponseDTO getAccountDetailByAccountNo(String accountNumber);
+	//AccountResponseDTO getAccountDetailByAccountNo(String accountNumber);
 	 
-	AccountResponseDTO getAccountDetailByAccNo(HttpServletRequest request);
+	AccountResponseDTO getAccountDetailByAccountNo(HttpServletRequest request);
 
 	ResponseEntity<?> getAccountHolderName(String accountNumber);
 

@@ -41,18 +41,18 @@ private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
     return localStorage.getItem('token');
   }
   
-   getAccountNumber(): string | null {
-    const token = this.getToken();
-    if (!token) return null;
+  //  getAccountNumber(): string | null {
+  //   const token = this.getToken();
+  //   if (!token) return null;
   
-    try {
-      const decoded: any = jwtDecode(token);
-      return decoded.accountNumber || null;
-    } catch (error) {
-      console.error('Error decoding token', error);
-      return null;
-    }
-  }
+  //   try {
+  //     const decoded: any = jwtDecode(token);
+  //     return decoded.accountNumber || null;
+  //   } catch (error) {
+  //     console.error('Error decoding token', error);
+  //     return null;
+  //   }
+  // }
 }
 
 
