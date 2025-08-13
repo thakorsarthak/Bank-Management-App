@@ -14,5 +14,4 @@ public class DashboardResponseDTO {
 	    private double totalDebited;
 	    private int creditScore;
 	    private boolean hasCreditCard;
-
 }

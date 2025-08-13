@@ -1,8 +1,11 @@
 package com.example.bankapp.implementation;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -157,11 +160,12 @@ public class AccountServiceImp implements AccountService {
 
 					Account acc = optionAcc.get();
 					String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber());
+					
 					System.out.println("Token From verify: " + token);
 					
 				 String	accountNum= acc.getEmail();
-					redisTemplate.opsForValue().set("session:" + accountNum , token, 10, TimeUnit.MINUTES); // TTL should match token
-
+					redisTemplate.opsForValue().set("session:" + accountNum , token, 60, TimeUnit.MINUTES); // TTL should match token
+					
 					return token;
 				} else {
 					System.out.println("Account not found in database after authentication.");
@@ -234,7 +238,7 @@ public class AccountServiceImp implements AccountService {
 //
 //		response.setProductCode(accountFound.getProductCode());
 //		response.setProductType(ProductType.getNameByCode(accountFound.getProductCode()));
-//
+
 //		return response;
 //
 //	}
@@ -271,7 +275,7 @@ public class AccountServiceImp implements AccountService {
 		response.setProductCode(accountFound.getProductCode());
 		response.setProductType(ProductType.getNameByCode(accountFound.getProductCode()));
 
-		System.out.println("Details fetched succesfully"+response);
+		System.out.println("Details fetched succesfully" + response);
 		return response;
 	}
 	

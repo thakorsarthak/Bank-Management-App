@@ -67,7 +67,6 @@ public class JwtFilter extends OncePerRequestFilter {
 		
 		if (token != null) {
 			
-			
 			username = jwtService.extractUserName(token); // This should return the email (sub)
 			System.out.println(">> Extracted username (JWT filter): " + username);
 

@@ -1,38 +1,97 @@
-<h1>Dashboard</h1>
 
-<p-card header="Account Overview" class="card" [style]="{ width: '800px', marginLeft: '100px' }">
-  <div class="p-grid p-dir-col">
-
-    <div class="p-col-12 p-md-6">
-      <strong>Account Holder:</strong> {{ account?.accountHolderName }}
+<div class="account">
+<p-card class="account-card" header="Account Overview">
+  <div class="account-details">
+    <div class="detail-item">
+      <span class="label">Account Holder:</span>
+      <span class="value">{{ account?.accountHolderName }}</span>
     </div>
 
-    <div class="p-col-12 p-md-6">
-      <strong>Email:</strong> {{ account?.email }}
+    <div class="detail-item">
+      <span class="label">Email:</span>
+      <span class="value">{{ account?.email }}</span>
     </div>
 
-    <div class="p-col-12 p-md-6">
-      <strong>Phone:</strong> {{ account?.contact }}
+    <div class="detail-item">
+      <span class="label">Phone:</span>
+      <span class="value">{{ account?.contact }}</span>
     </div>
 
-    <div class="p-col-12 p-md-6">
-      <strong>Account Number:</strong> {{ account?.accountNumber }}
+    <div class="detail-item">
+      <span class="label">Account Number:</span>
+      <span class="value">{{ account?.accountNumber }}</span>
     </div>
 
-    <div class="p-col-12 p-md-6">
-      <strong>Account Type:</strong> {{ account?.productType }}
+    <div class="detail-item">
+      <span class="label">Account Type:</span>
+      <span class="value">{{ account?.productType }}</span>
     </div>
 
-    <div class="p-col-12 p-md-6">
-      <strong>Branch:</strong> {{ account?.branchName }}
+    <div class="detail-item">
+      <span class="label">Branch:</span>
+      <span class="value">{{ account?.branchName }}</span>
     </div>
 
-    <div class="p-col-12 p-md-6">
-      <strong>IFSC Code:</strong> SBIN{{ account?.branchCode }}  
+    <div class="detail-item">
+      <span class="label">IFSC Code:</span>
+      <span class="value">SBIN{{ account?.branchCode }}</span>
     </div>
 
-    <div class="p-col-12 p-md-6">
-      <strong>Current Balance:</strong> ₹{{ account?.balance  }}
+    <div class="detail-item balance">
+      <span class="label">Current Balance:</span>
+      <span class="value">₹{{ account?.balance }}</span>
     </div>
   </div>
+  <!--transaction Overview-->
+ <div class="summary-cards">
+    <p-card styleClass="summary-card total">
+      <div class="summary-content">
+        <div class="summary-info">
+          <div class="summary-label">
+            <i class="pi pi-chart-bar"></i>
+            <h3>Total Transactions</h3>
+          </div>
+          <p class="summary-number">{{ totalTransactions }}</p>
+          <span class="summary-subtitle">All records</span>
+        </div>
+        <div class="summary-icon-wrapper">
+          <i class="pi pi-list summary-icon"></i>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="summary-card credit">
+      <div class="summary-content">
+        <div class="summary-info">
+          <div class="summary-label">
+            <i class="pi pi-plus-circle"></i>
+            <h3>Credit Transactions</h3>
+          </div>
+          <p class="summary-number">{{ creditTransactions  }}</p>
+          <span class="summary-subtitle">Money received</span>
+        </div>
+        <div class="summary-icon-wrapper credit-bg">
+          <i class="pi pi-arrow-up summary-icon"></i>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="summary-card debit">
+      <div class="summary-content">
+        <div class="summary-info">
+          <div class="summary-label">
+            <i class="pi pi-minus-circle"></i>
+            <h3>Debit Transactions</h3>
+          </div>
+          <p class="summary-number">{{debitTransactions  }}</p>
+          <span class="summary-subtitle">Money spent</span>
+        </div>
+        <div class="summary-icon-wrapper debit-bg">
+          <i class="pi pi-arrow-down summary-icon"></i>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
 </p-card>
+

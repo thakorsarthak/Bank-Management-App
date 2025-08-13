@@ -16,8 +16,9 @@ private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
     return !!localStorage.getItem('token');
   }
 
-  login(token: string): void {
+  login(token: string, expiresAt: number): void {
     localStorage.setItem('token', token);
+    localStorage.setItem('expiresAt', expiresAt.toString());
     this.loggedInSubject.next(true);
   }
 

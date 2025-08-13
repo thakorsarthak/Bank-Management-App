@@ -1,6 +1,10 @@
 package com.example.bankapp.controller;
 
+
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +21,7 @@ import com.example.bankapp.DTO.AccountResponseDTO;
 import com.example.bankapp.DTO.TokenResponseDTO;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.services.AccountService;
+import com.example.bankapp.services.JWTservices;
 
 @RestController
 @RequestMapping("/main")
@@ -24,6 +29,9 @@ public class MainController {
 
 	@Autowired
 	AccountService accountService;
+	
+	@Autowired
+	JWTservices jwtService;
 
 	// create account
 
@@ -38,7 +46,13 @@ public class MainController {
 	public ResponseEntity<?> login(@RequestBody AccountLoginDTO acc) {
 		String token = accountService.verify(acc);
 		if (!"Failed".equals(token)) {
-			return ResponseEntity.ok(new TokenResponseDTO(token));
+			
+			Date expiryDate = jwtService.extractExpiration(token);
+			Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("expiresAt", expiryDate.getTime());
+		//	return ResponseEntity.ok(new TokenResponseDTO(token));
+			return ResponseEntity.ok(response);
 		} else {
 			System.out.println("Wrong credentials");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invaid Credentials");

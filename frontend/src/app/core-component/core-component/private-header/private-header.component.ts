@@ -168,7 +168,6 @@ constructor(private authService: AuthServiceService, private router: Router) {}
     clearInterval(this.timerInterval);
   }
 
-
 }
 
 

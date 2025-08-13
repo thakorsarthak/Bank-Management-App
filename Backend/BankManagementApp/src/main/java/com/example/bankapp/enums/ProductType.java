@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public enum ProductType {
-	SAVING("02","saving"),
-	CURRENT("03","Current");
+	SAVING("01","Saving"),
+	CURRENT("02","Current");
 
 	private final String code;
     private final String name;

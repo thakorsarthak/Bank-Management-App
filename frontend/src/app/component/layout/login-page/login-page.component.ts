@@ -70,10 +70,9 @@ export class LoginPageComponent {
       const loginData = this.loginForm.value;
       this.AccountService.loginAccount(loginData).subscribe({
         next: (res) => {
-          
-          this.authService.login(res.token);
+          this.authService.login(res.token , res.expiresAt);
           const token = res.token;
-  const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+  const expiresAt = Date.now() + 60 * 60 * 1000; // 10 minutes
 
   localStorage.setItem('token', token);
   localStorage.setItem('expiresAt', expiresAt.toString());

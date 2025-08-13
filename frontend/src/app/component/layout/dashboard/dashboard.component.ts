@@ -10,6 +10,7 @@ import { ChartModule } from 'primeng/chart';
 import { AuthServiceService } from '../../services/auth-service.service';
 import { MessageService } from 'primeng/api';
 import { TransactionService } from '../../services/transaction.service';
+import { Transaction } from '../../Models/Transaction';
 
 
 @Component({
@@ -21,6 +22,9 @@ import { TransactionService } from '../../services/transaction.service';
 })
 export class DashboardComponent implements OnInit {
   account: any;
+   totalTransactions = 0;
+creditTransactions = 0;
+debitTransactions = 0;
 
   constructor(
     private authservice: AuthServiceService,
@@ -32,6 +36,19 @@ export class DashboardComponent implements OnInit {
     console.log('dashboard component');
     this.transactionService.getAccountHolderDetails().subscribe(data => {
       this.account = data;
+this.transactionService.getTransactionHistory().subscribe({
+    next: (res) => {
+      const transactions = res.data; // assuming GlobalAPIResponse<Transaction[]>
+      
+      this.totalTransactions = transactions.length;
+      this.creditTransactions = transactions.filter(t => t.direction === 'CREDIT').length;
+      this.debitTransactions = transactions.filter(t => t.direction === 'DEBIT').length;
+    },
+    error: (err) => {
+      console.error('Failed to fetch transactions:', err);
+    }
+  });
     });
   }
+
 }

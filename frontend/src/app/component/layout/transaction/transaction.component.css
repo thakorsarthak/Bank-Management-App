@@ -55,7 +55,7 @@
   z-index: 1;
 }
 
-/* Enhanced Summary Cards */
+/* Transaction Overview Summary Card */
 .summary-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -177,7 +177,7 @@
   color: white;
 }
 
-/* Enhanced Filters */
+/* Filter block */
 .filters-card {
   margin-bottom: 2.5rem;
   border-radius: 20px;

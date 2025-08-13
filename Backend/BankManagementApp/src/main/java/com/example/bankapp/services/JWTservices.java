@@ -33,7 +33,7 @@ public class JWTservices {
 
 	public String extractTokenFromRequest(HttpServletRequest request) {
 	    String authHeader = request.getHeader("Authorization");
-	    System.out.println(authHeader+"authHeader");
+	    System.out.println("authHeader" + authHeader );
 
 	    if (authHeader != null && authHeader.startsWith("Bearer ")) {
 	        return authHeader.substring(7); // Remove "Bearer " prefix
@@ -69,14 +69,14 @@ public class JWTservices {
 				.claims(claims)
 				.subject(email)
 				.issuedAt(new Date(System.currentTimeMillis()))
-				.expiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+				.expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
 				.signWith(getKey())
 				.compact();
 
 		// return Jwts.builder() .claims() .add(claims) .subject(null);
 		// return "token";
 		
-	 redisTemplate.opsForValue().set("session:" + accountNumber , token, 10 , TimeUnit.MINUTES );
+	 redisTemplate.opsForValue().set("session:" + accountNumber , token, 60 , TimeUnit.MINUTES );
 	 
 	 return token;
 	}
@@ -90,7 +90,9 @@ public class JWTservices {
 	public String extractUserName(String token) {
 		return extractClaims(token, Claims::getSubject);
 	}
+	
 
+	
 	public String extractAccountNumber(String token) {
 	    return extractClaims(token, claims -> claims.get("accountNumber").toString());
 	}
@@ -124,8 +126,12 @@ public class JWTservices {
 
 	}
 
-	private Date extractExpiration(String token) {
-		return extractClaims(token,Claims::getExpiration );
-
-	}
+	  public Date extractExpiration(String token) {
+	        return extractAllClaims(token).getExpiration();
+	    }
+	
+//	private Date extractExpiration(String token) {
+//		return extractClaims(token,Claims::getExpiration );
+//
+//	}
 }

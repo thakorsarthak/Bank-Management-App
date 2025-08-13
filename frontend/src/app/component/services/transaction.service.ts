@@ -28,6 +28,6 @@ constructor(private http: HttpClient) {}
   }
 
   getAccountHolderDetails(): Observable<any> {
-    return this.http.get<any>(`http://localhost:6011/bankapp/account/accountHolderDetails`);
+    return this.http.get<any>(`http://localhost:6011/bankapp/account/accountHolderDetail`);
   }
 }
