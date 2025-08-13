@@ -11,11 +11,12 @@ import { AuthServiceService } from '../../services/auth-service.service';
 import { MessageService } from 'primeng/api';
 import { TransactionService } from '../../services/transaction.service';
 import { Transaction } from '../../Models/Transaction';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterLink, MessageModule, Button, CardModule, TableModule, TagModule, ProgressBarModule, ChartModule],
+  imports: [RouterLink, MessageModule, Button, CardModule, TableModule, TagModule, ProgressBarModule, ChartModule, OverlayBadgeModule ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   providers: [MessageService]
