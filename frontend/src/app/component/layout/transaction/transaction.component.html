@@ -1,5 +1,4 @@
 <app-private-header></app-private-header>
-
 <div class="transactions-container">
   <!-- Modern Header with Gradient Background -->
   <div class="transactions-header">
@@ -10,8 +9,87 @@
     <div class="header-actions">
       <p-button label="Back to Dashboard" icon="pi pi-arrow-left" severity="secondary" (onClick)="onBackToDashboard()">
       </p-button>
-      <p-button label="Export" icon="pi pi-download" severity="info" (onClick)="onExportTransactions()">
-      </p-button>
+      <p-button label="Export" icon="pi pi-download" severity="info" (onClick)="openDownloadDialog()">
+</p-button> 
+
+<!-- Confirm Dialog -->
+<p-confirmDialog key="customConfirm" [style]="{width: '450px'}">
+    <!-- Header -->
+    <ng-template pTemplate="header">
+        <i class="pi pi-calendar mr-2"></i>
+        Select Date Range for Download
+    </ng-template>
+
+    <!-- Message -->
+    <ng-template pTemplate="message">
+        <div class="p-fluid">
+            <!-- From Date -->
+            <div class="field mb-3">
+                <label for="fromDate" class="font-semibold">From Date <span class="text-red-500">*</span></label>
+                <p-calendar 
+                    id="fromDate" 
+                    [(ngModel)]="fromDate" 
+                    dateFormat="dd/mm/yy"
+                    [maxDate]="maxFromDate"
+                    [showIcon]="true"
+                    [iconDisplay]="'input'"
+                    placeholder="Select start date"
+                    inputId="fromDateInput"
+                    styleClass="w-full">
+                </p-calendar>
+                <small class="text-red-500" *ngIf="!fromDate && showValidation">From date is required</small>
+            </div>
+            
+            <!-- To Date -->
+            <div class="field mb-3">
+                <label for="toDate" class="font-semibold">To Date <span class="text-red-500">*</span></label>
+                <p-calendar 
+                    id="toDate" 
+                    [(ngModel)]="toDate" 
+                    dateFormat="dd/mm/yy"
+                    [minDate]="fromDate"
+                    [maxDate]="maxToDate"
+                    [showIcon]="true"
+                    [iconDisplay]="'input'"
+                    placeholder="Select end date"
+                    inputId="toDateInput"
+                    styleClass="w-full">
+                </p-calendar>
+                <small class="text-red-500" *ngIf="!toDate && showValidation">To date is required</small>
+                <small class="text-red-500" *ngIf="toDate && fromDate && toDate < fromDate && showValidation">
+                    To date must be after from date
+                </small>
+            </div>
+
+            <!-- Info -->
+            <div class="field">
+                <small class="text-gray-600">
+                    <i class="pi pi-info-circle mr-1"></i>
+                    Maximum date range allowed: 90 days
+                </small>
+            </div>
+        </div>
+    </ng-template>
+
+    <!-- Footer -->
+    <ng-template pTemplate="footer">
+        <p-button 
+            label="Cancel" 
+            icon="pi pi-times" 
+            (onClick)="cancel()" 
+            styleClass="p-button-text p-button-secondary">
+        </p-button>
+        <p-button 
+            label="Download Excel" 
+            icon="pi pi-download" 
+            (onClick)="downloadExcel()" 
+            [disabled]="!isValidDateRange()"
+            [loading]="isDownloading">
+        </p-button>
+    </ng-template>
+</p-confirmDialog>
+
+
     </div>
   </div>
 

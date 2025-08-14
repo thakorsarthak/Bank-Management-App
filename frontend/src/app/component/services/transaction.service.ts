@@ -27,6 +27,13 @@ constructor(private http: HttpClient) {}
     return this.http.get<GlobalAPIResponse<Transaction[]>>(`http://localhost:6011/bankapp/transaction/history`);
   }
 
+  getTransactionExcelHistoryByDate(fromDate: string, toDate: string) {
+  return this.http.get(`http://localhost:6011/bankapp/transaction/downloadTransactionHistory?fromDate=${fromDate}&toDate=${toDate}`, {
+    responseType: 'blob' // Important for file download
+  });
+}
+
+
   getAccountHolderDetails(): Observable<any> {
     return this.http.get<any>(`http://localhost:6011/bankapp/account/accountHolderDetail`);
   }

@@ -1,5 +1,6 @@
 package com.example.bankapp.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import com.example.bankapp.DTO.TransactionReqDTO;
 import com.example.bankapp.DTO.TransactionResponseDTO;
 import com.example.bankapp.DTO.TransferRequestDTO;
+import com.example.bankapp.entity.Transaction;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -26,7 +28,7 @@ public interface TransactionService {
 
 		// Account withdrawAmount(Long accontNumber, Double amount);
 
-		
+		List<Transaction> getTransactionByDateRange(String accountNumber, LocalDate fromDate, LocalDate toDate);
 
 		 ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request);
 

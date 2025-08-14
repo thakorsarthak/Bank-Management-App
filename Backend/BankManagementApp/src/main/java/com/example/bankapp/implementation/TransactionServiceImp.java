@@ -1,5 +1,6 @@
 package com.example.bankapp.implementation;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -82,6 +83,14 @@ public class TransactionServiceImp implements TransactionService {
 	}
 
 
+	@Override
+	public List<Transaction> getTransactionByDateRange(String accountNumber, LocalDate fromDate,
+			LocalDate toDate) {
+		LocalDateTime startDateTime = fromDate.atStartOfDay();
+		LocalDateTime endDateTime = toDate.atTime(23,59,59);
+		return transactionRepo.findByAccountAndDateRange(accountNumber, startDateTime, endDateTime);
+    }
+	
 
 	@Override
 	public ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request) {
@@ -258,11 +267,5 @@ public class TransactionServiceImp implements TransactionService {
 		return "Withdrawal successful. New balance: ₹" + account.getBalance();
 
 	}
-
-	
-
-	
-
-
 
 }

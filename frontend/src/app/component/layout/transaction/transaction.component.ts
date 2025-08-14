@@ -17,6 +17,11 @@ import { GlobalAPIResponse } from '../../Models/global-api-response';
 import { AuthServiceService } from '../../services/auth-service.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import {  ConfirmPopupModule } from 'primeng/confirmpopup';
+import {  ToastModule } from 'primeng/toast';
+import { Dialog } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-transaction',
@@ -25,6 +30,7 @@ import autoTable from 'jspdf-autotable';
     RouterOutlet,
     CommonModule,
     FormsModule,
+    ConfirmPopupModule,ToastModule,ConfirmDialogModule,
     CardModule,
     TableModule,
     TagModule,
@@ -36,9 +42,20 @@ import autoTable from 'jspdf-autotable';
     PrivateHeaderComponent
   ],
   templateUrl: './transaction.component.html',
-  styleUrl: './transaction.component.css'
+  styleUrl: './transaction.component.css',
+  providers: [ConfirmationService, MessageService]
 })
 export class TransactionComponent implements OnInit {
+
+
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
+  maxFromDate: Date = new Date();
+  maxToDate: Date = new Date();
+  showValidation: boolean = false;
+  isDownloading: boolean = false;
+
+
   transactions: Transaction[] = [];
   filteredTransactions: Transaction[] = [];
 
@@ -69,12 +86,76 @@ export class TransactionComponent implements OnInit {
   constructor(
     private router: Router,
     private transactionService: TransactionService,
-    private authService: AuthServiceService
+    private authService: AuthServiceService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
   this.loadTransactions();
   }
+ // Open Confirm Dialog
+  openDownloadDialog() {
+    this.confirmationService.confirm({
+      key: 'customConfirm',
+      message: '' // Required for opening, but actual content comes from template
+    });
+  }
+
+  // Cancel
+  cancel() {
+    this.fromDate = null;
+    this.toDate = null;
+    this.confirmationService.close();
+  }
+
+  // Date Range Validation
+  isValidDateRange(): boolean {
+    if (!this.fromDate || !this.toDate) return false;
+    if (this.toDate < this.fromDate) return false;
+
+    const diffInDays =
+      (this.toDate.getTime() - this.fromDate.getTime()) / (1000 * 3600 * 24);
+    return diffInDays <= 90; // Max 90 days range
+  }
+
+  // Call Download API
+  downloadExcel() {
+    if (!this.isValidDateRange()) {
+      this.showValidation = true;
+      return;
+    }
+
+    this.isDownloading = true;
+
+    const from = this.formatDate(this.fromDate!);
+    const to = this.formatDate(this.toDate!);
+
+    this.transactionService.getTransactionExcelHistoryByDate(from, to).subscribe({
+      next: (res: Blob) => {
+        const url = window.URL.createObjectURL(res);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `transactions_${from}_to_${to}.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.isDownloading = false;
+        this.confirmationService.close();
+        this.messageService.add({ severity: 'success', summary: 'Download Started', detail: 'Excel file is being downloaded.' });
+      },
+      error: () => {
+        this.isDownloading = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to download Excel file.' });
+      }
+    });
+  }
+
+  // Helper to format date to yyyy-MM-dd
+  private formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
+
 
   loadTransactions(): void {
     this.transactionService.getTransactionHistory().subscribe({
