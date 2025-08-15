@@ -23,6 +23,7 @@ import { Dialog } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
+
 @Component({
   selector: 'app-transaction',
   standalone: true,
@@ -89,6 +90,7 @@ export class TransactionComponent implements OnInit {
     private authService: AuthServiceService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
+   
   ) { }
 
   ngOnInit(): void {
@@ -109,6 +111,7 @@ export class TransactionComponent implements OnInit {
     this.confirmationService.close();
   }
 
+ 
   // Date Range Validation
   isValidDateRange(): boolean {
     if (!this.fromDate || !this.toDate) return false;
@@ -119,6 +122,13 @@ export class TransactionComponent implements OnInit {
     return diffInDays <= 90; // Max 90 days range
   }
 
+  // Helper to format date to yyyy-MM-dd
+private formatDate(date: Date): string {
+  return date.toLocaleDateString('en-CA');
+}
+
+
+
   // Call Download API
   downloadExcel() {
     if (!this.isValidDateRange()) {
@@ -128,9 +138,13 @@ export class TransactionComponent implements OnInit {
 
     this.isDownloading = true;
 
+
     const from = this.formatDate(this.fromDate!);
     const to = this.formatDate(this.toDate!);
 
+    console.log(`Downloading transactions from ${from} to ${to}`);
+
+    this.showValidation = false;
     this.transactionService.getTransactionExcelHistoryByDate(from, to).subscribe({
       next: (res: Blob) => {
         const url = window.URL.createObjectURL(res);
@@ -150,10 +164,7 @@ export class TransactionComponent implements OnInit {
     });
   }
 
-  // Helper to format date to yyyy-MM-dd
-  private formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
+
 
 
 
