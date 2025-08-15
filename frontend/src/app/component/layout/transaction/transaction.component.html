@@ -10,88 +10,67 @@
       <p-button label="Back to Dashboard" icon="pi pi-arrow-left" severity="secondary" (onClick)="onBackToDashboard()">
       </p-button>
       <p-button label="Export" icon="pi pi-download" severity="info" (onClick)="openDownloadDialog()">
-</p-button> 
+      </p-button>
 
-<!-- Confirm Dialog -->
-<p-confirmDialog key="customConfirm" [style]="{width: '450px'}">
-    <!-- Header -->
-    <ng-template pTemplate="header">
-        <i class="pi pi-calendar mr-2"></i>
-        Select Date Range for Download
-    </ng-template>
+        <!-- Confirm Dialog -->
+        <p-confirmDialog key="customConfirm"  [style]="{ width: '450px'}"
+    styleClass="custom-dialog">
+          <!-- Header -->
+          <ng-template pTemplate="header">
+            <i class="pi pi-calendar mr-2"></i>
+            Select Date Range for Download
+          </ng-template>
 
-    <!-- Message -->
-    <ng-template pTemplate="message">
-        <div class="p-fluid">
-            <!-- From Date -->
-            <div class="field mb-3">
+          <!-- Message -->
+          <ng-template pTemplate="message">
+            <div [style]="{'display': 'flex', 'flex-direction': 'column', 'gap': '10px'}">
+              <!-- From Date -->
+              <div [style]="{'margin-bottom': '10px'}" >
                 <label for="fromDate" class="font-semibold">From Date <span class="text-red-500">*</span></label>
-                <p-calendar 
-                    id="fromDate" 
-                    [(ngModel)]="fromDate" 
-                    dateFormat="dd/mm/yy"
-                    [maxDate]="maxFromDate"
-                    [showIcon]="true"
-                    [iconDisplay]="'input'"
-                    placeholder="Select start date"
-                    inputId="fromDateInput"
-                    styleClass="w-full">
+             <!-- <input type="date" placeholder="Select start date" [(ngModel)]="fromDate" />" -->
+                <p-calendar appendTo="transactions-container" id="fromDate" [(ngModel)]="fromDate" dateFormat="dd/mm/yy" [maxDate]="maxFromDate"
+                  [showIcon]="true" [iconDisplay]="'input'" placeholder="Select start date" inputId="fromDateInput"
+                  styleClass="w-full" appendTo="body">
                 </p-calendar>
                 <small class="text-red-500" *ngIf="!fromDate && showValidation">From date is required</small>
-            </div>
-            
-            <!-- To Date -->
-            <div class="field mb-3">
+              </div>
+
+              <!-- To Date -->
+              <div class="field mb-3">
                 <label for="toDate" class="font-semibold">To Date <span class="text-red-500">*</span></label>
-                <p-calendar 
-                    id="toDate" 
-                    [(ngModel)]="toDate" 
-                    dateFormat="dd/mm/yy"
-                    [minDate]="fromDate"
-                    [maxDate]="maxToDate"
-                    [showIcon]="true"
-                    [iconDisplay]="'input'"
-                    placeholder="Select end date"
-                    inputId="toDateInput"
-                    styleClass="w-full">
+                <p-calendar id="toDate" [(ngModel)]="toDate" dateFormat="dd/mm/yy" [minDate]="fromDate"
+                  [maxDate]="maxToDate" [showIcon]="true" [iconDisplay]="'input'" placeholder="Select end date"
+                  inputId="toDateInput" styleClass="w-full" appendTo="body">
                 </p-calendar>
                 <small class="text-red-500" *ngIf="!toDate && showValidation">To date is required</small>
                 <small class="text-red-500" *ngIf="toDate && fromDate && toDate < fromDate && showValidation">
-                    To date must be after from date
+                  To date must be after from date
                 </small>
-            </div>
+              </div>
 
-            <!-- Info -->
-            <div class="field">
+              <!-- Info -->
+              <div class="field">
                 <small class="text-gray-600">
-                    <i class="pi pi-info-circle mr-1"></i>
-                    Maximum date range allowed: 90 days
+                  <i class="pi pi-info-circle mr-1"></i>
+                  Maximum date range allowed: 90 days
                 </small>
+              </div>
             </div>
-        </div>
-    </ng-template>
+          </ng-template>
 
-    <!-- Footer -->
-    <ng-template pTemplate="footer">
-        <p-button 
-            label="Cancel" 
-            icon="pi pi-times" 
-            (onClick)="cancel()" 
-            styleClass="p-button-text p-button-secondary">
-        </p-button>
-        <p-button 
-            label="Download Excel" 
-            icon="pi pi-download" 
-            (onClick)="downloadExcel()" 
-            [disabled]="!isValidDateRange()"
-            [loading]="isDownloading">
-        </p-button>
-    </ng-template>
-</p-confirmDialog>
-
-
+          <!-- Footer -->
+          <ng-template pTemplate="footer">
+            <p-button label="Cancel" icon="pi pi-times" (onClick)="cancel()"
+              styleClass="p-button-text p-button-secondary">
+            </p-button>
+            <p-button label="Download Excel" icon="pi pi-download" (onClick)="downloadExcel()"
+              [disabled]="!isValidDateRange()" [loading]="isDownloading">
+            </p-button>
+          </ng-template>
+        </p-confirmDialog>
+        
+      </div>
     </div>
-  </div>
 
   <!-- Enhanced Summary Cards (moved above filters) -->
   <div class="summary-cards">
@@ -272,8 +251,10 @@
           <td>{{ transaction.description }}</td>
           <td>{{ transaction.counterPartyName || '-' }}</td>
           <td>
-            <p-tag [value]="formatCurrency(transaction.amount)" [severity]="getTransactionSeverity(transaction.direction)"
-              [icon]="transaction.direction === 'CREDIT' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'" styleClass="amount-tag">
+            <p-tag [value]="formatCurrency(transaction.amount)"
+              [severity]="getTransactionSeverity(transaction.direction)"
+              [icon]="transaction.direction === 'CREDIT' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"
+              styleClass="amount-tag">
             </p-tag>
           </td>
           <td>₹{{ transaction.afterBalance | number: '1.2-2' }}</td>

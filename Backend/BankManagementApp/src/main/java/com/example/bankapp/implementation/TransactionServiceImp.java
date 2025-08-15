@@ -2,6 +2,7 @@ package com.example.bankapp.implementation;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -87,7 +88,7 @@ public class TransactionServiceImp implements TransactionService {
 	public List<Transaction> getTransactionByDateRange(String accountNumber, LocalDate fromDate,
 			LocalDate toDate) {
 		LocalDateTime startDateTime = fromDate.atStartOfDay();
-		LocalDateTime endDateTime = toDate.atTime(23,59,59);
+		LocalDateTime endDateTime = toDate.plusDays(1).atStartOfDay();
 		return transactionRepo.findByAccountAndDateRange(accountNumber, startDateTime, endDateTime);
     }
 	

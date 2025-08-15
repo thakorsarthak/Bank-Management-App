@@ -19,7 +19,6 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 
 	// Fetch last 5 transactions (most recent first)
 	// List<Transaction> findTop5ByUserOrderByDateDesc(Account account);
-
 	// Fetch all transactions of a Account
 	// List<Transaction> findByUser(Account account);
 
@@ -27,7 +26,8 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 
 	@Query("SELECT t FROM Transaction t " + 
 			"WHERE t.account.accountNumber = :accountNumber " +
-			"AND t.timestamp BETWEEN :startDate AND :endDate " + 
+			"AND t.timestamp >= :startDate " +
+		       "AND t.timestamp < :endDate " +   
 			"ORDER BY t.timestamp DESC")
 	List<Transaction>findByAccountAndDateRange( @Param("accountNumber") String accountNumber,
 			@Param("startDate")  LocalDateTime startDate ,

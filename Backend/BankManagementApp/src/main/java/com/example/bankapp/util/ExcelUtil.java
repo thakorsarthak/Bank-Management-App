@@ -88,6 +88,7 @@ public class ExcelUtil {
             // Type -- (debit / credit)
             
             row.createCell(6).setCellValue(t.getDirection() != null ? t.getDirection() : "");
+            
 		}
 		 for (int i = 0; i < headers.length; i++) {
 	            sheet.autoSizeColumn(i);

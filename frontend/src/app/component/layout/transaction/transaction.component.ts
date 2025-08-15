@@ -68,7 +68,7 @@ export class TransactionComponent implements OnInit {
   direction: string = '';// 'all', 'credit', 'debit'
 
   showFilters = true;
-
+  
   // Dropdown options
   typeOptions = [
     { label: 'All Types', value: '' },
