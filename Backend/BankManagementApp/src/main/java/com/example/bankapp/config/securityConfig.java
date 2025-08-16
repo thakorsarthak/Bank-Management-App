@@ -34,8 +34,8 @@ public class securityConfig {
 
 
 		return http
-				 .cors(Customizer.withDefaults()) //to enable CORS 
-		  
+				 .cors(Customizer.withDefaults()) //to enable CORS
+
 				.csrf(customizer -> customizer.disable())
 				.authorizeHttpRequests(request -> request
 						.requestMatchers("/account/**","/transaction/**","/main/**","/otp/**","/swagger-ui/**","/v3/api-docs/**","/swagger-resources/**")
@@ -48,7 +48,7 @@ public class securityConfig {
 				.build();
 	}
 
-	
+
 
 	@Bean
 	public AuthenticationProvider authenticationProvider() {

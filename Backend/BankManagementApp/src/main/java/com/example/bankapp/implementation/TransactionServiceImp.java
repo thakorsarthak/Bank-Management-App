@@ -2,7 +2,6 @@ package com.example.bankapp.implementation;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,17 +53,17 @@ public class TransactionServiceImp implements TransactionService {
 //		return transactions.stream().map(TransactionResponseDTO::from).collect(Collectors.toList());
 //	}
 
-	
+
 	@Override
 	public List<TransactionResponseDTO> getTransactionHistoryByAccountNum(HttpServletRequest request) {
-		
+
 		String token = jService.extractTokenFromRequest(request);
 	    String accountNumber= jService.extractAccountNumber(token);
-		
+
 		List<Transaction> transactions = transactionRepo.findByAccount_AccountNumberOrderByTimestampDesc(accountNumber);
 
 		return transactions.stream().map(TransactionResponseDTO::from).collect(Collectors.toList());
-		
+
 	}
 	private void saveFailedTransaction(Account from, Account to, TransferRequestDTO request, TransactionStatus status,
 			String reason, String counterPartyName) {
@@ -91,7 +90,7 @@ public class TransactionServiceImp implements TransactionService {
 		LocalDateTime endDateTime = toDate.plusDays(1).atStartOfDay();
 		return transactionRepo.findByAccountAndDateRange(accountNumber, startDateTime, endDateTime);
     }
-	
+
 
 	@Override
 	public ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request) {

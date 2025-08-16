@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.TransactionReqDTO;
 import com.example.bankapp.DTO.TransactionResponseDTO;
@@ -66,11 +65,11 @@ public class TransactionContoller {
 			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate fromDate,
 			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate toDate , HttpServletRequest httpRequest,
 			HttpServletResponse response) throws IOException {
-		
-		
+
+
 		String token = jwtService.extractTokenFromRequest(httpRequest);
 		String accountNumber = jwtService.extractAccountNumber(token);
-		
+
 		List<Transaction> transactions =  transactionService.getTransactionByDateRange(accountNumber,fromDate , toDate );
 
 		 // Set Excel headers
@@ -79,7 +78,7 @@ public class TransactionContoller {
 
         // Write to Excel
         ExcelUtil.transactionExport(transactions, response.getOutputStream());
-		
+
 	}
 
 	@PutMapping("/deposit")

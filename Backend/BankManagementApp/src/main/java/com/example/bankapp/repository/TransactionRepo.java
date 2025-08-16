@@ -24,10 +24,10 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 
 	List<Transaction> findByAccountAndDirection(Account acc, String direction);
 
-	@Query("SELECT t FROM Transaction t " + 
+	@Query("SELECT t FROM Transaction t " +
 			"WHERE t.account.accountNumber = :accountNumber " +
 			"AND t.timestamp >= :startDate " +
-		       "AND t.timestamp < :endDate " +   
+		       "AND t.timestamp < :endDate " +
 			"ORDER BY t.timestamp DESC")
 	List<Transaction>findByAccountAndDateRange( @Param("accountNumber") String accountNumber,
 			@Param("startDate")  LocalDateTime startDate ,

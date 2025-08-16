@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankapp.DTO.AccountLoginDTO;
 import com.example.bankapp.DTO.AccountRequestDTO;
 import com.example.bankapp.DTO.AccountResponseDTO;
-import com.example.bankapp.DTO.TokenResponseDTO;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
@@ -29,7 +28,7 @@ public class MainController {
 
 	@Autowired
 	AccountService accountService;
-	
+
 	@Autowired
 	JWTservices jwtService;
 
@@ -46,7 +45,7 @@ public class MainController {
 	public ResponseEntity<?> login(@RequestBody AccountLoginDTO acc) {
 		String token = accountService.verify(acc);
 		if (!"Failed".equals(token)) {
-			
+
 			Date expiryDate = jwtService.extractExpiration(token);
 			Map<String, Object> response = new HashMap<>();
             response.put("token", token);

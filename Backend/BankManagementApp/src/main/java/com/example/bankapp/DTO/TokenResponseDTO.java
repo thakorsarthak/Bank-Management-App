@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data  
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TokenResponseDTO {
@@ -12,5 +12,5 @@ public class TokenResponseDTO {
 	private String token;
 	private String expiry;
 
-	
+
 }

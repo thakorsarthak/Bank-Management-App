@@ -1,11 +1,8 @@
 package com.example.bankapp.implementation;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -54,9 +51,9 @@ public class AccountServiceImp implements AccountService {
 
 	@Autowired
 	TransactionRepo Trepo;
-	
 
-	
+
+
 	@Autowired
     private RedisTemplate<String, String> redisTemplate;
 
@@ -160,12 +157,12 @@ public class AccountServiceImp implements AccountService {
 
 					Account acc = optionAcc.get();
 					String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber());
-					
+
 					System.out.println("Token From verify: " + token);
-					
+
 				 String	accountNum= acc.getEmail();
 					redisTemplate.opsForValue().set("session:" + accountNum , token, 60, TimeUnit.MINUTES); // TTL should match token
-					
+
 					return token;
 				} else {
 					System.out.println("Account not found in database after authentication.");
@@ -194,7 +191,7 @@ public class AccountServiceImp implements AccountService {
 		String name = account.get().getAccountHolderName();
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Sucsess", true, name));
 	}
-	
+
 //	@Override
 //	public ResponseEntity<?> getAccountHolderN(HttpServletRequest request) {
 //
@@ -202,7 +199,7 @@ public class AccountServiceImp implements AccountService {
 //	    String accountNumber = jService.extractAccountNumber(token);
 //
 //	    Optional<Account> account = repo.findByAccountNumber(accountNumber);
-//	    
+//
 //		if (account.isEmpty()) {
 //			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 //					.body(new GlobalAPIResponseDTO<>("Account not found", false));
@@ -211,7 +208,7 @@ public class AccountServiceImp implements AccountService {
 //		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Sucsess", true, name));
 //	}
 
-	
+
 
 
 //	@Override
@@ -243,16 +240,16 @@ public class AccountServiceImp implements AccountService {
 //
 //	}
 
-	
-	
+
+
 	@Override
 	public AccountResponseDTO getAccountDetailByAccountNo(HttpServletRequest request) {
-	
+
 		String token = jService.extractTokenFromRequest(request);
 	    String accountNumber = jService.extractAccountNumber(token);
-	    
+
 	    System.out.println("Inside get AccountDetails (service)");
-	    
+
 	    Optional<Account> account = repo.findByAccountNumber(accountNumber);
 
 		if (account.isEmpty()) {
@@ -278,8 +275,8 @@ public class AccountServiceImp implements AccountService {
 		System.out.println("Details fetched succesfully" + response);
 		return response;
 	}
-	
-	
+
+
 	@Override
 	public List<Account> getAllAccountDetails() {
 
@@ -435,6 +432,6 @@ public class AccountServiceImp implements AccountService {
 		return false;
 	}
 
-	
+
 
 }

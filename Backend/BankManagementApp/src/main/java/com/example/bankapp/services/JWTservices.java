@@ -24,8 +24,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class JWTservices {
-	
-	
+
+
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
 
@@ -75,9 +75,9 @@ public class JWTservices {
 
 		// return Jwts.builder() .claims() .add(claims) .subject(null);
 		// return "token";
-		
+
 	 redisTemplate.opsForValue().set("session:" + accountNumber , token, 60 , TimeUnit.MINUTES );
-	 
+
 	 return token;
 	}
 
@@ -90,9 +90,9 @@ public class JWTservices {
 	public String extractUserName(String token) {
 		return extractClaims(token, Claims::getSubject);
 	}
-	
 
-	
+
+
 	public String extractAccountNumber(String token) {
 	    return extractClaims(token, claims -> claims.get("accountNumber").toString());
 	}
@@ -129,7 +129,7 @@ public class JWTservices {
 	  public Date extractExpiration(String token) {
 	        return extractAllClaims(token).getExpiration();
 	    }
-	
+
 //	private Date extractExpiration(String token) {
 //		return extractClaims(token,Claims::getExpiration );
 //

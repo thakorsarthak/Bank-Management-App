@@ -21,7 +21,7 @@ public interface AccountService {
 	AccountResponseDTO createAccount(AccountRequestDTO accountDto);
 
 	//AccountResponseDTO getAccountDetailByAccountNo(String accountNumber);
-	 
+
 	AccountResponseDTO getAccountDetailByAccountNo(HttpServletRequest request);
 
 	ResponseEntity<?> getAccountHolderName(String accountNumber);
@@ -35,7 +35,7 @@ public interface AccountService {
 
 	AccountResponseDTO updateAccountDetails(AccountUpdateRequestDTO dto);
 
-	
+
 
 	ResponseEntity<?> ChangePinWithOtp(SetPinWithOtpDTO resestPin);
 
