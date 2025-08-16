@@ -1,17 +1,20 @@
 Bank Management System[Ongoing]
 
-This is a full-stack Bank Management System built with Spring Boot (Java) for the backend and Angular for the frontend. The project includes core banking features such as account creation, login with JWT, OTP verification, money transfer, transaction history, and secure PIN reset.
+This is a full-stack Bank Management System built with Spring Boot (Java) for the backend and Angular for the frontend. The project includes core banking features
+such as account creation, login with JWT, OTP verification,secure PIN reset, money transfer, transaction history as per user's choiced date,user's session management, Auto Session
+ending and restricted multiple login.
 
 Technologies Used
 
 Backend
 - Java 17
 - Spring Boot
-- Spring Security (JWT)
-- Spring Data JPA
+- Spring Security (User Authentication)
+- Spring Data JPA 
 - MySQL
 - Twilio (for SMS OTP - simulated)
 - JavaMailSender (for Email OTP)
+- Redis (For session Mangement)
 
 Frontend
 - Angular 19
