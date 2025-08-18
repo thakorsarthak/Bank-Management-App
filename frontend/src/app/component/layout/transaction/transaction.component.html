@@ -27,7 +27,7 @@
               <!-- From Date -->
               <div [style]="{'margin-bottom': '10px'}" >
                 <label for="fromDate" class="font-semibold">From Date <span class="text-red-500">*</span></label>
-             <!-- <input type="date" placeholder="Select start date" [(ngModel)]="fromDate" />" -->
+            
                 <p-calendar appendTo="transactions-container" id="fromDate" [(ngModel)]="fromDate" dateFormat="dd/mm/yy" [maxDate]="maxFromDate"
                   [showIcon]="true" [iconDisplay]="'input'" placeholder="Select start date" inputId="fromDateInput"
                   styleClass="w-full" appendTo="body">
