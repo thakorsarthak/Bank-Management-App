@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import com.example.bankapp.entity.Transaction;
 import com.example.bankapp.services.JWTservices;
 import com.example.bankapp.services.TransactionService;
 import com.example.bankapp.util.ExcelUtil;
+
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -60,24 +62,37 @@ public class TransactionContoller {
 		return transactionService.transferMoney(fromAccount, dto);
 	}
 
-	@GetMapping("/downloadTransactionHistory")
-	public void downloadTransHistoryExcel(
-			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate fromDate,
-			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate toDate , HttpServletRequest httpRequest,
-			HttpServletResponse response) throws IOException {
+	@GetMapping("/downloadTransactionHistoryBypageNation")
+	public ResponseEntity<GlobalAPIResponseDTO> Pagenation(HttpServletRequest request,
+			@RequestParam int page, @RequestParam int size) {
+		String token = jwtService.extractTokenFromRequest(request);
+		String accountNumber = jwtService.extractAccountNumber(token);
+		
+		Page<TransactionResponseDTO> dtoPage =
+	            transactionService.getTransactions(accountNumber, page, size);
 
+	    GlobalAPIResponseDTO<Page<TransactionResponseDTO>> response =
+	            new GlobalAPIResponseDTO<>("Transactions fetched successfully", true, dtoPage);
+
+	    return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/downloadTransactionHistory")
+	public void downloadTransHistoryExcel(@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate fromDate,
+			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate toDate, HttpServletRequest httpRequest,
+			HttpServletResponse response) throws IOException {
 
 		String token = jwtService.extractTokenFromRequest(httpRequest);
 		String accountNumber = jwtService.extractAccountNumber(token);
 
-		List<Transaction> transactions =  transactionService.getTransactionByDateRange(accountNumber,fromDate , toDate );
+		List<Transaction> transactions = transactionService.getTransactionByDateRange(accountNumber, fromDate, toDate);
 
-		 // Set Excel headers
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=transactions.xlsx");
+		// Set Excel headers
+		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		response.setHeader("Content-Disposition", "attachment; filename=transactions.xlsx");
 
-        // Write to Excel
-        ExcelUtil.transactionExport(transactions, response.getOutputStream());
+		// Write to Excel
+		ExcelUtil.transactionExport(transactions, response.getOutputStream());
 
 	}
 

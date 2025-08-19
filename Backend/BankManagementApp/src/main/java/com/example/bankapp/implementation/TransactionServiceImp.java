@@ -7,6 +7,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -82,6 +85,16 @@ public class TransactionServiceImp implements TransactionService {
 		transactionRepo.save(failedTransaction);
 	}
 
+	@Override
+	public Page<TransactionResponseDTO> getTransactions(String accountNumber, int page, int size) {
+		Pageable pageable = PageRequest.of(page, size); 
+		
+		 Page<Transaction> transactions =
+	                transactionRepo.findByAccount_AccountNumber(accountNumber, pageable);
+
+	        // convert each Transaction to TransactionResponseDTO
+	        return transactions.map(TransactionResponseDTO::from);
+	}
 
 	@Override
 	public List<Transaction> getTransactionByDateRange(String accountNumber, LocalDate fromDate,
@@ -90,7 +103,9 @@ public class TransactionServiceImp implements TransactionService {
 		LocalDateTime endDateTime = toDate.plusDays(1).atStartOfDay();
 		return transactionRepo.findByAccountAndDateRange(accountNumber, startDateTime, endDateTime);
     }
-
+	
+	
+	
 
 	@Override
 	public ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request) {
@@ -194,6 +209,8 @@ public class TransactionServiceImp implements TransactionService {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>(successMessage, true));
 	}
 
+	
+	//deposit and withdraw are for practice purpose
 	@Override
 	public String depositAmount(TransactionReqDTO request) {
 
@@ -267,5 +284,6 @@ public class TransactionServiceImp implements TransactionService {
 		return "Withdrawal successful. New balance: ₹" + account.getBalance();
 
 	}
+	
 
 }

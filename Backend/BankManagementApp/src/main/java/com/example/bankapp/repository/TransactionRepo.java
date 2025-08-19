@@ -3,6 +3,8 @@ package com.example.bankapp.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,6 +24,8 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 	// Fetch all transactions of a Account
 	// List<Transaction> findByUser(Account account);
 
+	 Page<Transaction> findByAccount_AccountNumber(String accountNumber, Pageable pageable);
+	
 	List<Transaction> findByAccountAndDirection(Account acc, String direction);
 
 	@Query("SELECT t FROM Transaction t " +
