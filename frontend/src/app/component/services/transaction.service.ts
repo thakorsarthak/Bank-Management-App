@@ -33,6 +33,11 @@ constructor(private http: HttpClient) {}
   });
 }
 
+  getPaginatedHistory(page: number, size: number) {
+  return this.http.get<any>(`http://localhost:6011/bankapp/transaction/downloadTransactionHistoryBypageNation`, {
+    params: { page, size }
+  });
+}
 
   getAccountHolderDetails(): Observable<any> {
     return this.http.get<any>(`http://localhost:6011/bankapp/account/accountHolderDetail`);

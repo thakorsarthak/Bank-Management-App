@@ -17,8 +17,8 @@ import { GlobalAPIResponse } from '../../Models/global-api-response';
 import { AuthServiceService } from '../../services/auth-service.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import {  ConfirmPopupModule } from 'primeng/confirmpopup';
-import {  ToastModule } from 'primeng/toast';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ToastModule } from 'primeng/toast';
 import { Dialog } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -31,7 +31,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     RouterOutlet,
     CommonModule,
     FormsModule,
-    ConfirmPopupModule,ToastModule,ConfirmDialogModule,
+    ConfirmPopupModule, ToastModule, ConfirmDialogModule,
     CardModule,
     TableModule,
     TagModule,
@@ -47,7 +47,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   providers: [ConfirmationService, MessageService]
 })
 export class TransactionComponent implements OnInit {
-
+transactions: Transaction[] = [];
+  filteredTransactions: Transaction[] = [];
+  totalRecords = 0;
+totalTransactions = 0;
 
   fromDate: Date | null = null;
   toDate: Date | null = null;
@@ -55,10 +58,6 @@ export class TransactionComponent implements OnInit {
   maxToDate: Date = new Date();
   showValidation: boolean = false;
   isDownloading: boolean = false;
-
-
-  transactions: Transaction[] = [];
-  filteredTransactions: Transaction[] = [];
 
   // Filter states
   searchTerm = '';
@@ -69,7 +68,7 @@ export class TransactionComponent implements OnInit {
   direction: string = '';// 'all', 'credit', 'debit'
 
   showFilters = true;
-  
+
   // Dropdown options
   typeOptions = [
     { label: 'All Types', value: '' },
@@ -90,19 +89,36 @@ export class TransactionComponent implements OnInit {
     private authService: AuthServiceService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
-   
-  ) { }
+
+  ) { 
+   // this.loadTransactions({first: 0, rows: 10});
+   }
 
   ngOnInit(): void {
-  this.loadTransactions();
+ 
   }
- // Open Confirm Dialog
+  // Open Confirm Dialog
   openDownloadDialog() {
     this.confirmationService.confirm({
       key: 'customConfirm',
       message: '' // Required for opening, but actual content comes from template
     });
   }
+
+loadTransactions(event: any): void {
+    const page = Math.floor(event.first / event.rows);
+    const size = event.rows;
+  console.log("call")
+    this.transactionService.getPaginatedHistory(page, size).subscribe({
+      next: (response) => {
+        this.transactions      = response.data.content;     // backend page data
+        this.totalRecords      = response.data.totalElements;
+        this.applyFilters();                                // apply frontend filters
+      },
+      error: (err) => console.error('Failed to fetch transactions', err)
+    });
+  }
+
 
   // Cancel
   cancel() {
@@ -111,7 +127,7 @@ export class TransactionComponent implements OnInit {
     this.confirmationService.close();
   }
 
- 
+
   // Date Range Validation
   isValidDateRange(): boolean {
     if (!this.fromDate || !this.toDate) return false;
@@ -123,9 +139,9 @@ export class TransactionComponent implements OnInit {
   }
 
   // Helper to format date to yyyy-MM-dd
-private formatDate(date: Date): string {
-  return date.toLocaleDateString('en-CA');
-}
+  private formatDate(date: Date): string {
+    return date.toLocaleDateString('en-CA');
+  }
 
 
 
@@ -168,17 +184,17 @@ private formatDate(date: Date): string {
 
 
 
-  loadTransactions(): void {
-    this.transactionService.getTransactionHistory().subscribe({
-      next: (response) => {
-        this.transactions = Array.isArray(response.data) ? response.data : [];
-        this.applyFilters();
-      },
-      error: (err) => {
-        console.error('Failed to fetch transactions', err);
-      }
-    });
-  }
+  // loadTransactions(): void {
+  //   this.transactionService.getTransactionHistory().subscribe({
+  //     next: (response) => {
+  //       this.transactions = Array.isArray(response.data) ? response.data : [];
+  //       this.applyFilters();
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to fetch transactions', err);
+  //     }
+  //   });
+  // }
 
   applyFilters(): void {
     const searchLower = this.searchTerm.trim().toLowerCase();
@@ -190,13 +206,8 @@ private formatDate(date: Date): string {
       const type = transaction.direction?.toLowerCase() || '';
       const txnDate = new Date(transaction.timestamp);
 
+      const matchesSearch = !this.searchTerm || description.includes(searchLower) || counterParty.includes(searchLower);
 
-      const matchesSearch =
-        !this.searchTerm ||
-        description.includes(searchLower) ||
-        counterParty.includes(searchLower);
-
-  
       const matchesType = !this.direction || type === this.direction.toLowerCase();
       const matchesStatus = !this.selectedStatus || status === this.selectedStatus.toLowerCase();
 
@@ -268,52 +279,57 @@ private formatDate(date: Date): string {
     return this.filteredTransactions.filter(t => t.direction?.toLowerCase() === 'debit').length;
   }
 
-  refreshTransactions(): void {
-    
-      this.loadTransactions();
-    
+  // refreshTransactions(): void {
+
+  //   this.loadTransactions();
+
+  // }
+   refreshTransactions(): void {
+    console.log("refreshTransactions called");
+    this.loadTransactions({first: 0, rows: 10});
   }
+
 
   onBackToDashboard(): void {
     this.router.navigate(['/privateMain/dashBoard']);
   }
 
   onExportTransactions() {
-  const doc = new jsPDF();
+    const doc = new jsPDF();
 
-  
-  // Title
-  doc.text('Transaction History', 14, 15);
 
-  // Define table columns
-  const headers = [['Date', 'Description', 'Type', 'Amount', 'Status', 'From/To', 'After Balance']];
+    // Title
+    doc.text('Transaction History', 14, 15);
 
-  // Prepare rows from filtered transactions
-  const data = this.filteredTransactions.map(tx => [
-    new Date(tx.timestamp).toLocaleString(),
-    tx.description || '',
-    tx.type,
-    this.formatCurrency(tx.amount),
-    tx.status,
-    tx.counterPartyName || '',
-    this.formatCurrency(tx.afterBalance)
-  ]);
+    // Define table columns
+    const headers = [['Date', 'Description', 'Type', 'Amount', 'Status', 'From/To', 'After Balance']];
 
-  // Add table to PDF
-  autoTable(doc, {
-    head: headers,
-    body: data,
-    startY: 20,
-    styles: {
-    fontSize: 10,
-    cellPadding: 4,
-    halign: 'center'
-  },
-  });
+    // Prepare rows from filtered transactions
+    const data = this.filteredTransactions.map(tx => [
+      new Date(tx.timestamp).toLocaleString(),
+      tx.description || '',
+      tx.type,
+      this.formatCurrency(tx.amount),
+      tx.status,
+      tx.counterPartyName || '',
+      this.formatCurrency(tx.afterBalance)
+    ]);
 
-  // Save PDF file
-  doc.save('transaction-history.pdf');
-}
+    // Add table to PDF
+    autoTable(doc, {
+      head: headers,
+      body: data,
+      startY: 20,
+      styles: {
+        fontSize: 10,
+        cellPadding: 4,
+        halign: 'center'
+      },
+    });
+
+    // Save PDF file
+    doc.save('transaction-history.pdf');
+  }
   // onExportTransactions(): void {
   //   const csvRows: string[] = [];
   //   csvRows.push('Date,Description,Type,Amount,Status,From/To,After Balance');

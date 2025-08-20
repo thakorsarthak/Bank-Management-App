@@ -81,7 +81,7 @@
             <i class="pi pi-chart-bar"></i>
             <h3>Total Transactions</h3>
           </div>
-          <p class="summary-number">{{ filteredTransactions.length }}</p>
+          <p class="summary-number">{{ totalRecords }}</p>
           <span class="summary-subtitle">All records</span>
         </div>
         <div class="summary-icon-wrapper">
@@ -196,97 +196,100 @@
 
   <!--Transactions Table -->
   <p-card styleClass="transactions-table-card">
-    <ng-template pTemplate="header">
-      <div class="table-header">
-        <div class="table-title">
-          <i class="pi pi-table"></i>
-          <span>Recent Transactions</span>
-        </div>
-        <div class="table-actions">
-          <p-button icon="pi pi-refresh" severity="secondary" [text]="true" (onClick)="refreshTransactions()"
-            pTooltip="Refresh data">
-          </p-button>
-        </div>
+  <ng-template pTemplate="header">
+    <div class="table-header">
+      <div class="table-title">
+        <i class="pi pi-table"></i>
+        <span>Recent Transactions</span>
       </div>
+      <div class="table-actions">
+        <p-button icon="pi pi-refresh" severity="secondary" [text]="true"
+                  (onClick)="refreshTransactions()" pTooltip="Refresh data">
+        </p-button>
+      </div>
+    </div>
+  </ng-template>
+
+  <p-table
+    [value]="filteredTransactions"
+    [paginator]="true"
+    [lazy]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [totalRecords]="totalRecords"
+    [sortField]="'timestamp'"
+    [sortOrder]="-1"
+    (onLazyLoad)="loadTransactions($event)"
+    responsiveLayout="scroll"
+    styleClass="p-datatable-striped modern-table">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="timestamp">
+          <i class="pi pi-calendar"></i> Date & Time <p-sortIcon field="timestamp" />
+        </th>
+        <th pSortableColumn="description">
+          <i class="pi pi-file-edit"></i> Description <p-sortIcon field="description" />
+        </th>
+        <th><i class="pi pi-user"></i> To/From</th>
+        <th pSortableColumn="amount">
+          <i class="pi pi-dollar"></i> Amount <p-sortIcon field="amount" />
+        </th>
+        <th><i class="pi pi-wallet"></i> After Balance</th>
+        <th><i class="pi pi-tags"></i> Type</th>
+        <th pSortableColumn="status">
+          <i class="pi pi-flag"></i> Status <p-sortIcon field="status" />
+        </th>
+      </tr>
     </ng-template>
-    
 
-    <p-table [value]="filteredTransactions" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
-      [sortField]="'timestamp'" [sortOrder]="-1" responsiveLayout="scroll"
-      styleClass="p-datatable-striped modern-table">
+    <ng-template pTemplate="body" let-transaction let-rowIndex="rowIndex">
+      <tr [class.highlight-row]="rowIndex % 2 === 0">
+        <td>
+          <div class="date-wrapper">
+            <span>{{ transaction.timestamp | date: 'dd/MM/yyyy' }}</span>
+            <small class="date-time">{{ transaction.timestamp | date: 'HH:mm' }}</small>
+          </div>
+        </td>
+        <td>{{ transaction.description }}</td>
+        <td>{{ transaction.counterPartyName || '-' }}</td>
+        <td>
+          <p-tag
+            [value]="formatCurrency(transaction.amount)"
+            [severity]="getTransactionSeverity(transaction.direction)"
+            [icon]="transaction.direction === 'CREDIT' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"
+            styleClass="amount-tag">
+          </p-tag>
+        </td>
+        <td>₹{{ transaction.afterBalance | number: '1.2-2' }}</td>
+        <td>
+          <p-tag [value]="transaction.type | titlecase"
+                 [severity]="getTransactionSeverity(transaction.type)">
+          </p-tag>
+        </td>
+        <td>
+          <p-tag [value]="transaction.status | titlecase"
+                 [severity]="getStatusSeverity(transaction.status)">
+          </p-tag>
+        </td>
+      </tr>
+    </ng-template>
 
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="timestamp">
-            <i class="pi pi-calendar"></i> Date & Time <p-sortIcon field="timestamp" />
-          </th>
-          <th pSortableColumn="description">
-            <i class="pi pi-file-edit"></i> Description <p-sortIcon field="description" />
-          </th>
-          <th>
-            <i class="pi pi-user"></i> To/From
-          </th>
-          <th pSortableColumn="amount">
-            <i class="pi pi-dollar"></i> Amount <p-sortIcon field="amount" />
-          </th>
-          <th>
-            <i class="pi pi-wallet"></i> After Balance
-          </th>
-          <th>
-            <i class="pi pi-tags"></i> Type
-          </th>
-          <th pSortableColumn="status">
-            <i class="pi pi-flag"></i> Status <p-sortIcon field="status" />
-          </th>
-        </tr>
-      </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7" class="text-center">
+          <div class="empty-state modern-empty">
+            <i class="pi pi-inbox empty-icon"></i>
+            <h3>No transactions found</h3>
+            <p>Try adjusting your filters to see more results.</p>
+            <p-button label="Reset Filters" icon="pi pi-refresh" severity="secondary" (onClick)="clearFilters()"
+                      [text]="true">
+            </p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
 
-      <ng-template pTemplate="body" let-transaction let-rowIndex="rowIndex">
-        <tr [class.highlight-row]="rowIndex % 2 === 0">
-          <td>
-            <div class="date-wrapper">
-              <span>{{ transaction.timestamp | date: 'dd/MM/yyyy' }}</span>
-              <small class="date-time">{{ transaction.timestamp | date: 'HH:mm' }}</small>
-            </div>
-          </td>
-          <td>{{ transaction.description }}</td>
-          <td>{{ transaction.counterPartyName || '-' }}</td>
-          <td>
-            <p-tag [value]="formatCurrency(transaction.amount)"
-              [severity]="getTransactionSeverity(transaction.direction)"
-              [icon]="transaction.direction === 'CREDIT' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"
-              styleClass="amount-tag">
-            </p-tag>
-          </td>
-          <td>₹{{ transaction.afterBalance | number: '1.2-2' }}</td>
-          <td>
-            <p-tag [value]="transaction.type | titlecase" [severity]="getTransactionSeverity(transaction.type)">
-            </p-tag>
-          </td>
-          <td>
-            <p-tag [value]="transaction.status | titlecase" [severity]="getStatusSeverity(transaction.status)">
-            </p-tag>
-          </td>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="7" class="text-center">
-            <div class="empty-state modern-empty">
-              <div class="empty-icon-wrapper">
-                <i class="pi pi-inbox empty-icon"></i>
-              </div>
-              <h3>No transactions found</h3>
-              <p>Try adjusting your filters to see more results.</p>
-              <p-button label="Reset Filters" icon="pi pi-refresh" severity="secondary" (onClick)="clearFilters()"
-                [text]="true">
-              </p-button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-
-  </p-card>
 </div>
