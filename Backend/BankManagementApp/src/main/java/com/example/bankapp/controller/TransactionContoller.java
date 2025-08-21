@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
+import com.example.bankapp.DTO.TransactionHistoryResponseDTO;
 import com.example.bankapp.DTO.TransactionReqDTO;
 import com.example.bankapp.DTO.TransactionResponseDTO;
 import com.example.bankapp.DTO.TransferRequestDTO;
@@ -23,7 +24,6 @@ import com.example.bankapp.entity.Transaction;
 import com.example.bankapp.services.JWTservices;
 import com.example.bankapp.services.TransactionService;
 import com.example.bankapp.util.ExcelUtil;
-
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -62,16 +62,35 @@ public class TransactionContoller {
 		return transactionService.transferMoney(fromAccount, dto);
 	}
 
+//	@GetMapping("/downloadTransactionHistoryBypageNation")
+//	public ResponseEntity<GlobalAPIResponseDTO> Pagenation(HttpServletRequest request,
+//			@RequestParam int page, @RequestParam int size) {
+//		String token = jwtService.extractTokenFromRequest(request);
+//		String accountNumber = jwtService.extractAccountNumber(token);
+//
+//		Page<TransactionResponseDTO> dtoPage =
+//	          transactionService.getTransactions(accountNumber, page, size,sortBy,sortByDirection);
+//
+//	    GlobalAPIResponseDTO<Page<TransactionResponseDTO>> response =
+//	            new GlobalAPIResponseDTO<>("Transactions fetched successfully", true, dtoPage);
+//
+//	    return ResponseEntity.ok(response);
+//	}
+
+	
 	@GetMapping("/downloadTransactionHistoryBypageNation")
 	public ResponseEntity<GlobalAPIResponseDTO> Pagenation(HttpServletRequest request,
-			@RequestParam int page, @RequestParam int size) {
+			@RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size,
+	        @RequestParam(defaultValue = "timestamp") String sortBy,
+	        @RequestParam(defaultValue = "desc") String sortByDirection) {
 		String token = jwtService.extractTokenFromRequest(request);
 		String accountNumber = jwtService.extractAccountNumber(token);
-		
-		Page<TransactionResponseDTO> dtoPage =
-	            transactionService.getTransactions(accountNumber, page, size);
 
-	    GlobalAPIResponseDTO<Page<TransactionResponseDTO>> response =
+		 TransactionHistoryResponseDTO dtoPage =
+	          transactionService.getTransactions(accountNumber, page, size,sortBy,sortByDirection);
+
+	    GlobalAPIResponseDTO<TransactionHistoryResponseDTO> response =
 	            new GlobalAPIResponseDTO<>("Transactions fetched successfully", true, dtoPage);
 
 	    return ResponseEntity.ok(response);

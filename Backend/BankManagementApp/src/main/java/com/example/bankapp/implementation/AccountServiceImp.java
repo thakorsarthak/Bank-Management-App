@@ -52,10 +52,8 @@ public class AccountServiceImp implements AccountService {
 	@Autowired
 	TransactionRepo Trepo;
 
-
-
 	@Autowired
-    private RedisTemplate<String, String> redisTemplate;
+	private RedisTemplate<String, String> redisTemplate;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -160,8 +158,10 @@ public class AccountServiceImp implements AccountService {
 
 					System.out.println("Token From verify: " + token);
 
-				 String	accountNum= acc.getEmail();
-					redisTemplate.opsForValue().set("session:" + accountNum , token, 60, TimeUnit.MINUTES); // TTL should match token
+					String accountNum = acc.getEmail();
+					redisTemplate.opsForValue().set("session:" + accountNum, token, 60, TimeUnit.MINUTES); // TTL should
+																											// match
+																											// token
 
 					return token;
 				} else {
@@ -208,9 +208,6 @@ public class AccountServiceImp implements AccountService {
 //		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Sucsess", true, name));
 //	}
 
-
-
-
 //	@Override
 //	public AccountResponseDTO getAccountDetailByAccountNo(String accountNumber) {
 //
@@ -240,17 +237,15 @@ public class AccountServiceImp implements AccountService {
 //
 //	}
 
-
-
 	@Override
 	public AccountResponseDTO getAccountDetailByAccountNo(HttpServletRequest request) {
 
 		String token = jService.extractTokenFromRequest(request);
-	    String accountNumber = jService.extractAccountNumber(token);
+		String accountNumber = jService.extractAccountNumber(token);
 
-	    System.out.println("Inside get AccountDetails (service)");
+		System.out.println("Inside get AccountDetails (service)");
 
-	    Optional<Account> account = repo.findByAccountNumber(accountNumber);
+		Optional<Account> account = repo.findByAccountNumber(accountNumber);
 
 		if (account.isEmpty()) {
 			throw new RuntimeException("Account doesn't Exist");
@@ -275,7 +270,6 @@ public class AccountServiceImp implements AccountService {
 		System.out.println("Details fetched succesfully" + response);
 		return response;
 	}
-
 
 	@Override
 	public List<Account> getAllAccountDetails() {
@@ -431,7 +425,5 @@ public class AccountServiceImp implements AccountService {
 		}
 		return false;
 	}
-
-
 
 }

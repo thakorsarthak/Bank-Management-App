@@ -25,9 +25,15 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 	// List<Transaction> findByUser(Account account);
 
 	 Page<Transaction> findByAccount_AccountNumber(String accountNumber, Pageable pageable);
-	
+
 	List<Transaction> findByAccountAndDirection(Account acc, String direction);
 
+	
+	long countByAccount_AccountNumber(String accountNumber);
+	
+	long countByAccount_AccountNumberAndType(String accountNumber , String type);
+	
+	
 	@Query("SELECT t FROM Transaction t " +
 			"WHERE t.account.accountNumber = :accountNumber " +
 			"AND t.timestamp >= :startDate " +

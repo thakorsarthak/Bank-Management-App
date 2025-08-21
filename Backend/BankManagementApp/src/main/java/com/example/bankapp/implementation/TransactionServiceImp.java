@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
+import com.example.bankapp.DTO.TransactionHistoryResponseDTO;
 import com.example.bankapp.DTO.TransactionReqDTO;
 import com.example.bankapp.DTO.TransactionResponseDTO;
 import com.example.bankapp.DTO.TransferRequestDTO;
@@ -86,17 +87,51 @@ public class TransactionServiceImp implements TransactionService {
 		transactionRepo.save(failedTransaction);
 	}
 
+//	@Override
+//	public Page<TransactionResponseDTO> getTransactions(String accountNumber, int page, int size) {
+//		Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
+//
+//		 Page<Transaction> transactions =
+//	                transactionRepo.findByAccount_AccountNumber(accountNumber, pageable);
+//
+//	        // convert each Transaction to TransactionResponseDTO
+//	        return transactions.map(TransactionResponseDTO::from);
+//	}
+
+	
 	@Override
-	public Page<TransactionResponseDTO> getTransactions(String accountNumber, int page, int size) {
-		Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending()); 
+	public TransactionHistoryResponseDTO 
+					getTransactions(String accountNumber, int page, int size,String sortBy , String sortDirection){
 		
-		 Page<Transaction> transactions =
-	                transactionRepo.findByAccount_AccountNumber(accountNumber, pageable);
+	 Sort sort = sortDirection.equalsIgnoreCase("desc")
+			 ? Sort.by(sortBy).descending()
+			: Sort.by(sortBy).ascending();
+	 
+	 Pageable pageable = PageRequest.of(page,size,sort);
+	 
+	 Page<Transaction> transactionsPage =
+	            transactionRepo.findByAccount_AccountNumber(accountNumber, pageable);
+	 
 
-	        // convert each Transaction to TransactionResponseDTO
-	        return transactions.map(TransactionResponseDTO::from);
+	    List<TransactionResponseDTO> dtos =
+	            transactionsPage.getContent().stream()
+	                            .map(TransactionResponseDTO::from)
+	                            .toList();
+	    
+	    long total = transactionRepo.countByAccount_AccountNumber(accountNumber);
+	    long debitCount = transactionRepo.countByAccount_AccountNumberAndType(accountNumber, "DEBIT");
+	    long creditCount = transactionRepo.countByAccount_AccountNumberAndType(accountNumber, "CREDIT");
+		
+	    return new TransactionHistoryResponseDTO(
+	            dtos,
+	            total,
+	            debitCount,
+	            creditCount,
+	            transactionsPage.getNumber(),
+	            transactionsPage.getTotalPages()
+	            );
 	}
-
+	
 	@Override
 	public List<Transaction> getTransactionByDateRange(String accountNumber, LocalDate fromDate,
 			LocalDate toDate) {
@@ -104,9 +139,9 @@ public class TransactionServiceImp implements TransactionService {
 		LocalDateTime endDateTime = toDate.plusDays(1).atStartOfDay();
 		return transactionRepo.findByAccountAndDateRange(accountNumber, startDateTime, endDateTime);
     }
-	
-	
-	
+
+
+
 
 	@Override
 	public ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request) {
@@ -210,7 +245,7 @@ public class TransactionServiceImp implements TransactionService {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>(successMessage, true));
 	}
 
-	
+
 	//deposit and withdraw are for practice purpose
 	@Override
 	public String depositAmount(TransactionReqDTO request) {
@@ -285,6 +320,6 @@ public class TransactionServiceImp implements TransactionService {
 		return "Withdrawal successful. New balance: ₹" + account.getBalance();
 
 	}
-	
+
 
 }
