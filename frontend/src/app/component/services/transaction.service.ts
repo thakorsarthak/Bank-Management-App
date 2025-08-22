@@ -27,15 +27,15 @@ constructor(private http: HttpClient) {}
     return this.http.get<GlobalAPIResponse<Transaction[]>>(`http://localhost:6011/bankapp/transaction/history`);
   }
 
-  getTransactionExcelHistoryByDate(fromDate: string, toDate: string) {
+  getTransactionExcelHistoryByDate(fromDate: string, toDate: string ) {
   return this.http.get(`http://localhost:6011/bankapp/transaction/downloadTransactionHistory?fromDate=${fromDate}&toDate=${toDate}`, {
     responseType: 'blob' // Important for file download
   });
 }
 
-  getPaginatedHistory(page: number, size: number) {
+  getPaginatedHistory(page: number, size: number , sortByTime: string, sortByDirection: string) {
   return this.http.get<any>(`http://localhost:6011/bankapp/transaction/downloadTransactionHistoryBypageNation`, {
-    params: { page, size }
+    params: { page, size , sortByTime,sortByDirection}
   });
 }
 

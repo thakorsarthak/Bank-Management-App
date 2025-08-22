@@ -82,13 +82,13 @@ public class TransactionContoller {
 	public ResponseEntity<GlobalAPIResponseDTO> Pagenation(HttpServletRequest request,
 			@RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size,
-	        @RequestParam(defaultValue = "timestamp") String sortBy,
+	        @RequestParam(defaultValue = "timestamp") String sortByTime,
 	        @RequestParam(defaultValue = "desc") String sortByDirection) {
 		String token = jwtService.extractTokenFromRequest(request);
 		String accountNumber = jwtService.extractAccountNumber(token);
 
 		 TransactionHistoryResponseDTO dtoPage =
-	          transactionService.getTransactions(accountNumber, page, size,sortBy,sortByDirection);
+	          transactionService.getTransactions(accountNumber, page, size,sortByTime,sortByDirection);
 
 	    GlobalAPIResponseDTO<TransactionHistoryResponseDTO> response =
 	            new GlobalAPIResponseDTO<>("Transactions fetched successfully", true, dtoPage);

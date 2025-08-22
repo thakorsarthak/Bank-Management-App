@@ -29,9 +29,9 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 	List<Transaction> findByAccountAndDirection(Account acc, String direction);
 
 	
-	long countByAccount_AccountNumber(String accountNumber);
+	Long countByAccount_AccountNumber(String accountNumber);
 	
-	long countByAccount_AccountNumberAndType(String accountNumber , String type);
+	Long countByAccount_AccountNumberAndDirection(String accountNumber , String direction);
 	
 	
 	@Query("SELECT t FROM Transaction t " +

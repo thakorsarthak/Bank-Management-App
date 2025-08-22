@@ -97,7 +97,7 @@
             <i class="pi pi-plus-circle"></i>
             <h3>Credit Transactions</h3>
           </div>
-          <p class="summary-number">{{ getCreditCount() }}</p>
+          <p class="summary-number">{{ totalCredits }}</p>
           <span class="summary-subtitle">Money received</span>
         </div>
         <div class="summary-icon-wrapper credit-bg">
@@ -113,7 +113,7 @@
             <i class="pi pi-minus-circle"></i>
             <h3>Debit Transactions</h3>
           </div>
-          <p class="summary-number">{{ getDebitCount() }}</p>
+          <p class="summary-number">{{ totalDebits }}</p>
           <span class="summary-subtitle">Money spent</span>
         </div>
         <div class="summary-icon-wrapper debit-bg">
@@ -155,7 +155,7 @@
             <i class="pi pi-tags"></i>
             Transaction Type
           </label>
-          <p-dropdown id="direction" [options]="typeOptions" [(ngModel)]="direction" (onChange)="applyFilters()"
+          <p-dropdown id="direction" [options]="typeOptions"  [(ngModel)]="direction" (onChange)="applyFilters()"
             placeholder="Select type" styleClass="modern-dropdown" [style]="{'width': '100%'}"></p-dropdown>
         </div>
 
@@ -164,8 +164,8 @@
             <i class="pi pi-flag"></i>
             Status
           </label>
-          <p-dropdown id="status" [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="applyFilters()"
-            placeholder="Select status" styleClass="modern-dropdown" [style]="{'width': '100%'}"></p-dropdown>
+          <p-dropdown id="status" appendTo="filters-card" [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="applyFilters()"
+            placeholder="Select status"  [style]="{'width': '100%'}"></p-dropdown>
         </div>
 
         <div class="filter-field">
@@ -173,7 +173,7 @@
             <i class="pi pi-calendar"></i>
             From Date
           </label>
-          <p-calendar id="dateFrom" [(ngModel)]="dateFrom" (onSelect)="applyFilters()" placeholder="Select start date"
+          <p-calendar id="dateFrom" [(ngModel)]="dateFrom" (onSelect)="applyFilters()"  appendTo="body" placeholder="Select start date"
             styleClass="modern-calendar" [style]="{'width': '100%'}" dateFormat="dd/mm/yy"></p-calendar>
         </div>
 
@@ -182,7 +182,7 @@
             <i class="pi pi-calendar"></i>
             To Date
           </label>
-          <p-calendar id="dateTo" [(ngModel)]="dateTo" (onSelect)="applyFilters()" placeholder="Select end date"
+          <p-calendar id="dateTo" [(ngModel)]="dateTo" appendTo="body" (onSelect)="applyFilters()" placeholder="Select end date"
             styleClass="modern-calendar" [style]="{'width': '100%'}" dateFormat="dd/mm/yy"></p-calendar>
         </div>
 

@@ -50,7 +50,9 @@ export class TransactionComponent implements OnInit {
 transactions: Transaction[] = [];
   filteredTransactions: Transaction[] = [];
   totalRecords = 0;
-totalTransactions = 0;
+  totalDebits = 0;
+  totalCredits = 0;
+
 
   fromDate: Date | null = null;
   toDate: Date | null = null;
@@ -108,12 +110,17 @@ totalTransactions = 0;
 loadTransactions(event: any): void {
     const page = Math.floor(event.first / event.rows);
     const size = event.rows;
+
+    const sortField = event.sortField ? event.sortField : 'timestamp';
+    const sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
   console.log("call")
-    this.transactionService.getPaginatedHistory(page, size).subscribe({
-      next: (response) => {
-        this.transactions      = response.data.content;     // backend page data
-        this.totalRecords      = response.data.totalElements;
-        this.applyFilters();                                // apply frontend filters
+    this.transactionService.getPaginatedHistory(page, size, sortField , sortOrder ).subscribe({
+      next: (response: any) => {
+        this.transactions  = response.data.response;     // backend page data
+        this.totalRecords  = response.data.totalTransactions;
+        this.totalDebits = response.data.debitCount;
+        this.totalCredits = response.data.creditCount;
+        this.applyFilters();   // apply frontend filters
       },
       error: (err) => console.error('Failed to fetch transactions', err)
     });
@@ -161,6 +168,7 @@ loadTransactions(event: any): void {
     console.log(`Downloading transactions from ${from} to ${to}`);
 
     this.showValidation = false;
+
     this.transactionService.getTransactionExcelHistoryByDate(from, to).subscribe({
       next: (res: Blob) => {
         const url = window.URL.createObjectURL(res);

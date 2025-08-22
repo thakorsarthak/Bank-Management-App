@@ -101,11 +101,11 @@ public class TransactionServiceImp implements TransactionService {
 	
 	@Override
 	public TransactionHistoryResponseDTO 
-					getTransactions(String accountNumber, int page, int size,String sortBy , String sortDirection){
+					getTransactions(String accountNumber, int page, int size,String sortByTime , String sortDirection){
 		
 	 Sort sort = sortDirection.equalsIgnoreCase("desc")
-			 ? Sort.by(sortBy).descending()
-			: Sort.by(sortBy).ascending();
+			 ? Sort.by(sortByTime).descending()
+			: Sort.by(sortByTime).ascending();
 	 
 	 Pageable pageable = PageRequest.of(page,size,sort);
 	 
@@ -118,9 +118,12 @@ public class TransactionServiceImp implements TransactionService {
 	                            .map(TransactionResponseDTO::from)
 	                            .toList();
 	    
-	    long total = transactionRepo.countByAccount_AccountNumber(accountNumber);
-	    long debitCount = transactionRepo.countByAccount_AccountNumberAndType(accountNumber, "DEBIT");
-	    long creditCount = transactionRepo.countByAccount_AccountNumberAndType(accountNumber, "CREDIT");
+	    Long total = transactionRepo.countByAccount_AccountNumber(accountNumber);
+	    Long debitCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "DEBIT");
+	    Long creditCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "CREDIT");
+	    
+	    System.out.println(debitCount);
+	    System.out.println(creditCount);
 		
 	    return new TransactionHistoryResponseDTO(
 	            dtos,
