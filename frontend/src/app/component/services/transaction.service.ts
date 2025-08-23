@@ -34,7 +34,7 @@ constructor(private http: HttpClient) {}
 }
 
   getPaginatedHistory(page: number, size: number , sortByTime: string, sortByDirection: string) {
-  return this.http.get<any>(`http://localhost:6011/bankapp/transaction/downloadTransactionHistoryBypageNation`, {
+  return this.http.get<any>(`http://localhost:6011/bankapp/transaction/transactionHistory`, {
     params: { page, size , sortByTime,sortByDirection}
   });
 }

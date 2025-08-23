@@ -78,7 +78,7 @@ public class TransactionContoller {
 //	}
 
 	
-	@GetMapping("/downloadTransactionHistoryBypageNation")
+	@GetMapping("/transactionHistory")
 	public ResponseEntity<GlobalAPIResponseDTO> Pagenation(HttpServletRequest request,
 			@RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size,

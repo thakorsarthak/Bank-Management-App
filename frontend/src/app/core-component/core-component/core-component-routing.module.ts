@@ -10,6 +10,7 @@ import { PrivateMainComponent } from '../../component/layout/private-main/privat
 import { authGuardGuard } from '../../guards/auth-guard.guard';
 import { TransferMoneyComponent } from '../../component/layout/transfer-money/transfer-money.component';
 import { TransactionComponent } from '../../component/layout/transaction/transaction.component';
+import { ForgetPinComponent } from '../../component/layout/forget-pin/forget-pin.component';
 
 
 const routes:  Routes = [
@@ -17,6 +18,7 @@ const routes:  Routes = [
     component: CoreComponentComponent,
     children: [ 
       { path: '',component: PublicMainComponent},
+       { path: 'forgetPin',component: ForgetPinComponent},
       { path: 'openAccount', component: OpenAccountComponent },
       { path: 'login',component: LoginPageComponent},
       { path: 'resetPassword',component: ResetPasswordComponent},
@@ -26,7 +28,7 @@ const routes:  Routes = [
       path: 'privateMain', component: PrivateMainComponent,
       canActivate: [authGuardGuard], 
       children  : [ 
-       
+        
          { path: 'resetPassword',component: ResetPasswordComponent},
           { path: 'dashBoard', component: DashboardComponent },
           { path: 'transferMoney', component: TransferMoneyComponent },

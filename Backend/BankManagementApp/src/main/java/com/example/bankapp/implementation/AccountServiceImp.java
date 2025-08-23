@@ -160,8 +160,8 @@ public class AccountServiceImp implements AccountService {
 
 					String accountNum = acc.getEmail();
 					redisTemplate.opsForValue().set("session:" + accountNum, token, 60, TimeUnit.MINUTES); // TTL should
-																											// match
-																											// token
+																										// match to token's
+																											
 
 					return token;
 				} else {
@@ -337,7 +337,7 @@ public class AccountServiceImp implements AccountService {
 					.orElseThrow(() -> new RuntimeException("No account found with this Email"));
 		} else if (resetPin.getContact() != null) {
 
-			String phoneNo = resetPin.getContact(); // remove non-digits
+			String phoneNo = resetPin.getContact(); 
 
 			if (phoneNo.length() > 10 && phoneNo.startsWith("91")) {
 				phoneNo = phoneNo.substring(2);

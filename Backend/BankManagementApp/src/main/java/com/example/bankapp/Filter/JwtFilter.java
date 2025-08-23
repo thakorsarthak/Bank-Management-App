@@ -39,7 +39,8 @@ public class JwtFilter extends OncePerRequestFilter {
 		String requestURI = request.getRequestURI();
 
 		// Skip JWT + Redis validation for public endpoints
-		if (requestURI.contains("/bankapp/main/login-account") || requestURI.contains("/bankapp/main/create")
+		if (requestURI.contains("/bankapp/main/login-account") || requestURI.contains("/bankapp/main/create") 
+				|| requestURI.contains("/bankapp/account/changePinWithOtp") 
 				|| requestURI.contains("/bankapp/otp") || requestURI.contains("/swagger-ui") || // Swagger UI
 				requestURI.contains("/v3/api-docs") || // OpenAPI JSON
 				requestURI.contains("/swagger-resources") || // Swagger configs
