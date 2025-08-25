@@ -47,7 +47,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   providers: [ConfirmationService, MessageService]
 })
 export class TransactionComponent implements OnInit {
-transactions: Transaction[] = [];
+  transactions: Transaction[] = [];
   filteredTransactions: Transaction[] = [];
   totalRecords = 0;
   totalDebits = 0;
@@ -92,12 +92,12 @@ transactions: Transaction[] = [];
     private confirmationService: ConfirmationService,
     private messageService: MessageService
 
-  ) { 
-   // this.loadTransactions({first: 0, rows: 10});
-   }
+  ) {
+    // this.loadTransactions({first: 0, rows: 10});
+  }
 
   ngOnInit(): void {
- 
+
   }
   // Open Confirm Dialog
   openDownloadDialog() {
@@ -107,17 +107,17 @@ transactions: Transaction[] = [];
     });
   }
 
-loadTransactions(event: any): void {
+  loadTransactions(event: any): void {
     const page = Math.floor(event.first / event.rows);
     const size = event.rows;
 
     const sortField = event.sortField ? event.sortField : 'timestamp';
     const sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
-  console.log("call")
-    this.transactionService.getPaginatedHistory(page, size, sortField , sortOrder ).subscribe({
+    console.log("call")
+    this.transactionService.getPaginatedHistory(page, size, sortField, sortOrder).subscribe({
       next: (response: any) => {
-        this.transactions  = response.data.response;     // backend page data
-        this.totalRecords  = response.data.totalTransactions;
+        this.transactions = response.data.response;     // backend page data
+        this.totalRecords = response.data.totalTransactions;
         this.totalDebits = response.data.debitCount;
         this.totalCredits = response.data.creditCount;
         this.applyFilters();   // apply frontend filters
@@ -188,21 +188,6 @@ loadTransactions(event: any): void {
     });
   }
 
-
-
-
-
-  // loadTransactions(): void {
-  //   this.transactionService.getTransactionHistory().subscribe({
-  //     next: (response) => {
-  //       this.transactions = Array.isArray(response.data) ? response.data : [];
-  //       this.applyFilters();
-  //     },
-  //     error: (err) => {
-  //       console.error('Failed to fetch transactions', err);
-  //     }
-  //   });
-  // }
 
   applyFilters(): void {
     const searchLower = this.searchTerm.trim().toLowerCase();
@@ -292,9 +277,9 @@ loadTransactions(event: any): void {
   //   this.loadTransactions();
 
   // }
-   refreshTransactions(): void {
+  refreshTransactions(): void {
     console.log("refreshTransactions called");
-    this.loadTransactions({first: 0, rows: 10});
+    this.loadTransactions({ first: 0, rows: 10 });
   }
 
 
@@ -338,28 +323,5 @@ loadTransactions(event: any): void {
     // Save PDF file
     doc.save('transaction-history.pdf');
   }
-  // onExportTransactions(): void {
-  //   const csvRows: string[] = [];
-  //   csvRows.push('Date,Description,Type,Amount,Status,From/To,After Balance');
-
-  //   for (const tx of this.filteredTransactions) {
-  //     const row = [
-  //       new Date(tx.timestamp).toLocaleString(),
-  //       `"${tx.description}"`,
-  //       tx.type,
-  //       this.formatCurrency(tx.amount),
-  //       tx.status,
-  //       tx.counterPartyName || '',
-  //       this.formatCurrency(tx.afterBalance)
-  //     ];
-  //     csvRows.push(row.join(','));
-  //   }
-
-  //   const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
-  //   const link = document.createElement('a');
-  //   link.href = URL.createObjectURL(blob);
-  //   link.download = 'transaction-history.csv';
-  //   link.click();
-  // }
 }
 
