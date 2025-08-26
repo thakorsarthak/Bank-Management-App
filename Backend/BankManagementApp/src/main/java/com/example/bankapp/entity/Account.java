@@ -36,12 +36,21 @@ public class Account {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "password")
+    private String password;
+    
+    @Column(nullable = false , name="transaction_pin")
     private String pin;
 
     @Column(nullable = false, unique = true)
     private Long contact;
 
+    @Column(nullable = true , name="pan_number" )
+    private String panNumber;
+
+    @Column(nullable = true , name="aadhaar_number")
+    private String aadhaarNumber;
+    
     @Column(name = "branch_code", nullable = false, length = 4)
     private String branchCode;  //  "1001" for Ahmedabad
 

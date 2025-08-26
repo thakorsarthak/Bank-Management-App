@@ -205,7 +205,7 @@ public class AccountServiceImp implements AccountService {
 //					.body(new GlobalAPIResponseDTO<>("Account not found", false));
 //		}
 //		String name = account.get().getAccountHolderName();
-//		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Sucsess", true, name));
+//		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Succ	ess", true, name));
 //	}
 
 //	@Override
