@@ -58,8 +58,8 @@ public class Account {
     private String branchCode;  //  "1001" for Ahmedabad
 
     @Column(name = "product_code", nullable = false, length = 2)
-    private String productCode; // 01 for savings, 02 for current
-
+    private String productCode; // 01 for savings, 02 for current , 03 Student , O4 Senior Citizen , 05 salary 
+    
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
 

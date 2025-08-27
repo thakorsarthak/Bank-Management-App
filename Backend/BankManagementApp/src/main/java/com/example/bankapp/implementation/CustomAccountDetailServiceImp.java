@@ -5,14 +5,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.bankapp.config.CustomUserDetails;
+import com.example.bankapp.config.CustomAcountDetails;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.repository.AccountRepo;
-import com.example.bankapp.services.CustomUserDetailService;
+import com.example.bankapp.services.CustomAcountDetailService;
+
 
 
 @Service
-public class CustomUserDetailServiceImp implements CustomUserDetailService {
+public class CustomAccountDetailServiceImp implements CustomAcountDetailService {
 
 	@Autowired
 	private AccountRepo accountRepo;
@@ -23,7 +24,7 @@ public class CustomUserDetailServiceImp implements CustomUserDetailService {
 		Account account = accountRepo.findByEmail(email)
 		        .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-		    return new CustomUserDetails(account);
+		    return new CustomAcountDetails(account);
 	}
 
 }

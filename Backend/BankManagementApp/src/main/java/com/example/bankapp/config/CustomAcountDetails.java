@@ -11,11 +11,11 @@ import com.example.bankapp.entity.Account;
 
 
 
-public class CustomUserDetails implements UserDetails{
+public class CustomAcountDetails implements UserDetails{
 
 	private final Account account;
 
-	public CustomUserDetails(Account acc) {
+	public CustomAcountDetails(Account acc) {
 		this.account = acc;
 	}
 

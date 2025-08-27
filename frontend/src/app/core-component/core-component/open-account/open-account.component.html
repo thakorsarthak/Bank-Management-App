@@ -1,50 +1,51 @@
 <p-toast></p-toast>
 <app-public-header></app-public-header>
 <div class="signup-container">
-  <p-card header="Create Account" [style]="{ width: '360px' }">
-    <form [formGroup]="signupForm" (ngSubmit)="onCreateAccount()" class="signup-form">
+  <p-card header="Create Account" [style]="{ width: '600px' }">
+  <form [formGroup]="signupForm" (ngSubmit)="onCreateAccount()" class="signup-form">
 
-      <!-- Full Name -->
-      <div class="form-field">
-        <label for="accountHolderName">Full Name</label>
-        <span class="p-input-icon-right w-full">
-          <i class="pi pi-user" style="padding-right: 10px;"></i>
-          <input 
-            id="name"
-            type="text" 
-            pInputText 
-            formControlName="accountHolderName"
-            placeholder="Enter your full name"
-            class="w-full"
-            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('accountHolderName')}">
-        </span>
-        <small class="error-message" *ngIf="isFieldInvalid('accountHolderName')">
-          {{ getErrorMessage('accountHolderName') }}
-        </small>
-      </div>
+    <!-- Full Name -->
+    <div class="form-field">
+      <label for="accountHolderName">Full Name</label>
+      <span class="p-input-icon-right w-full">
+        <i class="pi pi-user" style="padding-right: 10px;"></i>
+        <input 
+          id="name"
+          type="text" 
+          pInputText 
+          formControlName="accountHolderName"
+          placeholder="Enter your full name"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('accountHolderName')}">
+      </span>
+      <small class="error-message" *ngIf="isFieldInvalid('accountHolderName')">
+        {{ getErrorMessage('accountHolderName') }}
+      </small>
+    </div>
 
-      <!-- Email -->
-      <div class="form-field">
-        <label for="email">Email Address</label>
-        <span class="p-input-icon-right w-full">
-          <i class="pi pi-envelope" style="padding-right: 10px;"></i>
-          <input 
-            id="email"
-            type="email" 
-            pInputText 
-            formControlName="email"
-            placeholder="Enter your email"
-            class="w-full"
-            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('email')}">
-        </span>
-        <small class="error-message" *ngIf="isFieldInvalid('email')">
-          {{ getErrorMessage('email') }}
-        </small>
-      </div>
+    <!-- Email -->
+    <div class="form-field">
+      <label for="email">Email Address</label>
+      <span class="p-input-icon-right w-full">
+        <i class="pi pi-envelope" style="padding-right: 10px;"></i>
+        <input 
+          id="email"
+          type="email" 
+          pInputText 
+          formControlName="email"
+          placeholder="Enter your email"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('email')}">
+      </span>
+      <small class="error-message" *ngIf="isFieldInvalid('email')">
+        {{ getErrorMessage('email') }}
+      </small>
+    </div>
 
-      <!-- PIN -->
+    <!-- Login PIN + Confirm PIN -->
+    <div class="form-row">
       <div class="form-field">
-        <label for="pin">PIN (4 to 6 digits)</label>
+        <label for="pin">Login PIN</label>
         <span class="p-input-icon-right w-full">
           <i class="pi pi-lock" style="padding-right: 10px;"></i>
           <input 
@@ -52,9 +53,9 @@
             type="password" 
             pInputText 
             formControlName="pin"
-            placeholder="Enter 6-digit PIN"
+            placeholder="Enter PIN"
+            maxlength="18"
             class="w-full"
-            maxlength="6"
             [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('pin')}">
         </span>
         <small class="error-message" *ngIf="isFieldInvalid('pin')">
@@ -62,9 +63,8 @@
         </small>
       </div>
 
-      <!-- Confirm PIN -->
       <div class="form-field">
-        <label for="confirmPin">Confirm PIN</label>
+        <label for="confirmPin">Confirm Login PIN</label>
         <span class="p-input-icon-right w-full">
           <i class="pi pi-lock" style="padding-right: 10px;"></i>
           <input 
@@ -73,78 +73,221 @@
             pInputText 
             formControlName="confirmPin"
             placeholder="Confirm PIN"
+            maxlength="18"
             class="w-full"
-            maxlength="6"
             [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('confirmPin')}">
         </span>
-        <small class="error-message" *ngIf="isFieldInvalid('confirmPin') || signupForm.errors?.['pinMisMatch']">
+        <small class="error-message" *ngIf="isFieldInvalid('confirmPin') || signupForm.errors?.['LoginPinMisMatch']">
           {{ getErrorMessage('confirmPin') }}
         </small>
       </div>
+    </div>
 
-      <!-- Contact -->
+    <!-- Transaction PIN + Confirm Transaction PIN -->
+    <div class="form-row">
       <div class="form-field">
-        <label for="contact">Contact Number</label>
+        <label for="transactionPin">Transaction PIN</label>
         <span class="p-input-icon-right w-full">
-          <i class="pi pi-phone" style="padding-right: 10px;"></i>
+          <i class="pi pi-key" style="padding-right: 10px;"></i>
           <input 
-            id="contact"
-            type="tel" 
+            id="transactionPin"
+            type="password" 
             pInputText 
-            formControlName="contact"
-            placeholder="Enter contact number"
+            formControlName="transactionPin"
+            placeholder="Enter Transaction PIN"
+            maxlength="6"
             class="w-full"
-            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('contact')}">
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('transactionPin')}">
         </span>
-        <small class="error-message" *ngIf="isFieldInvalid('contact')">
-          {{ getErrorMessage('contact') }}
+        <small class="error-message" *ngIf="isFieldInvalid('transactionPin')">
+          {{ getErrorMessage('transactionPin') }}
         </small>
       </div>
 
-      <!-- Branch Dropdown -->
       <div class="form-field">
-        <label for="branch">Select Branch</label>
-        <p-dropdown 
-          id="branch"
-          [options]="branches"
-          formControlName="branch"
-          placeholder="Select branch"
-          [style]="{ 'width': '70%' }"
-          [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('branch') }">
-        </p-dropdown>
-        <small class="error-message" *ngIf="isFieldInvalid('branch')">
-          {{ getErrorMessage('branch') }}
+        <label for="confirmTransactionPin">Confirm Transaction PIN</label>
+        <span class="p-input-icon-right w-full">
+          <i class="pi pi-key" style="padding-right: 10px;"></i>
+          <input 
+            id="confirmTransactionPin"
+            type="password" 
+            pInputText 
+            formControlName="confirmTransactionPin"
+            placeholder="Confirm Transaction PIN"
+            maxlength="6"
+            class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('confirmTransactionPin')}">
+        </span>
+        <small class="error-message" *ngIf="isFieldInvalid('confirmTransactionPin') || signupForm.errors?.['TransactionPinMisMatch']">
+          {{ getErrorMessage('confirmTransactionPin') }}
         </small>
       </div>
+    </div>
 
-      <!-- Account Type Dropdown -->
+    <!-- Contact -->
+    <div class="form-field">
+      <label for="contact">Contact Number</label>
+      <span class="p-input-icon-right w-full">
+        <i class="pi pi-phone" style="padding-right: 10px;"></i>
+        <input 
+          id="contact"
+          type="tel" 
+          pInputText 
+          formControlName="contact"
+          placeholder="Enter contact number"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('contact')}">
+      </span>
+      <small class="error-message" *ngIf="isFieldInvalid('contact')">
+        {{ getErrorMessage('contact') }}
+      </small>
+    </div>
+
+    <!-- PAN + Aadhaar -->
+    <div class="form-row">
       <div class="form-field">
-        <label for="accountType">Account Type</label>
-        <p-dropdown 
-          id="accountType"
-          [options]="accountTypes"
-          formControlName="accountType"
-          placeholder="Select account type"
-          [style]="{'width': '70%'}"
-          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('accountType')}">
-        </p-dropdown>
-        <small class="error-message" *ngIf="isFieldInvalid('accountType')">
-          {{ getErrorMessage('accountType') }}
+        <label for="panNumber">PAN Number</label>
+        <input 
+          id="panNumber"
+          type="text" 
+          pInputText 
+          formControlName="panNumber"
+          placeholder="Enter PAN Number"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('panNumber')}">
+        <small class="error-message" *ngIf="isFieldInvalid('panNumber')">
+          {{ getErrorMessage('panNumber') }}
         </small>
       </div>
 
-      <!-- Create Button -->
-      <div class="form-actions">
-        <p-button 
-          type="submit"
-          label="Create Account" 
-          icon="pi pi-user-plus"
-          severity="success"
-          [style]="{ 'width': '70%' }">
-        </p-button>
+      <div class="form-field">
+        <label for="aadhaarNumber">Aadhaar Number</label>
+        <input 
+          id="aadhaarNumber"
+          type="text" 
+          pInputText 
+          formControlName="aadhaarNumber"
+          placeholder="Enter Aadhaar Number"
+          maxlength="12"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('aadhaarNumber')}">
+        <small class="error-message" *ngIf="isFieldInvalid('aadhaarNumber')">
+          {{ getErrorMessage('aadhaarNumber') }}
+        </small>
       </div>
-    </form>
-  </p-card>
+    </div>
+
+    <!-- Street -->
+    <div class="form-field">
+      <label for="street">Street</label>
+      <input 
+        id="street"
+        type="text" 
+        pInputText 
+        formControlName="street"
+        placeholder="Enter street address"
+        class="w-full"
+        [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('street')}">
+      <small class="error-message" *ngIf="isFieldInvalid('street')">
+        {{ getErrorMessage('street') }}
+      </small>
+    </div>
+
+    <!-- City + State -->
+    <div class="form-row">
+      <div class="form-field">
+        <label for="city">City</label>
+        <input 
+          id="city"
+          type="text" 
+          pInputText 
+          formControlName="city"
+          placeholder="Enter city"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('city')}">
+        <small class="error-message" *ngIf="isFieldInvalid('city')">
+          {{ getErrorMessage('city') }}
+        </small>
+      </div>
+
+      <div class="form-field">
+        <label for="state">State</label>
+        <input 
+          id="state"
+          type="text" 
+          pInputText 
+          formControlName="state"
+          placeholder="Enter state"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('state')}">
+        <small class="error-message" *ngIf="isFieldInvalid('state')">
+          {{ getErrorMessage('state') }}
+        </small>
+      </div>
+    </div>
+
+    <!-- Postal Code -->
+    <div class="form-field">
+      <label for="postalCode">Postal Code</label>
+      <input 
+        id="postalCode"
+        type="text" 
+        pInputText 
+        formControlName="postalCode"
+        placeholder="Enter postal code"
+        maxlength="6"
+        class="w-full"
+        [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('postalCode')}">
+      <small class="error-message" *ngIf="isFieldInvalid('postalCode')">
+        {{ getErrorMessage('postalCode') }}
+      </small>
+    </div>
+
+    <!-- Branch Dropdown -->
+    <div class="form-field">
+      <label for="branch">Select Branch</label>
+      <p-dropdown 
+        id="branch"
+        [options]="branches"
+        formControlName="branch"
+        placeholder="Select branch"
+        [style]="{ 'width': '70%' }"
+        [ngClass]="{ 'ng-invalid ng-dirty': isFieldInvalid('branch') }">
+      </p-dropdown>
+      <small class="error-message" *ngIf="isFieldInvalid('branch')">
+        {{ getErrorMessage('branch') }}
+      </small>
+    </div>
+
+    <!-- Account Type Dropdown -->
+    <div class="form-field">
+      <label for="accountType">Account Type</label>
+      <p-dropdown 
+        id="accountType"
+        [options]="accountTypes"
+        formControlName="accountType"
+        placeholder="Select account type"
+        [style]="{'width': '70%'}"
+        [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('accountType')}">
+      </p-dropdown>
+      <small class="error-message" *ngIf="isFieldInvalid('accountType')">
+        {{ getErrorMessage('accountType') }}
+      </small>
+    </div>
+
+    <!-- Create Button -->
+    <div class="form-actions">
+      <p-button 
+        type="submit"
+        label="Create Account" 
+        icon="pi pi-user-plus"
+        severity="success"
+        [style]="{ 'width': '70%' }">
+      </p-button>
+    </div>
+  </form>
+</p-card>
+
 
   <!-- Confirmation Dialog -->
   <p-dialog 

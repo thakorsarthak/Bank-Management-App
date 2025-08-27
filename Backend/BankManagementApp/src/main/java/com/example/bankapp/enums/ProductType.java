@@ -6,7 +6,10 @@ import java.util.Optional;
 
 public enum ProductType {
 	SAVING("01","Saving"),
-	CURRENT("02","Current");
+	CURRENT("02","Current"),
+	STUDENT("03","Saving"),
+	SENIORCITIZEN("04","Current"),
+	SALARY("05","Saving");
 
 	private final String code;
     private final String name;

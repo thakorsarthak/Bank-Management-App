@@ -37,41 +37,69 @@ export class OpenAccountComponent implements OnInit {
 
   accountTypes = [
     { label: 'Savings Account', value: '01' },
-    { label: 'Current Account', value: '02' }
+    { label: 'Current Account', value: '02' },
+    { label: 'Student Account', value: '03' },
+    { label: 'Senior Citizen Account', value: '04' },
+    { label: 'Salary Account', value: '05' },
+
   ];
 
   branches = [
     { label: 'Ahmedabad', value: '1001' },
     { label: 'Surat', value: '1002' },
-    { label: 'Mumbai', value: '1003' }
+    { label: 'Mumbai', value: '1003' },
   ];
 
   constructor(
     private fb: FormBuilder,
     private messageService: MessageService,
     private router: Router
-  ) {}
+  ) { }
 
 
   ngOnInit() {
     this.signupForm = this.fb.group({
       accountHolderName: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      pin: ['', [Validators.required, Validators.pattern('^[0-9]{4,6}$')]],
+
+      // Login PIN password
+      pin: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9@$!%*?&]{4,12}$')]],
       confirmPin: ['', [Validators.required]],
+     
+     
+      //transaction PIN 
+      transactionPin: ['', [Validators.required, Validators.pattern('^[0-9]{4,6}$')]],
+      confirmTransactionPin: ['', [Validators.required]],
+
       contact: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+
+       // KYC
+    panNumber: ['', [Validators.required, Validators.pattern('^[A-Z]{5}[0-9]{4}[A-Z]{1}$')]], // PAN format
+    aadhaarNumber: ['', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
+
+    // Address
+    street: ['', [Validators.required, Validators.minLength(3)]],
+    city: ['', [Validators.required, Validators.minLength(2)]],
+    state: ['', [Validators.required, Validators.minLength(2)]],
+    postalCode: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
+
       branch: ['', Validators.required],
       accountType: ['', Validators.required],
       balance: [1000.0]
-    }, { validators: this.matchPinValidator });
+    }, { validators: [this.matchTransactionPinValidator , this.matchLoginPinValidator ]});
   }
 
-  
+// Validate Login PIN and Confirm PIN
+matchLoginPinValidator(group: FormGroup) {
+  const pin = group.get('pin')?.value;
+  const confirmPin = group.get('confirmPin')?.value;
+  return pin === confirmPin ? null : { LoginPinMisMatch: true };
+}
 
-  matchPinValidator(group: AbstractControl): ValidationErrors | null {
-    const pin = group.get('pin')?.value;
-    const confirmPin = group.get('confirmPin')?.value;
-    return pin === confirmPin ? null : { pinMisMatch: true };
+  matchTransactionPinValidator(group: AbstractControl): ValidationErrors | null {
+    const transactionPin = group.get('transactionPin')?.value;
+    const confirmTransactionPin = group.get('confirmTransactionPin')?.value;
+    return transactionPin === confirmTransactionPin ? null : { TransactionPinMisMatch: true };
   }
 
   onCancelConfirmation() {
@@ -79,9 +107,9 @@ export class OpenAccountComponent implements OnInit {
   }
 
   getBranchLabel(value: string): string {
-  const branch = this.branches.find(branch => branch.value === value);
-  return branch ? branch.label : value;
-}
+    const branch = this.branches.find(branch => branch.value === value);
+    return branch ? branch.label : value;
+  }
 
 
   onCreateAccount() {
@@ -102,7 +130,7 @@ export class OpenAccountComponent implements OnInit {
       // Map to backend structure
       formData.branchCode = formData.branch;
       formData.productCode = formData.accountType;
-      
+
       this.AccountService.createAccount(formData).subscribe({
         next: (res) => {
           this.messageService.add({
@@ -148,14 +176,18 @@ export class OpenAccountComponent implements OnInit {
       if (control.errors['email']) return 'Enter a valid email';
       if (control.errors['minlength']) return 'Minimum 3 characters';
       if (control.errors['pattern']) {
-        if (fieldName === 'pin') return 'PIN must be 4 to 6 digits';
+        if (fieldName === 'confirmTransactionPin') return 'PIN must be 4 to 6 digits';
         if (fieldName === 'contact') return 'Contact must be 10 digits';
       }
       if (control.errors['serverError']) return control.errors['serverError'];
     }
-    if (fieldName === 'confirmPin' && this.signupForm.errors?.['pinMisMatch']) {
-      return 'PIN do not match';
+    if (fieldName === 'confirmTransactionPin' && this.signupForm.errors?.['TransactionPinMisMatch']) {
+      return 'Transaction PIN do not match';
     }
+    if (fieldName === 'confirmPin' && this.signupForm.errors?.['LoginPinMisMatch']) {
+      return 'Login PIN do not match';
+    }
+
     return '';
   }
 }
