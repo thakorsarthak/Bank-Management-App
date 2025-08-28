@@ -63,13 +63,13 @@ export class OpenAccountComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
 
       // Login PIN password
-      pin: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9@$!%*?&]{4,12}$')]],
-      confirmPin: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9@$!%*?&]{4,12}$')]],
+      confirmPassword: ['', [Validators.required]],
      
      
       //transaction PIN 
-      transactionPin: ['', [Validators.required, Validators.pattern('^[0-9]{4,6}$')]],
-      confirmTransactionPin: ['', [Validators.required]],
+      pin: ['', [Validators.required, Validators.pattern('^[0-9]{4,6}$')]],
+      confirmPin: ['', [Validators.required]],
 
       contact: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
 
@@ -86,20 +86,20 @@ export class OpenAccountComponent implements OnInit {
       branch: ['', Validators.required],
       accountType: ['', Validators.required],
       balance: [1000.0]
-    }, { validators: [this.matchTransactionPinValidator , this.matchLoginPinValidator ]});
+    }, { validators: [this.matchTransactionPinValidator , this.matchPasswordValidator ]});
   }
 
 // Validate Login PIN and Confirm PIN
-matchLoginPinValidator(group: FormGroup) {
-  const pin = group.get('pin')?.value;
-  const confirmPin = group.get('confirmPin')?.value;
-  return pin === confirmPin ? null : { LoginPinMisMatch: true };
+matchPasswordValidator(group: FormGroup) {
+  const password = group.get('password')?.value;
+  const confirmPassword = group.get('confirmPassword')?.value;
+  return password === confirmPassword ? null : { passwordMisMatch: true };
 }
 
   matchTransactionPinValidator(group: AbstractControl): ValidationErrors | null {
-    const transactionPin = group.get('transactionPin')?.value;
-    const confirmTransactionPin = group.get('confirmTransactionPin')?.value;
-    return transactionPin === confirmTransactionPin ? null : { TransactionPinMisMatch: true };
+    const pin = group.get('pin')?.value;
+    const confirmPin = group.get('confirmPin')?.value;
+    return pin === confirmPin ? null : { TransactionPinMisMatch: true };
   }
 
   onCancelConfirmation() {
@@ -176,16 +176,16 @@ matchLoginPinValidator(group: FormGroup) {
       if (control.errors['email']) return 'Enter a valid email';
       if (control.errors['minlength']) return 'Minimum 3 characters';
       if (control.errors['pattern']) {
-        if (fieldName === 'confirmTransactionPin') return 'PIN must be 4 to 6 digits';
+        if (fieldName === 'confirmPin') return 'PIN must be 4 to 6 digits';
         if (fieldName === 'contact') return 'Contact must be 10 digits';
       }
       if (control.errors['serverError']) return control.errors['serverError'];
     }
-    if (fieldName === 'confirmTransactionPin' && this.signupForm.errors?.['TransactionPinMisMatch']) {
+    if (fieldName === 'confirmPin' && this.signupForm.errors?.['TransactionPinMisMatch']) {
       return 'Transaction PIN do not match';
     }
-    if (fieldName === 'confirmPin' && this.signupForm.errors?.['LoginPinMisMatch']) {
-      return 'Login PIN do not match';
+    if (fieldName === 'confirmPassword' && this.signupForm.errors?.['passwordMisMatch']) {
+      return 'Login Password do not match';
     }
 
     return '';

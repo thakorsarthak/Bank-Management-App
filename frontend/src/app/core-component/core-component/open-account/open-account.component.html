@@ -49,17 +49,17 @@
         <span class="p-input-icon-right w-full">
           <i class="pi pi-lock" style="padding-right: 10px;"></i>
           <input 
-            id="pin"
+            id="password"
             type="password" 
             pInputText 
-            formControlName="pin"
+            formControlName="password"
             placeholder="Enter PIN"
             maxlength="18"
             class="w-full"
-            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('pin')}">
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('password')}">
         </span>
-        <small class="error-message" *ngIf="isFieldInvalid('pin')">
-          {{ getErrorMessage('pin') }}
+        <small class="error-message" *ngIf="isFieldInvalid('password')">
+          {{ getErrorMessage('password') }}
         </small>
       </div>
 
@@ -68,17 +68,17 @@
         <span class="p-input-icon-right w-full">
           <i class="pi pi-lock" style="padding-right: 10px;"></i>
           <input 
-            id="confirmPin"
+            id="confirmPassword"
             type="password" 
             pInputText 
-            formControlName="confirmPin"
+            formControlName="confirmPassword"
             placeholder="Confirm PIN"
             maxlength="18"
             class="w-full"
-            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('confirmPin')}">
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('confirmPassword')}">
         </span>
-        <small class="error-message" *ngIf="isFieldInvalid('confirmPin') || signupForm.errors?.['LoginPinMisMatch']">
-          {{ getErrorMessage('confirmPin') }}
+        <small class="error-message" *ngIf="isFieldInvalid('confirmPassword') || signupForm.errors?.['passwordMisMatch']">
+          {{ getErrorMessage('confirmPassword') }}
         </small>
       </div>
     </div>
@@ -90,36 +90,36 @@
         <span class="p-input-icon-right w-full">
           <i class="pi pi-key" style="padding-right: 10px;"></i>
           <input 
-            id="transactionPin"
+            id="Pin"
             type="password" 
             pInputText 
-            formControlName="transactionPin"
+            formControlName="pin"
             placeholder="Enter Transaction PIN"
             maxlength="6"
             class="w-full"
-            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('transactionPin')}">
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('pin')}">
         </span>
-        <small class="error-message" *ngIf="isFieldInvalid('transactionPin')">
-          {{ getErrorMessage('transactionPin') }}
+        <small class="error-message" *ngIf="isFieldInvalid('pin')">
+          {{ getErrorMessage('TransactionPinMisMatch') }}
         </small>
       </div>
 
       <div class="form-field">
-        <label for="confirmTransactionPin">Confirm Transaction PIN</label>
+        <label for="confirmPin">Confirm Transaction PIN</label>
         <span class="p-input-icon-right w-full">
           <i class="pi pi-key" style="padding-right: 10px;"></i>
           <input 
-            id="confirmTransactionPin"
+            id="confirmPin"
             type="password" 
             pInputText 
-            formControlName="confirmTransactionPin"
+            formControlName="confirmPin"
             placeholder="Confirm Transaction PIN"
             maxlength="6"
             class="w-full"
-            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('confirmTransactionPin')}">
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('confirmPin')}">
         </span>
-        <small class="error-message" *ngIf="isFieldInvalid('confirmTransactionPin') || signupForm.errors?.['TransactionPinMisMatch']">
-          {{ getErrorMessage('confirmTransactionPin') }}
+        <small class="error-message" *ngIf="isFieldInvalid('confirmPin') || signupForm.errors?.['TransactionPinMisMatch']">
+          {{ getErrorMessage('confirmPin') }}
         </small>
       </div>
     </div>

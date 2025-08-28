@@ -118,13 +118,24 @@ public class AccountServiceImp implements AccountService {
 		account.setAccountNumber(generatedAccountNumber);
 		account.setAccountHolderName(accountdto.getAccountHolderName());
 		account.setContact(accountdto.getContact());
+		account.setEmail(accountdto.getEmail());
+		account.setAadhaarNumber(accountdto.getAadhaarNumber());
+		account.setPanNumber(accountdto.getPanNumber());
 		// account.setBalance(accountdto.getBalance());
 		account.setBalance(balance != null ? balance : 10000.0);
 		account.setBranchCode(accountdto.getBranchCode());
 		account.setProductCode(accountdto.getProductCode());
-		account.setEmail(accountdto.getEmail());
+		account.setAddress(accountdto.getAddress());
+		account.setPassword(accountdto.getPassword());
 		account.setPin(encoder.encode(accountdto.getPin()));
 		// account.setAccountType(accountdto.getAccountType());
+		
+		//for address
+		
+
+		
+		
+		
 
 		Account save = repo.save(account);
 
@@ -134,6 +145,7 @@ public class AccountServiceImp implements AccountService {
 		response.setBalance(save.getBalance());
 		response.setContact(save.getContact());
 		response.setEmail(save.getEmail());
+		
 		// response.setAccountType(save.getAccountType());
 
 		return response;
