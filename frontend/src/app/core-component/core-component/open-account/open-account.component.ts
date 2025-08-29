@@ -65,36 +65,37 @@ export class OpenAccountComponent implements OnInit {
       // Login PIN password
       password: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9@$!%*?&]{4,12}$')]],
       confirmPassword: ['', [Validators.required]],
-     
-     
+
+
       //transaction PIN 
       pin: ['', [Validators.required, Validators.pattern('^[0-9]{4,6}$')]],
       confirmPin: ['', [Validators.required]],
 
       contact: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
 
-       // KYC
-    panNumber: ['', [Validators.required, Validators.pattern('^[A-Z]{5}[0-9]{4}[A-Z]{1}$')]], // PAN format
-    aadhaarNumber: ['', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
-
-    // Address
-    street: ['', [Validators.required, Validators.minLength(3)]],
-    city: ['', [Validators.required, Validators.minLength(2)]],
-    state: ['', [Validators.required, Validators.minLength(2)]],
-    postalCode: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
-
+      // KYC
+      panNumber: ['', [Validators.required, Validators.pattern('^[A-Z]{5}[0-9]{4}[A-Z]{1}$')]], // PAN format
+      aadhaarNumber: ['', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
       branch: ['', Validators.required],
       accountType: ['', Validators.required],
-      balance: [1000.0]
-    }, { validators: [this.matchTransactionPinValidator , this.matchPasswordValidator ]});
+      balance: [1000.0] ,
+
+      address : this.fb.group({
+      street: ['', [Validators.required, Validators.minLength(3)]],
+      city: ['', [Validators.required, Validators.minLength(2)]],
+      state: ['', [Validators.required, Validators.minLength(2)]],
+      postalCode: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]]
+    }),
+
+    }, { validators: [this.matchTransactionPinValidator, this.matchPasswordValidator] });
   }
 
-// Validate Login PIN and Confirm PIN
-matchPasswordValidator(group: FormGroup) {
-  const password = group.get('password')?.value;
-  const confirmPassword = group.get('confirmPassword')?.value;
-  return password === confirmPassword ? null : { passwordMisMatch: true };
-}
+  // Validate Login PIN and Confirm PIN
+  matchPasswordValidator(group: FormGroup) {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordMisMatch: true };
+  }
 
   matchTransactionPinValidator(group: AbstractControl): ValidationErrors | null {
     const pin = group.get('pin')?.value;

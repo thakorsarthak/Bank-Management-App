@@ -28,6 +28,7 @@ import com.example.bankapp.DTO.SetPinWithOtpDTO;
 import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.entity.Account;
+import com.example.bankapp.entity.Address;
 import com.example.bankapp.enums.Branch;
 import com.example.bankapp.enums.ProductType;
 import com.example.bankapp.repository.AccountRepo;
@@ -125,16 +126,18 @@ public class AccountServiceImp implements AccountService {
 		account.setBalance(balance != null ? balance : 10000.0);
 		account.setBranchCode(accountdto.getBranchCode());
 		account.setProductCode(accountdto.getProductCode());
-		account.setAddress(accountdto.getAddress());
 		account.setPassword(accountdto.getPassword());
 		account.setPin(encoder.encode(accountdto.getPin()));
 		// account.setAccountType(accountdto.getAccountType());
 		
 		//for address
-		
-
-		
-		
+		 Address address = new Address();
+		 address.setStreet(accountdto.getAddress().getStreet());
+		 address.setCity(accountdto.getAddress().getCity());
+		 address.setState(accountdto.getAddress().getState());
+		 address.setPostalCode(accountdto.getAddress().getPostalCode());
+		 
+		 account.setAddress(address);
 		
 
 		Account save = repo.save(account);
