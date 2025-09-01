@@ -129,16 +129,15 @@ public class AccountServiceImp implements AccountService {
 		account.setPassword(accountdto.getPassword());
 		account.setPin(encoder.encode(accountdto.getPin()));
 		// account.setAccountType(accountdto.getAccountType());
-		
-		//for address
-		 Address address = new Address();
-		 address.setStreet(accountdto.getAddress().getStreet());
-		 address.setCity(accountdto.getAddress().getCity());
-		 address.setState(accountdto.getAddress().getState());
-		 address.setPostalCode(accountdto.getAddress().getPostalCode());
-		 
-		 account.setAddress(address);
-		
+
+		// for address
+		Address address = new Address();
+		address.setStreet(accountdto.getAddress().getStreet());
+		address.setCity(accountdto.getAddress().getCity());
+		address.setState(accountdto.getAddress().getState());
+		address.setPostalCode(accountdto.getAddress().getPostalCode());
+
+		account.setAddress(address);
 
 		Account save = repo.save(account);
 
@@ -148,7 +147,7 @@ public class AccountServiceImp implements AccountService {
 		response.setBalance(save.getBalance());
 		response.setContact(save.getContact());
 		response.setEmail(save.getEmail());
-		
+
 		// response.setAccountType(save.getAccountType());
 
 		return response;
@@ -174,8 +173,8 @@ public class AccountServiceImp implements AccountService {
 					System.out.println("Token From verify: " + token);
 
 					String accountNum = acc.getEmail();
-					redisTemplate.opsForValue().set("session:" + accountNum, token, 60, TimeUnit.MINUTES); // TTL should
-																										// match to token's
+					// TTL should match to token's
+					redisTemplate.opsForValue().set("session:" + accountNum, token, 60, TimeUnit.MINUTES); 
 																											
 
 					return token;
@@ -188,7 +187,7 @@ public class AccountServiceImp implements AccountService {
 			return "Failed"; // Should never reach here normally
 
 		} catch (AuthenticationException ex) {
-			// Optional: log the error
+			// log the error
 			System.out.println("Authentication failed: " + ex.getMessage());
 			return "Failed";
 		}
@@ -220,7 +219,7 @@ public class AccountServiceImp implements AccountService {
 //					.body(new GlobalAPIResponseDTO<>("Account not found", false));
 //		}
 //		String name = account.get().getAccountHolderName();
-//		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Succ	ess", true, name));
+//		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Success", true, name));
 //	}
 
 //	@Override
@@ -294,20 +293,6 @@ public class AccountServiceImp implements AccountService {
 		return allaccount;
 	}
 
-//	@Override
-//	public Account depositAmount(Long accountNumber, Double amount) {
-//		Optional<Account> byId = repo.findById(accountNumber);
-//		if (byId.isEmpty()) {
-//			throw new RuntimeException("Account Not Exist");
-//		}
-//
-//		Account accountFound = byId.get();
-//		Double netBalance = accountFound.getBalance() + amount;
-//		accountFound.setBalance(netBalance);
-//		Account account = repo.save(accountFound);
-//		return account;
-//	}
-
 	@Override
 	public String changePinWithOldPin(ChangePinRequestDTO changePin) {
 
@@ -352,7 +337,7 @@ public class AccountServiceImp implements AccountService {
 					.orElseThrow(() -> new RuntimeException("No account found with this Email"));
 		} else if (resetPin.getContact() != null) {
 
-			String phoneNo = resetPin.getContact(); 
+			String phoneNo = resetPin.getContact();
 
 			if (phoneNo.length() > 10 && phoneNo.startsWith("91")) {
 				phoneNo = phoneNo.substring(2);

@@ -1,7 +1,5 @@
 package com.example.bankapp.DTO;
 
-import java.util.List;
-
 import com.example.bankapp.AddressDTO;
 
 import lombok.AllArgsConstructor;
