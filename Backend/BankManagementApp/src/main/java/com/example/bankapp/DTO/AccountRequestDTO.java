@@ -1,7 +1,5 @@
 package com.example.bankapp.DTO;
 
-import com.example.bankapp.AddressDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +22,7 @@ public class AccountRequestDTO {
 	private String branchCode;
 	private String productCode;
 	
-   private AddressDTO address;
+  private AddressDTO address;
 	
 	
 }

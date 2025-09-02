@@ -154,6 +154,8 @@ public class AccountServiceImp implements AccountService {
 
 	}
 
+	
+	//basically login
 	@Override
 	public String verify(AccountLoginDTO account) {
 
