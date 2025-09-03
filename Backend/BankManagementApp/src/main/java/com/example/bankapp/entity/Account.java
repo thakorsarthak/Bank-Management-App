@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "accounts")
+@Table(name = "account", 
+uniqueConstraints =  {
+        @UniqueConstraint(columnNames = "email"),
+        @UniqueConstraint(columnNames = "contact"),
+        @UniqueConstraint(columnNames = "aadhaarNo"),
+        @UniqueConstraint(columnNames = "panNo")
+    })
 public class Account {
 
     @Id
@@ -49,10 +56,10 @@ public class Account {
     private Long contact;
 
     @Column(nullable = true , name="pan_number" )
-    private String panNumber;
+    private String panNo;
 
     @Column(nullable = true , name="aadhaar_number")
-    private String aadhaarNumber;
+    private String aadhaarNo;
     
     @Column(name = "branch_code", nullable = false, length = 4)
     private String branchCode;  //  "1001" for Ahmedabad

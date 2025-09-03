@@ -120,8 +120,8 @@ public class AccountServiceImp implements AccountService {
 		account.setAccountHolderName(accountdto.getAccountHolderName());
 		account.setContact(accountdto.getContact());
 		account.setEmail(accountdto.getEmail());
-		account.setAadhaarNumber(accountdto.getAadhaarNumber());
-		account.setPanNumber(accountdto.getPanNumber());
+		account.setAadhaarNo(accountdto.getAadhaarNo());
+		account.setPanNo(accountdto.getPanNo());
 		// account.setBalance(accountdto.getBalance());
 		account.setBalance(balance != null ? balance : 10000.0);
 		account.setBranchCode(accountdto.getBranchCode());

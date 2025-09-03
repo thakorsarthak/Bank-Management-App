@@ -16,8 +16,8 @@ public class AccountRequestDTO {
 	private String pin;
 	private String confirmPin;
 	private Long contact;
-	private String panNumber;
-	private String aadhaarNumber;
+	private String panNo;
+	private String aadhaarNo;
 	private String accountType;
 	private String branchCode;
 	private String productCode;
