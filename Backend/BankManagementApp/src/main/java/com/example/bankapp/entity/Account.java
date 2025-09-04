@@ -21,13 +21,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "account", 
-uniqueConstraints =  {
-        @UniqueConstraint(columnNames = "email"),
-        @UniqueConstraint(columnNames = "contact"),
-        @UniqueConstraint(columnNames = "aadhaarNo"),
-        @UniqueConstraint(columnNames = "panNo")
-    })
+@Table(name = "accounts")//, 
+//uniqueConstraints =  {
+//        @UniqueConstraint(columnNames = "email"),
+//        @UniqueConstraint(columnNames = "contact"),
+//        @UniqueConstraint(columnNames = "aadhaar_number"),
+//        @UniqueConstraint(columnNames = "pan_number")
+//    })
 public class Account {
 
     @Id
@@ -78,9 +78,5 @@ public class Account {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
-
-    
-    
-    
 }
 

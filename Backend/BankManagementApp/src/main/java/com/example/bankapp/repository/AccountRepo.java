@@ -3,9 +3,12 @@ package com.example.bankapp.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.example.bankapp.entity.Account;
+
+import io.lettuce.core.dynamic.annotation.Param;
 
 @Repository
 public interface AccountRepo extends JpaRepository<Account, Long> {
@@ -22,8 +25,13 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 	//Optional<Account> findTopByOrderByAccountNumberDesc();
 
 	Optional<Account> findTopByOrderByIdDesc();
+	
+	
+	@Query("SELECT a FROM Account a WHERE " +
+		       "a.email = :id OR " +
+		       "a.contact = :id OR " +
+		       "a.aadhaarNo = :id OR " +
+		       "a.panNo = :id")
+		Optional<Account> findByIdentifier(@Param("id") String identifier);
 
-	
-	
-	
 }
