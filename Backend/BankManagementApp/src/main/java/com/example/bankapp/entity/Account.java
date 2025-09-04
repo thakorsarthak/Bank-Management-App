@@ -21,13 +21,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "accounts")//, 
-//uniqueConstraints =  {
-//        @UniqueConstraint(columnNames = "email"),
-//        @UniqueConstraint(columnNames = "contact"),
-//        @UniqueConstraint(columnNames = "aadhaar_number"),
-//        @UniqueConstraint(columnNames = "pan_number")
-//    })
+@Table(name = "accounts", 
+uniqueConstraints =  {
+        @UniqueConstraint(columnNames = "email"),
+        @UniqueConstraint(columnNames = "contact"),
+        @UniqueConstraint(columnNames = "aadhaar_number"),
+        @UniqueConstraint(columnNames = "pan_number")
+    })
 public class Account {
 
     @Id
