@@ -74,8 +74,8 @@ export class OpenAccountComponent implements OnInit {
       contact: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
 
       // KYC
-      panNumber: ['', [Validators.required, Validators.pattern('^[A-Z]{5}[0-9]{4}[A-Z]{1}$')]], // PAN format
-      aadhaarNumber: ['', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
+      panNo: ['', [Validators.required, Validators.pattern('^[A-Z]{5}[0-9]{4}[A-Z]{1}$')]], // PAN format
+      aadhaarNo: ['', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
       branch: ['', Validators.required],
       accountType: ['', Validators.required],
       balance: [1000.0] ,
@@ -114,7 +114,7 @@ export class OpenAccountComponent implements OnInit {
 
 
   onCreateAccount() {
-    if (this.signupForm.valid) {
+    if (this.signupForm.valid ) {
       this.showConfirmationDialog = true;
     } else {
       Object.keys(this.signupForm.controls).forEach(key => {

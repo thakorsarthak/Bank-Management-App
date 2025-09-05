@@ -9,53 +9,73 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.bankapp.entity.Account;
 
+public class CustomAcountDetails implements UserDetails {
 
+    private final Account account;
+    private final String identifier; // the value user logged in with
 
-public class CustomAcountDetails implements UserDetails{
+    public CustomAcountDetails(Account account, String identifier) {
+        this.account = account;
+        this.identifier = identifier;
+    }
 
-	private final Account account;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+    }
 
-	public CustomAcountDetails(Account acc) {
-		this.account = acc;
-	}
+    @Override
+    public String getPassword() {
+        // This must be the encoded pin from DB
+        System.out.println("Spring checking encoded pin: " + account.getPin());
+        return account.getPin();
+    }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-	}
+    @Override
+    public String getUsername() {
+        // Return the actual identifier used for login
+        System.out.println("Spring checking identifier: " + identifier);
+        return identifier;
+    }
 
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return account.getPin();
-	}
+    // Extra getters for other fields (not required by Spring, but handy in app)
+    public String getAccountNumber() {
+        return account.getAccountNumber();
+    }
 
-	@Override
-	public String getUsername() {
-		return account.getEmail();
-	}
+    public String getEmail() {
+        return account.getEmail();
+    }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
+    public String getAadhaarNo() {
+        return account.getAadhaarNo();
+    }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
+    public String getPanNo() {
+        return account.getPanNo();
+    }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
+    public String getContact() {
+        return String.valueOf(account.getContact());
+    }
 
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

@@ -30,9 +30,9 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 	
 	@Query("SELECT a FROM Account a WHERE " +
 		       "a.email = :id OR " +
-		       "a.contact = :id OR " +
+		       "CAST(a.contact AS string) = :id OR " +
 		       "a.aadhaarNo = :id OR " +
 		       "a.panNo = :id")
-		Optional<Account> findByIdentifier(@Param("id") String identifier);
+	Optional<Account> findByIdentifier(@Param("id") String identifier);
 
 }

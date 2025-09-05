@@ -130,6 +130,7 @@ public class AccountServiceImp implements AccountService {
 		account.setPin(encoder.encode(accountdto.getPin()));
 		// account.setAccountType(accountdto.getAccountType());
 
+		System.out.println(account);
 		// for address
 		Address address = new Address();
 		address.setStreet(accountdto.getAddress().getStreet());
@@ -161,11 +162,13 @@ public class AccountServiceImp implements AccountService {
 
 		try {
 			Authentication authentication = authManage
-					.authenticate(new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPin()));
+					.authenticate(new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPin()));
 
+			
+			
 			if (authentication.isAuthenticated()) {
 
-				Optional<Account> optionAcc = repo.findByEmail(account.getEmail());
+				Optional<Account> optionAcc = repo.findByIdentifier(account.getIdentifier());
 
 				if (optionAcc.isPresent()) {
 
@@ -174,7 +177,7 @@ public class AccountServiceImp implements AccountService {
 
 					System.out.println("Token From verify: " + token);
 
-					String accountNum = acc.getEmail();
+					String accountNum = acc.getAccountNumber();
 					// TTL should match to token's
 					redisTemplate.opsForValue().set("session:" + accountNum, token, 60, TimeUnit.MINUTES); 
 																											

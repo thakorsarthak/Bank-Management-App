@@ -19,12 +19,12 @@ public class CustomAccountDetailServiceImp implements CustomAcountDetailService 
 	private AccountRepo accountRepo;
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
 
-		Account account = accountRepo.findByEmail(email)
-		        .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+		Account account = accountRepo.findByIdentifier(identifier)
+		        .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + identifier));
 
-		    return new CustomAcountDetails(account);
+		    return new CustomAcountDetails(account , identifier);
 	}
 
 }
