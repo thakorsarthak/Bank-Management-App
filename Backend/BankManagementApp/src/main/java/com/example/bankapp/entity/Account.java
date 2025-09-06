@@ -13,6 +13,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,7 +39,7 @@ public class Account {
     @Column(name = "account_number", unique = true, nullable = false, length = 20)
     private String accountNumber; // 12-digit generated account number
 
-    @Column(name = "holder_name", nullable = false)
+    @Column(name = "holder_name")
     private String accountHolderName;
 
     @Column(nullable = false)
@@ -55,10 +57,20 @@ public class Account {
     @Column(nullable = false, unique = true)
     private Long contact;
 
-    @Column(nullable = true , name="pan_number" )
+ //   @Column( name="pan_number", nullable = false, length = 20 )
+    @NotBlank(message = "PAN is required")
+    @Pattern(
+        regexp = "^[A-Z]{5}[0-9]{4}[A-Z]{1}$",
+        message = "Invalid PAN format"
+    )
     private String panNo;
 
-    @Column(nullable = true , name="aadhaar_number")
+    //@Column(nullable = true , name="aadhaar_number")
+    @NotBlank(message = "Aadhaar number is required")
+    @Pattern(
+        regexp = "^[0-9]{12}$",
+        message = "Aadhaar must be 12 digits"
+    )
     private String aadhaarNo;
     
     @Column(name = "branch_code", nullable = false, length = 4)

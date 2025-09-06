@@ -59,6 +59,7 @@ public class AccountServiceImp implements AccountService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	
 	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
 	private String generateAccountNumber(String branchCode, String productCode) {
@@ -98,6 +99,10 @@ public class AccountServiceImp implements AccountService {
 		if (repo.existsByContact(accountdto.getContact())) {
 			errors.add(new FieldError("contact", "Acccount with this Contact is already Exist pls login"));
 		}
+		
+//		if (repo.existsByAadhaarNo(accountdto.getAadhaarNo())) {
+//			errors.add(new FieldError("contact", "Acccount with this Aadhaar is already Exist pls login"));
+//		}
 
 		// System.out.println("PIN: " + accountdto.getPin());
 		// System.out.println("Confirm PIN: " + accountdto.getConfirmPin());
@@ -286,7 +291,7 @@ public class AccountServiceImp implements AccountService {
 		response.setProductCode(accountFound.getProductCode());
 		response.setProductType(ProductType.getNameByCode(accountFound.getProductCode()));
 
-		System.out.println("Details fetched succesfully" + response);
+		System.out.println("Details fetched succesfully :" + response);
 		return response;
 	}
 

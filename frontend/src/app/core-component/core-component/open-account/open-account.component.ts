@@ -103,6 +103,7 @@ export class OpenAccountComponent implements OnInit {
     return pin === confirmPin ? null : { TransactionPinMisMatch: true };
   }
 
+  
   onCancelConfirmation() {
     this.showConfirmationDialog = false;
   }
@@ -176,9 +177,11 @@ export class OpenAccountComponent implements OnInit {
       if (control.errors['required']) return 'This field is required';
       if (control.errors['email']) return 'Enter a valid email';
       if (control.errors['minlength']) return 'Minimum 3 characters';
+      if (control.errors['panNo']) return 'Pan Number is Required';
       if (control.errors['pattern']) {
         if (fieldName === 'confirmPin') return 'PIN must be 4 to 6 digits';
         if (fieldName === 'contact') return 'Contact must be 10 digits';
+        if (fieldName === 'panNo') return 'PAN number must be in format: ABCDE1234F';
       }
       if (control.errors['serverError']) return control.errors['serverError'];
     }
@@ -188,7 +191,6 @@ export class OpenAccountComponent implements OnInit {
     if (fieldName === 'confirmPassword' && this.signupForm.errors?.['passwordMisMatch']) {
       return 'Login Password do not match';
     }
-
     return '';
   }
 }

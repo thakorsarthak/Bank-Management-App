@@ -18,8 +18,8 @@ import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-login-page',
-  imports: [CommonModule, RouterLink,Dialog,
-    ReactiveFormsModule, ToastModule, RippleModule,PublicHeaderComponent,
+  imports: [CommonModule, RouterLink, Dialog,
+    ReactiveFormsModule, ToastModule, RippleModule, PublicHeaderComponent,
     InputTextModule, PasswordModule,
     DropdownModule,
     ButtonModule,
@@ -33,49 +33,49 @@ export class LoginPageComponent {
 
   loginForm!: FormGroup;
 
-  
+
   AccountService = inject(AccountService);
   authService = inject(AuthServiceService);
 
 
-  constructor(private fb: FormBuilder, private messageService: MessageService, private router : Router) { }
+  constructor(private fb: FormBuilder, private messageService: MessageService, private router: Router) { }
 
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      identifier: ['', [Validators.required]],
       pin: ['', [Validators.required, Validators.pattern('^[0-9]{4,6}$')]]
     },);
-
   }
-   visible: boolean = false;
+  
+  visible: boolean = false;
 
-    showDialog() {
-        this.visible = true;
-    }
+  showDialog() {
+    this.visible = true;
+  }
 
-    closeDialog() {
-        this.visible = false;
-    }
+  closeDialog() {
+    this.visible = false;
+  }
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.loginForm.get(fieldName);
     return field ? field.invalid && (field.dirty || field.touched) : false;
   }
 
-  
- 
+
+
   onSubmit() {
     if (this.loginForm.valid) {
       const loginData = this.loginForm.value;
       this.AccountService.loginAccount(loginData).subscribe({
         next: (res) => {
-          this.authService.login(res.token , res.expiresAt);
+          this.authService.login(res.token, res.expiresAt);
           const token = res.token;
-  const expiresAt = Date.now() + 60 * 60 * 1000; // 10 minutes
+          const expiresAt = Date.now() + 60 * 60 * 1000; // 10 minutes
 
-  localStorage.setItem('token', token);
-  localStorage.setItem('expiresAt', expiresAt.toString());
+          localStorage.setItem('token', token);
+          localStorage.setItem('expiresAt', expiresAt.toString());
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
@@ -84,7 +84,7 @@ export class LoginPageComponent {
           setTimeout(() => {
             this.router.navigate(['privateMain']);
           }, 1000);
-        },  
+        },
         error: (err: any) => {
           console.error('Login failed', err);
           let errorMsg = 'Login failed. Please try again.';
@@ -99,7 +99,7 @@ export class LoginPageComponent {
         }
       });
     }
-  }  
+  }
 }
 
 

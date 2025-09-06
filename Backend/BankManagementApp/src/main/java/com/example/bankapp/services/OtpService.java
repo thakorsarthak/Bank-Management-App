@@ -36,7 +36,7 @@ public class OtpService {
 
 		String otp = generateOtp();
 		LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
-		System.out.println("Sending otp");
+		System.out.println("inside Sending otp service");
 		OtpRecord record = new OtpRecord();
 
 		record.setEmail(email);

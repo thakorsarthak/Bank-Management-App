@@ -107,7 +107,7 @@
           <label for="panNumber">PAN Number</label>
           <input id="panNumber" type="text" pInputText formControlName="panNo" placeholder="Enter PAN Number"
             class="w-full" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('panNo')}">
-          <small class="error-message" *ngIf="isFieldInvalid('panNo')">
+          <small class="error-message" *ngIf="isFieldInvalid('panNo') ">
             {{ getErrorMessage('panNo') }}
           </small>
         </div>
