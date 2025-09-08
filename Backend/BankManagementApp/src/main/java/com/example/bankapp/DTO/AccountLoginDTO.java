@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class AccountLoginDTO {
 
 	private String identifier;
-	private String pin;
+	private String password;
 }

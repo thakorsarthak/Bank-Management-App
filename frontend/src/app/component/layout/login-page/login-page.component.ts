@@ -10,7 +10,7 @@ import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
 import { AccountService } from '../../services/account.service';
 import { MessageService } from 'primeng/api';
-import { PasswordModule } from 'primeng/password';
+import { Password, PasswordModule } from 'primeng/password';
 import { Router, RouterLink } from '@angular/router';
 import { AuthServiceService } from '../../services/auth-service.service';
 import { PublicHeaderComponent } from "../../../core-component/core-component/public-header/public-header.component";
@@ -44,7 +44,7 @@ export class LoginPageComponent {
   ngOnInit() {
     this.loginForm = this.fb.group({
       identifier: ['', [Validators.required]],
-      pin: ['', [Validators.required, Validators.pattern('^[0-9]{4,6}$')]]
+      password: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9@$!%*?&]{4,12}$')]]
     },);
   }
   

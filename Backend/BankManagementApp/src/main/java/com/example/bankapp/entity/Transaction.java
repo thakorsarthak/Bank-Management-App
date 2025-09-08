@@ -29,7 +29,6 @@ public class Transaction {
 	private LocalDateTime timestamp;
 	private String type;
 	private Double amount;
-
 	private String description;
 	private Double beforebalance;
 	private Double afterbalance;

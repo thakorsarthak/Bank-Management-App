@@ -27,8 +27,8 @@ public class CustomAcountDetails implements UserDetails {
     @Override
     public String getPassword() {
         // This must be the encoded pin from DB
-        System.out.println("Spring checking encoded pin: " + account.getPin());
-        return account.getPin();
+        System.out.println("Spring checking encoded pin: " + account.getPassword());
+        return account.getPassword();
     }
 
     @Override

@@ -131,7 +131,7 @@ public class AccountServiceImp implements AccountService {
 		account.setBalance(balance != null ? balance : 10000.0);
 		account.setBranchCode(accountdto.getBranchCode());
 		account.setProductCode(accountdto.getProductCode());
-		account.setPassword(accountdto.getPassword());
+		account.setPassword(encoder.encode(accountdto.getPassword()));
 		account.setPin(encoder.encode(accountdto.getPin()));
 		// account.setAccountType(accountdto.getAccountType());
 
@@ -167,10 +167,9 @@ public class AccountServiceImp implements AccountService {
 
 		try {
 			Authentication authentication = authManage
-					.authenticate(new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPin()));
+					.authenticate(new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword()));
 
-			
-			
+			  
 			if (authentication.isAuthenticated()) {
 
 				Optional<Account> optionAcc = repo.findByIdentifier(account.getIdentifier());
