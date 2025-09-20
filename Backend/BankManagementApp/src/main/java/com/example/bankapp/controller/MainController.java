@@ -32,9 +32,9 @@ public class MainController {
 	@Autowired
 	JWTservices jwtService;
 
+	
+
 	// create account
-
-
 	@PostMapping("/create")
 	public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody AccountRequestDTO account) {
 		AccountResponseDTO createAccount = accountService.createAccount(account);
