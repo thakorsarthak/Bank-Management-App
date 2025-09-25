@@ -57,7 +57,7 @@ public class Account {
     @Column(nullable = false, unique = true)
     private Long contact;
 
- //   @Column( name="pan_number", nullable = false, length = 20 )
+    @Column( name="pan_number", nullable = false, length = 20 )
     @NotBlank(message = "PAN is required")
     @Pattern(
         regexp = "^[A-Z]{5}[0-9]{4}[A-Z]{1}$",
@@ -65,7 +65,7 @@ public class Account {
     )
     private String panNo;
 
-    //@Column(nullable = true , name="aadhaar_number")
+    @Column(nullable = true , name="aadhaar_number")
     @NotBlank(message = "Aadhaar number is required")
     @Pattern(
         regexp = "^[0-9]{12}$",
