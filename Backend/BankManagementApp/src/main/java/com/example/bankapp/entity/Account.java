@@ -48,7 +48,7 @@ public class Account {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, name = "password")
+    @Column(nullable = false, name = "password")//login password
     private String password;
     
     @Column(nullable = false , name="transaction_pin")
