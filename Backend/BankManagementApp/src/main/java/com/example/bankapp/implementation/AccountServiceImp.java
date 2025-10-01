@@ -100,9 +100,9 @@ public class AccountServiceImp implements AccountService {
 			errors.add(new FieldError("contact", "Acccount with this Contact is already Exist pls login"));
 		}
 		
-//		if (repo.existsByAadhaarNo(accountdto.getAadhaarNo())) {
-//			errors.add(new FieldError("contact", "Acccount with this Aadhaar is already Exist pls login"));
-//		}
+		if (repo.existsByAadhaarNo(accountdto.getAadhaarNo())) {
+			errors.add(new FieldError("aadhaarNo", "Acccount with this Aadhaar is already Exist pls login"));
+		}
 
 		// System.out.println("PIN: " + accountdto.getPin());
 		// System.out.println("Confirm PIN: " + accountdto.getConfirmPin());
