@@ -155,8 +155,12 @@ export class OpenAccountComponent implements OnInit {
                 this.signupForm.controls['contact'].setErrors({ serverError: fieldError.message });
               }
               if (fieldError.field === 'aadhaarNo') {
-                this.messageService.add({ severity: 'error', summary: 'Aadhar Already Registered', detail: 'Please use another Aadhar number' });
+                this.messageService.add({ severity: 'error', summary: 'Aadhar Already Registered', detail: 'Please use another Aadhar number or Login' });
                 this.signupForm.controls['aadhaarNo'].setErrors({ serverError: fieldError.message });
+              }
+               if (fieldError.field === 'panNo') {
+                this.messageService.add({ severity: 'error', summary: 'Pan Already Registered', detail: 'Please use another Pan number or Login' });
+                this.signupForm.controls['panNo'].setErrors({ serverError: fieldError.message });
               }
             });
           }
