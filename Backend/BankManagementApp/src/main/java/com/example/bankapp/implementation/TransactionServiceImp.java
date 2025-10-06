@@ -28,6 +28,7 @@ import com.example.bankapp.enums.TransactionStatus;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.TransactionRepo;
 import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.NotificationService;
 import com.example.bankapp.services.TransactionService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,6 +50,9 @@ public class TransactionServiceImp implements TransactionService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private NotificationService notificationService;
 
 //	@Override
 //	public List<TransactionResponseDTO> getTransactionHistoryByAccountNum(String accountNumber) {
@@ -163,6 +167,8 @@ public class TransactionServiceImp implements TransactionService {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new GlobalAPIResponseDTO<>("Receiver Account does not exist", false));
 		}
+		
+	
 
 		Account toAccount = toOptionalAcc.get();
 

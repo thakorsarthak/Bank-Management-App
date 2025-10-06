@@ -59,7 +59,6 @@ public class AccountServiceImp implements AccountService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	
 	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
 	private String generateAccountNumber(String branchCode, String productCode) {
@@ -99,11 +98,11 @@ public class AccountServiceImp implements AccountService {
 		if (repo.existsByContact(accountdto.getContact())) {
 			errors.add(new FieldError("contact", "Acccount with this Contact is already Exist pls login"));
 		}
-		
+
 		if (repo.existsByAadhaarNo(accountdto.getAadhaarNo())) {
 			errors.add(new FieldError("aadhaarNo", "Acccount with this Aadhaar is already Exist pls login"));
 		}
-		
+
 		if (repo.existsByPanNo(accountdto.getPanNo())) {
 			errors.add(new FieldError("panNo", "Acccount with this Pan is already Exist pls login"));
 		}
@@ -164,16 +163,14 @@ public class AccountServiceImp implements AccountService {
 
 	}
 
-	
-	//basically login
+	// basically login
 	@Override
 	public String verify(AccountLoginDTO account) {
 
 		try {
-			Authentication authentication = authManage
-					.authenticate(new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword()));
+			Authentication authentication = authManage.authenticate(
+					new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword()));
 
-			  
 			if (authentication.isAuthenticated()) {
 
 				Optional<Account> optionAcc = repo.findByIdentifier(account.getIdentifier());
@@ -187,8 +184,7 @@ public class AccountServiceImp implements AccountService {
 
 					String accountNum = acc.getAccountNumber();
 					// TTL should match to token's
-					redisTemplate.opsForValue().set("session:" + accountNum, token, 60, TimeUnit.MINUTES); 
-																											
+					redisTemplate.opsForValue().set("session:" + accountNum, token, 60, TimeUnit.MINUTES);
 
 					return token;
 				} else {
@@ -337,19 +333,17 @@ public class AccountServiceImp implements AccountService {
 
 	@Override
 	public ResponseEntity<?> ChangePinWithOtp(SetPinWithOtpDTO resetPin) {
-		if (!resetPin.getNewPin().equals(resetPin.getConfirmPin())) {
 
+		if (!resetPin.getNewPin().equals(resetPin.getConfirmPin())) {
 			return ResponseEntity.badRequest()
 					.body(new GlobalAPIResponseDTO<>("Pin and Confirm pin do not match", false));
 		}
 
 		Account account = null;
 		if (resetPin.getEmail() != null) {
-
 			account = repo.findByEmail(resetPin.getEmail())
 					.orElseThrow(() -> new RuntimeException("No account found with this Email"));
 		} else if (resetPin.getContact() != null) {
-
 			String phoneNo = resetPin.getContact();
 
 			if (phoneNo.length() > 10 && phoneNo.startsWith("91")) {
