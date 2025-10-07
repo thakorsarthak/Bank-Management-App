@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
 
 import com.example.bankapp.DTO.NotificationRequestDTO;
 import com.twilio.http.Request;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
+@Service
 public class NotificationService {
 
 	@Autowired
@@ -59,4 +61,15 @@ public class NotificationService {
 			 System.err.println("SMS sending failed: " + e.getMessage());
 		}
 	}
+	
+	private String buildMessage(NotificationRequestDTO dto) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Transaction Status: ").append(dto.getStatus()).append("\n");
+        sb.append("Amount: ₹").append(dto.getAmount()).append("\n");
+        sb.append("Sender Account: ").append(dto.getSenderAccountNo()).append("\n");
+        sb.append("Receiver Account: ").append(dto.getReceiverAccountNo()).append("\n");
+        sb.append("Time: ").append(dto.getTransactionTime()).append("\n");
+        sb.append("Thank you for banking with us!");
+        return sb.toString();
+    }
 }

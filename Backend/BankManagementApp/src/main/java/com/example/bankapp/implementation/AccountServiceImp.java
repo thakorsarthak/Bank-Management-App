@@ -170,6 +170,7 @@ public class AccountServiceImp implements AccountService {
 		try {
 			Authentication authentication = authManage.authenticate(
 					new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword()));
+			
 
 			if (authentication.isAuthenticated()) {
 
@@ -197,6 +198,7 @@ public class AccountServiceImp implements AccountService {
 
 		} catch (AuthenticationException ex) {
 			// log the error
+			System.err.println(account.getIdentifier());
 			System.out.println("Authentication failed: " + ex.getMessage());
 			return "Failed";
 		}
