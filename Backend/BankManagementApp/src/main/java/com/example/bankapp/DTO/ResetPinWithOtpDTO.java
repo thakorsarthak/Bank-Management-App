@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SetPinWithOtpDTO {
+public class ResetPinWithOtpDTO {
 
 
 	    private String email;

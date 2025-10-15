@@ -9,7 +9,8 @@ import com.example.bankapp.DTO.AccountRequestDTO;
 import com.example.bankapp.DTO.AccountResponseDTO;
 import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.ChangePinRequestDTO;
-import com.example.bankapp.DTO.SetPinWithOtpDTO;
+import com.example.bankapp.DTO.ResetPasswordWithOtpDTO;
+import com.example.bankapp.DTO.ResetPinWithOtpDTO;
 import com.example.bankapp.entity.Account;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,10 +35,11 @@ public interface AccountService {
 	String changePinWithOldPin(ChangePinRequestDTO changePin);
 
 	AccountResponseDTO updateAccountDetails(AccountUpdateRequestDTO dto);
+	
+	ResponseEntity<?> ChangePasswordWithOtp(ResetPasswordWithOtpDTO resestPassword);
 
 
-
-	ResponseEntity<?> ChangePinWithOtp(SetPinWithOtpDTO resestPin);
+	ResponseEntity<?> ChangePinWithOtp(ResetPinWithOtpDTO resestPin);
 
 	String verify(AccountLoginDTO account);
 	// Account verify(Account acc);

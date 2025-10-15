@@ -33,7 +33,7 @@ public class JWTservices {
 
 	public String extractTokenFromRequest(HttpServletRequest request) {
 	    String authHeader = request.getHeader("Authorization");
-	    System.out.println("authHeader" + authHeader );
+	    System.out.println("authHeader " + authHeader );
 
 	    if (authHeader != null && authHeader.startsWith("Bearer ")) {
 	        return authHeader.substring(7); // Remove "Bearer " prefix

@@ -24,7 +24,8 @@ import com.example.bankapp.DTO.AccountResponseDTO;
 import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.ChangePinRequestDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
-import com.example.bankapp.DTO.SetPinWithOtpDTO;
+import com.example.bankapp.DTO.ResetPasswordWithOtpDTO;
+import com.example.bankapp.DTO.ResetPinWithOtpDTO;
 import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.entity.Account;
@@ -334,7 +335,7 @@ public class AccountServiceImp implements AccountService {
 	}
 
 	@Override
-	public ResponseEntity<?> ChangePinWithOtp(SetPinWithOtpDTO resetPin) {
+	public ResponseEntity<?> ChangePinWithOtp(ResetPinWithOtpDTO resetPin) {
 
 		if (!resetPin.getNewPin().equals(resetPin.getConfirmPin())) {
 			return ResponseEntity.badRequest()
@@ -364,6 +365,43 @@ public class AccountServiceImp implements AccountService {
 		}
 
 		account.setPin(passwordEncoder.encode(resetPin.getNewPin()));
+		repo.save(account);
+		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("PIN updated successfully", true));
+
+	}
+	
+	
+	@Override
+	public ResponseEntity<?> ChangePasswordWithOtp(ResetPasswordWithOtpDTO resestPassword) {
+		
+		if (!resestPassword.getNewPassword() .equals(resestPassword.getConfirmPassword())) {
+			return ResponseEntity.badRequest()
+					.body(new GlobalAPIResponseDTO<>("Pin and Confirm pin do not match", false));
+		}
+
+		Account account = null;
+		if (resestPassword.getEmail() != null) {
+			account = repo.findByEmail(resestPassword.getEmail())
+					.orElseThrow(() -> new RuntimeException("No account found with this Email"));
+		} else if (resestPassword.getContact() != null) {
+			String phoneNo = resestPassword.getContact();
+
+			if (phoneNo.length() > 10 && phoneNo.startsWith("91")) {
+				phoneNo = phoneNo.substring(2);
+			}
+			// System.out.println(phoneNo);
+			Long phoneNumber = Long.parseLong(phoneNo);
+			// System.out.println(phoneNumber);
+
+			account = repo.findByContact(phoneNumber)
+					.orElseThrow(() -> new RuntimeException("No account found with this Contact No"));
+		}
+
+		if (account == null) {
+			return ResponseEntity.badRequest().body(new GlobalAPIResponseDTO<>("Account not found", false));
+		}
+
+		account.setPin(passwordEncoder.encode(resestPassword.getNewPassword()));
 		repo.save(account);
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("PIN updated successfully", true));
 
@@ -434,5 +472,7 @@ public class AccountServiceImp implements AccountService {
 		}
 		return false;
 	}
+
+	
 
 }
