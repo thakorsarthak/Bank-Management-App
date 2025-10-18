@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankapp.DTO.AccountResponseDTO;
 import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.ChangePinRequestDTO;
+import com.example.bankapp.DTO.ResetPasswordWithOtpDTO;
 import com.example.bankapp.DTO.ResetPinWithOtpDTO;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
@@ -57,11 +58,14 @@ public class AccountController {
 		return aService.ChangePinWithOtp(resetPin);
 	}
 	
-//	@PutMapping("/changePasswordWithOtp")
-//	public ResponseEntity<?> setPasswordWithOtp(@RequestBody ){
-//		
-//		
-//	}
+	
+	
+	@PutMapping("/changePasswordWithOtp")
+	public ResponseEntity<?> setPasswordWithOtp(@RequestBody ResetPasswordWithOtpDTO passwordWithOtpDTO ){
+		
+		return aService.ChangePasswordWithOtp(passwordWithOtpDTO);
+		
+	}
 
 	@PostMapping("/logout")
 	public ResponseEntity<?> logout(HttpServletRequest request) {

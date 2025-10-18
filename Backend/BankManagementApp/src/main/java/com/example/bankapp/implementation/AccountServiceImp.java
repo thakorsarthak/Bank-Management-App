@@ -401,7 +401,7 @@ public class AccountServiceImp implements AccountService {
 			return ResponseEntity.badRequest().body(new GlobalAPIResponseDTO<>("Account not found", false));
 		}
 
-		account.setPin(passwordEncoder.encode(resestPassword.getNewPassword()));
+		account.setPassword(passwordEncoder.encode(resestPassword.getNewPassword()));
 		repo.save(account);
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("PIN updated successfully", true));
 

@@ -42,7 +42,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private messageService: MessageService,
     private accountsService: AccountService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.resetForm = this.fb.group({
@@ -50,64 +50,64 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       otp: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
     });
     // Initialize pin form -- p daialog
-     this.pinForm = this.fb.group({
-    newPin: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
-    confirmPin: ['', Validators.required]
-  }, { validator: this.matchPins });
+    this.pinForm = this.fb.group({
+      newPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(12)]],
+      confirmPassword: ['', Validators.required]
+    }, { validator: this.matchPins });
   }
 
   //match the new pin and confirm pin
   matchPins(group: FormGroup) {
-  const pin = group.get('newPin')?.value;
-  const confirmPin = group.get('confirmPin')?.value;
-  return pin === confirmPin ? null : { notMatching: true };
-}
-
-  onPinSubmit() {
-    if(this.pinForm.invalid) return;
-    const{newPin, confirmPin} = this.pinForm.value;
-    const identifier = this.resetForm.get('identifier')?.value?.trim();
-
-    const payload : any = {newPin, confirmPin};
-    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)) {
-      payload.email = identifier;
-    }else if (/^[0-9]{10}$/.test(identifier)) {
-    payload.contact = `91${identifier}`;     //json for api
+    const newPassword = group.get('newPassword')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    return newPassword === confirmPassword ? null : { notMatching: true };
   }
 
-  this.accountsService.setPinWithOtp(payload).subscribe({
+  onPinSubmit() {
+    if (this.pinForm.invalid) return;
+    const { newPassword, confirmPassword } = this.pinForm.value;
+    const identifier = this.resetForm.get('identifier')?.value?.trim();
+
+    const payload: any = { newPassword, confirmPassword };
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)) {
+      payload.email = identifier;
+    } else if (/^[0-9]{10}$/.test(identifier)) {
+      payload.contact = `91${identifier}`;     //json for api
+    }
+
+    this.accountsService.setPinWithOtp(payload).subscribe({
       next: () => {
         this.messageService.add({
-        severity: 'success',
-        summary: 'PIN Updated',
-        detail: 'Your PIN has been successfully updated. You may Login now.'
-      });
+          severity: 'success',
+          summary: 'Password Updated',
+          detail: 'Your Password has been successfully updated. You may Login now.'
+        });
 
-      // Reset forms and close dialog
-      this.pinDialogVisible = false;
-      this.pinForm.reset();
-      this.resetForm.reset();
-      
+        // Reset forms and close dialog
+        this.pinDialogVisible = false;
+        this.pinForm.reset();
+        this.resetForm.reset();
 
-      // Reset OTP state
-     this.isOtpSent = false;
-  this.verifyDisabled = true;
-  this.resendDisabled = false;
 
-      
-      // Reset timer and  hide timer
-  this.stopTimer();
-  this.timeLeft = this.otpValidSeconds;
+        // Reset OTP state
+        this.isOtpSent = false;
+        this.verifyDisabled = true;
+        this.resendDisabled = false;
 
-    },
-    error: () => {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Failed',
-        detail: 'Failed to update PIN. Please try again.'
-      });
-    }
-  });
+
+        // Reset timer and  hide timer
+        this.stopTimer();
+        this.timeLeft = this.otpValidSeconds;
+
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Failed',
+          detail: 'Failed to update Password. Please try again.'
+        });
+      }
+    });
   }
 
 
@@ -141,6 +141,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
     const isPhone = /^[0-9]{10}$/.test(identifier);
 
+
     if (!isEmail && !isPhone) {
       this.messageService.add({
         severity: 'error',
@@ -155,14 +156,14 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     if (isEmail) payload.email = identifier;
     if (isPhone) payload.phone = `+91${identifier}`;
 
-  
-  
-  this.resendDisabled = true;
+
+
+    this.resendDisabled = true;
 
     this.accountsService.sendOtp(payload).subscribe({
       next: () => {
         this.isOtpSent = true;
-     
+
         this.messageService.add({
           severity: 'info',
           summary: 'OTP Sent',
@@ -178,9 +179,9 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
           summary: 'Failed',
           detail: errorMessage
         });
-       this.resendDisabled = false;
-     
-      this.isOtpSent = false;
+        this.resendDisabled = false;
+
+        this.isOtpSent = false;
       }
     });
   }
@@ -262,7 +263,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     this.stopTimer();
   }
 }
-// This component handles the reset password functionality, 
+// This component handles the reset password functionality,
 // including OTP generation and verification.
 
 

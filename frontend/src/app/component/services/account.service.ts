@@ -23,7 +23,7 @@ constructor(private http: HttpClient) { }
       return this.http.post<any>("http://localhost:6011/bankapp/otp/verify",obj)
   }
    setPinWithOtp(obj:any):Observable<any[]>{
-      return this.http.put<any>("http://localhost:6011/bankapp/account/changePinWithOtp",obj)
+      return this.http.put<any>("http://localhost:6011/bankapp/account/changePasswordWithOtp",obj)
   }
  
 }

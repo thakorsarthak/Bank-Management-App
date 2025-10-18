@@ -17,11 +17,9 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface AccountService {
 
-
-
 	AccountResponseDTO createAccount(AccountRequestDTO accountDto);
 
-	//AccountResponseDTO getAccountDetailByAccountNo(String accountNumber);
+	// AccountResponseDTO getAccountDetailByAccountNo(String accountNumber);
 
 	AccountResponseDTO getAccountDetailByAccountNo(HttpServletRequest request);
 
@@ -35,9 +33,8 @@ public interface AccountService {
 	String changePinWithOldPin(ChangePinRequestDTO changePin);
 
 	AccountResponseDTO updateAccountDetails(AccountUpdateRequestDTO dto);
-	
-	ResponseEntity<?> ChangePasswordWithOtp(ResetPasswordWithOtpDTO resestPassword);
 
+	ResponseEntity<?> ChangePasswordWithOtp(ResetPasswordWithOtpDTO resestPassword);
 
 	ResponseEntity<?> ChangePinWithOtp(ResetPinWithOtpDTO resestPin);
 

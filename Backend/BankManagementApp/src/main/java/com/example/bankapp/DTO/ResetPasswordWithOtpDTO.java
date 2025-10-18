@@ -15,7 +15,7 @@ public class ResetPasswordWithOtpDTO {
 	    private String contact;
 
 	    @NotBlank(message = "New Password is required")
-	    @Size(min = 4, max = 8, message = "PIN must be 4 to 8 digits")
+	    @Size(min = 4, max = 30, message = "Minimum 4 to Max 30 required in Password")
 	    private String newPassword;
 
 	    @NotBlank(message = "Confirm Password is required")
