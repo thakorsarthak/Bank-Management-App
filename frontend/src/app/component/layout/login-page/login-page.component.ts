@@ -87,11 +87,11 @@ export class LoginPageComponent {
         },
         error: (err: any) => {
           console.error('Login failed', err);
-          let errorMsg = 'Login failed. Please try again.';
+          let errorMsg = 'Login failed. Servers are down Momentarily. Please try again later.';
           if (err.status === 401 || err.status === 403) {
             errorMsg = 'Invalid email or pin. Please check your credentials.';
           }
-          this.messageService.add({
+          this.messageService.add({ 
             severity: 'error',
             summary: 'Login Failed',
             detail: errorMsg
