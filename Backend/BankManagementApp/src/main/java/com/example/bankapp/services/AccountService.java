@@ -1,6 +1,7 @@
 package com.example.bankapp.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 
@@ -40,4 +41,6 @@ public interface AccountService {
 
 	String verify(AccountLoginDTO account);
 	// Account verify(Account acc);
+
+	Optional<Account> findByIdentifier(String identifier);
 }

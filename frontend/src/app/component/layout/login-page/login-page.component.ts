@@ -82,7 +82,7 @@ export class LoginPageComponent {
             detail: 'Login successful! Redirecting to dashboard...'
           });
           setTimeout(() => {
-            this.router.navigate(['privateMain']);
+            this.router.navigate(['privateMain/dashBoard']);
           }, 1000);
         },
         error: (err: any) => {

@@ -33,7 +33,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
 	Optional<Account> findTopByOrderByIdDesc();
 	
-	
+	//Was Created to use in Login but not using it now
 	@Query("SELECT a FROM Account a WHERE " +
 		       "a.email = :id OR " +
 		       "CAST(a.contact AS string) = :id OR " +

@@ -60,6 +60,11 @@ public class AccountServiceImp implements AccountService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+
+	
+	
+
+	
 	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
 	private String generateAccountNumber(String branchCode, String productCode) {
@@ -164,46 +169,105 @@ public class AccountServiceImp implements AccountService {
 
 	}
 
-	// basically login
+	
+	//Identifier for Login email, AccointNumber and Contact
+	@Override
+	public Optional<Account> findByIdentifier(String identifier) {
+	    identifier = identifier.trim();
+
+	    if (identifier.contains("@")) {
+	        return repo.findByEmail(identifier.toLowerCase());
+	    } else if (identifier.matches("\\d{10}")) {
+	        return repo.findByContact(Long.parseLong(identifier));
+	    } else {
+	        return repo.findByAccountNumber(identifier);
+	    }
+	}
+	
+	
 	@Override
 	public String verify(AccountLoginDTO account) {
+	    try {
+	        // Step 1: Authenticate credentials
+	        Authentication authentication = authManage.authenticate(
+	                new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword())
+	        );
 
-		try {
-			Authentication authentication = authManage.authenticate(
-					new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword()));
-			
+	        if (!authentication.isAuthenticated()) {
+	            return "Failed";
+	        }
 
-			if (authentication.isAuthenticated()) {
+	        // Step 2: Find account by identifier (email/contact/accountNo)
+	        Optional<Account> optionalAcc = findByIdentifier(account.getIdentifier());
+	        if (optionalAcc.isEmpty()) {
+	            System.out.println("Account not found in database after authentication.");
+	            return "Failed";
+	        }
 
-				Optional<Account> optionAcc = repo.findByIdentifier(account.getIdentifier());
+	        Account acc = optionalAcc.get();
 
-				if (optionAcc.isPresent()) {
+	        // Step 3: Generate JWT token
+	        String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber());
+	        System.out.println("Token From verify: " + token);
 
-					Account acc = optionAcc.get();
-					String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber());
+	        // Step 4: Store token in Redis with TTL = 60 minutes
+	        redisTemplate.opsForValue().set("session:" + acc.getAccountNumber(), token, 60, TimeUnit.MINUTES);
 
-					System.out.println("Token From verify: " + token);
+	        // Step 5: Return token
+	        return token;
 
-					String accountNum = acc.getAccountNumber();
-					// TTL should match to token's
-					redisTemplate.opsForValue().set("session:" + accountNum, token, 60, TimeUnit.MINUTES);
-
-					return token;
-				} else {
-					System.out.println("Account not found in database after authentication.");
-					return "failed";
-				}
-			}
-
-			return "Failed"; // Should never reach here normally
-
-		} catch (AuthenticationException ex) {
-			// log the error
-			System.err.println(account.getIdentifier());
-			System.out.println("Authentication failed: " + ex.getMessage());
-			return "Failed";
-		}
+	    } catch (AuthenticationException ex) {
+	        System.err.println("Authentication failed for: " + account.getIdentifier());
+	        System.out.println("Error: " + ex.getMessage());
+	        return "Failed";
+	    }
 	}
+
+	
+	
+	// Login Service 
+//	@Override
+//	public String verify(AccountLoginDTO account) {
+//
+//		try {
+//			Authentication authentication = authManage.authenticate(
+//					new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword()));
+//			
+//			if (!authentication.isAuthenticated()) {
+//	            return "Failed";
+//	        }
+//
+//			if (authentication.isAuthenticated()) {
+//
+//				Optional<Account> optionAcc = repo.findByIdentifier(account.getIdentifier());
+//
+//				if (optionAcc.isPresent()) {
+//
+//					Account acc = optionAcc.get();
+//					String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber());
+//
+//					System.out.println("Token From verify: " + token);
+//
+//					String accountNum = acc.getAccountNumber();
+//					// TTL should match to token's
+//					redisTemplate.opsForValue().set("session:" + accountNum, token, 60, TimeUnit.MINUTES);
+//
+//					return token;
+//				} else {
+//					System.out.println("Account not found in database after authentication.");
+//					return "failed";
+//				}
+//			}
+//
+//			return "Failed"; // Should never reach here normally
+//
+//		} catch (AuthenticationException ex) {
+//			// log the error
+//			System.err.println(account.getIdentifier());
+//			System.out.println("Authentication failed: " + ex.getMessage());
+//			return "Failed";
+//		}
+//	}
 
 	@Override
 	public ResponseEntity<?> getAccountHolderName(String accountNumber) {
