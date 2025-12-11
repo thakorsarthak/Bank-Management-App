@@ -32,8 +32,6 @@ public class MainController {
 	@Autowired
 	JWTservices jwtService;
 
-	
-
 	// create account
 	@PostMapping("/create")
 	public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody AccountRequestDTO account) {
@@ -41,6 +39,7 @@ public class MainController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(createAccount);
 	}
 
+	
 	@PostMapping("/login-account")
 	public ResponseEntity<?> login(@RequestBody AccountLoginDTO acc) {
 		String token = accountService.verify(acc);

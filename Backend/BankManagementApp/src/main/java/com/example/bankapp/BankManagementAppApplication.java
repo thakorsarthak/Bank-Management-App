@@ -11,5 +11,4 @@ public class BankManagementAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BankManagementAppApplication.class, args);
 	}
-
 }

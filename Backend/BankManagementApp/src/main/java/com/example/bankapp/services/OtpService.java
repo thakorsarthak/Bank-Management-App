@@ -4,12 +4,15 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.example.bankapp.DTO.NotificationEvent;
+import com.example.bankapp.config.RabbitMQConstants;
 import com.example.bankapp.entity.OtpRecord;
 import com.example.bankapp.repository.OtpRepository;
 import com.twilio.rest.api.v2010.account.Message;
@@ -23,6 +26,9 @@ public class OtpService {
 
 	@Autowired
 	private OtpRepository otpRepo;
+	
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
 
 	@Value("${twilio.phone.number}")
 	private String twiliPhone;
@@ -52,6 +58,21 @@ public class OtpService {
 		if (phone != null) {
 			sendSms(phone, otp);
 		}
+		
+		 NotificationEvent event = new NotificationEvent();
+		    event.setEmail(email);
+		    event.setPhone(phone);
+		    event.setMessageType("OTP");
+		    event.setOtp(otp);
+
+		    // Publish to RabbitMQ
+		    rabbitTemplate.convertAndSend(
+		        RabbitMQConstants.NOTIFICATION_EXCHANGE,
+		        RabbitMQConstants.OTP_ROUTING_KEY,
+		        event
+		    );
+
+		    System.out.println("OTP published to RabbitMQ: " + otp);
 
 	}
 

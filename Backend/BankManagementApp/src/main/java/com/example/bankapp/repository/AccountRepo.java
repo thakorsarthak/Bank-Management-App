@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.bankapp.entity.Account;
 
-
-
 @Repository
 public interface AccountRepo extends JpaRepository<Account, Long> {
 	boolean existsByEmail(String email);
@@ -27,7 +25,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
 	Optional<Account> findByAccountNumber(String accountNumber);
 	
-	
+
 
 	//Optional<Account> findTopByOrderByAccountNumberDesc();
 

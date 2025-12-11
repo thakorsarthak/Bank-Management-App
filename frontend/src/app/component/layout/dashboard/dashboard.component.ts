@@ -23,9 +23,9 @@ import { OverlayBadgeModule } from 'primeng/overlaybadge';
 })
 export class DashboardComponent implements OnInit {
   account: any;
-   totalTransactions = 0;
-creditTransactions = 0;
-debitTransactions = 0;
+  totalTransactions = 0;
+  creditTransactions = 0;
+  debitTransactions = 0;
 
   constructor(
     private authservice: AuthServiceService,

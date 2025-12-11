@@ -8,6 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public interface CustomAcountDetailService extends UserDetailsService {
 
 	@Override
-	UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
+	UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException;
 
 }

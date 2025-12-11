@@ -60,11 +60,6 @@ public class AccountServiceImp implements AccountService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-
-	
-	
-
-	
 	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
 	private String generateAccountNumber(String branchCode, String productCode) {
@@ -170,7 +165,7 @@ public class AccountServiceImp implements AccountService {
 	}
 
 	
-	//Identifier for Login email, AccointNumber and Contact
+	//Identifier for Login through email, AccointNumber and Contact
 	@Override
 	public Optional<Account> findByIdentifier(String identifier) {
 	    identifier = identifier.trim();
@@ -208,7 +203,7 @@ public class AccountServiceImp implements AccountService {
 
 	        // Step 3: Generate JWT token
 	        String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber());
-	        System.out.println("Token From verify: " + token);
+	        System.out.println("Token [From verify]: " + token);
 
 	        // Step 4: Store token in Redis with TTL = 60 minutes
 	        redisTemplate.opsForValue().set("session:" + acc.getAccountNumber(), token, 60, TimeUnit.MINUTES);
@@ -246,7 +241,7 @@ public class AccountServiceImp implements AccountService {
 //					Account acc = optionAcc.get();
 //					String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber());
 //
-//					System.out.println("Token From verify: " + token);
+//					System.out.println("Token [From verify]: " + token);
 //
 //					String accountNum = acc.getAccountNumber();
 //					// TTL should match to token's
