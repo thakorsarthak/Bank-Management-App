@@ -100,8 +100,10 @@ public class OtpController {
 
 		boolean valid = otpService.verifyOtp(email, phone, otp);
 		if (valid) {
+			System.out.println("Correct OTP");
 			return ResponseEntity.ok(Collections.singletonMap("message", "OTP verified"));
 		} else {
+			System.out.println("Incorrect OTP");
 			return ResponseEntity.status(401).body(new GlobalAPIResponseDTO<>( "Invalid or expired OTP", false));
 		}
 	}

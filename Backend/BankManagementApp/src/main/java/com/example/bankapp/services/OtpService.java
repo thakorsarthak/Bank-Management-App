@@ -30,8 +30,8 @@ public class OtpService {
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
-	@Value("${twilio.phone.number}")
-	private String twiliPhone;
+//	@Value("${twilio.phone.number}")
+//	private String twiliPhone;
 
 	private String generateOtp() {
 
@@ -52,12 +52,12 @@ public class OtpService {
 
 		otpRepo.save(record);
 
-		if (email != null) {
-			sendEmail(email, otp);
-		}
-		if (phone != null) {
-			sendSms(phone, otp);
-		}
+//		if (email != null) {
+//			sendEmail(email, otp);
+//		}
+//		if (phone != null) {
+//			sendSms(phone, otp);
+//		}
 		
 		 NotificationEvent event = new NotificationEvent();
 		    event.setEmail(email);
@@ -76,28 +76,49 @@ public class OtpService {
 
 	}
 
-	public boolean verifyOtp(String email, String phone, String otp) {
-		System.out.println("Inside Verify OTP");
-		Optional<OtpRecord> result = (email != null)
-				? otpRepo.findByEmailAndOtp(email, otp) : otpRepo.findByPhoneAndOtp(phone, otp);
-		return result.isPresent() && result.get().getExpiryTime().isAfter(LocalDateTime.now());
-	}
+//	public boolean verifyOtp(String email, String phone, String otp) {
+//		System.out.println("Inside Verify OTP");
+//		Optional<OtpRecord> result = (email != null)
+//				? otpRepo.findByEmailAndOtp(email, otp) : otpRepo.findByPhoneAndOtp(phone, otp);
+//		return result.isPresent() && result.get().getExpiryTime().isAfter(LocalDateTime.now());
+//	}
 
+	
+	 public boolean verifyOtp(String email, String phone, String otp) {
 
-	private void sendEmail(String email, String otp) {
+	        Optional<OtpRecord> result = (email != null)
+	                ? otpRepo.findByEmailAndOtp(email, otp)
+	                : otpRepo.findByPhoneAndOtp(phone, otp);
 
-		SimpleMailMessage msg = new  SimpleMailMessage();
-		msg.setTo(email);
-		msg.setSubject("OTP Verification");
-		msg.setText("Your OTP is: "+ otp);
-		mailSender.send(msg);
-	}
+	        if (result.isEmpty()) return false;
 
-	private void sendSms(String phone, String otp) {
+	        OtpRecord record = result.get();
 
-		Message.creator( new PhoneNumber(phone),
-				new PhoneNumber(twiliPhone),
-				"Your OTP is: "+ otp
-				).create();
-	}
+	        // expiry check
+	        if (record.getExpiryTime().isBefore(LocalDateTime.now())) {
+	            return false;
+	        }
+
+	        // OTP matched and valid → delete it
+	        otpRepo.delete(record);
+
+	        return true;
+	    }
+
+//	private void sendEmail(String email, String otp) {
+//
+//		SimpleMailMessage msg = new  SimpleMailMessage();
+//		msg.setTo(email);
+//		msg.setSubject("OTP Verification");
+//		msg.setText("Your OTP is: "+ otp);
+//		mailSender.send(msg);
+//	}
+//
+//	private void sendSms(String phone, String otp) {
+//
+//		Message.creator( new PhoneNumber(phone),
+//				new PhoneNumber(twiliPhone),
+//				"Your OTP is: "+ otp
+//				).create();
+//	}
 }

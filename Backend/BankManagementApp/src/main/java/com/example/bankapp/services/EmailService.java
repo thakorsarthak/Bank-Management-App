@@ -17,7 +17,7 @@ public class EmailService {
 		SimpleMailMessage msg = new  SimpleMailMessage();
 		msg.setTo(email);
 		msg.setSubject("OTP Verification");
-		msg.setText("Your OTP is reset password is : "+ otp);
+		msg.setText("Your OTP for reset password is : "+ otp);
 		mailSender.send(msg);
 		
 	}
