@@ -15,6 +15,7 @@ Backend
 - Twilio (for SMS OTP - simulated)
 - JavaMailSender (for Email OTP)
 - Redis (For session Mangement)
+- RabbitMQ (For Messaging)
 
 Frontend
 - Angular 19
