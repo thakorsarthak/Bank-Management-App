@@ -39,7 +39,7 @@ public class OTPConsumer {
 	            System.out.println(" OTP sent successfully!");
 
 	        } catch (Exception ex) {
-	            System.out.println("❌ Error sending OTP: " + ex.getMessage());
+	            System.out.println("Error sending OTP: " + ex.getMessage());
 	            throw ex; // sending to DLQ automatically
 	        }
 	}

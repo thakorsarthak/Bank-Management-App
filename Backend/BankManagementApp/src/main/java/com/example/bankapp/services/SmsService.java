@@ -19,7 +19,7 @@ public class SmsService {
 				"Your OTP is: "+ otp
 				).create();
 		
-		 System.out.println("📱 SMS OTP Sent → " + phone);
+		 System.out.println(" SMS OTP Sent → " + phone);
 	}
 
 }
