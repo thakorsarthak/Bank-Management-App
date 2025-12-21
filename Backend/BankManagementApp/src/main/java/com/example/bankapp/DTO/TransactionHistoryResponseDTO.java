@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransactionHistoryResponseDTO {
-	
+
 	private List<TransactionResponseDTO> response ;
 	private Long totalTransactions;
 	private Long debitCount;
 	private Long creditCount;
 	private int currentPage;
 	private int totalPages;
-	
+
 
 
 }

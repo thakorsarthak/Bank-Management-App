@@ -6,8 +6,6 @@ import java.util.Optional;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +13,6 @@ import com.example.bankapp.DTO.NotificationEvent;
 import com.example.bankapp.config.RabbitMQConstants;
 import com.example.bankapp.entity.OtpRecord;
 import com.example.bankapp.repository.OtpRepository;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
 
 @Service
 public class OtpService {
@@ -26,7 +22,7 @@ public class OtpService {
 
 	@Autowired
 	private OtpRepository otpRepo;
-	
+
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
@@ -58,7 +54,7 @@ public class OtpService {
 //		if (phone != null) {
 //			sendSms(phone, otp);
 //		}
-		
+
 		 NotificationEvent event = new NotificationEvent();
 		    event.setEmail(email);
 		    event.setPhone(phone);
@@ -83,14 +79,16 @@ public class OtpService {
 //		return result.isPresent() && result.get().getExpiryTime().isAfter(LocalDateTime.now());
 //	}
 
-	
+
 	 public boolean verifyOtp(String email, String phone, String otp) {
 
 	        Optional<OtpRecord> result = (email != null)
 	                ? otpRepo.findByEmailAndOtp(email, otp)
 	                : otpRepo.findByPhoneAndOtp(phone, otp);
 
-	        if (result.isEmpty()) return false;
+	        if (result.isEmpty()) {
+				return false;
+			}
 
 	        OtpRecord record = result.get();
 

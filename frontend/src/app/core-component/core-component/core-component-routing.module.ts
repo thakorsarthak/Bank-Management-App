@@ -11,6 +11,7 @@ import { authGuardGuard } from '../../guards/auth-guard.guard';
 import { TransferMoneyComponent } from '../../component/layout/transfer-money/transfer-money.component';
 import { TransactionComponent } from '../../component/layout/transaction/transaction.component';
 import { ForgetPinComponent } from '../../component/layout/forget-pin/forget-pin.component';
+import { AdminComponentComponent } from '../../component/layout/admin-component/admin-component.component';
 
 
 const routes:  Routes = [
@@ -33,6 +34,7 @@ const routes:  Routes = [
           { path: 'dashBoard', component: DashboardComponent },
           { path: 'transferMoney', component: TransferMoneyComponent },
           { path: 'transaction', component: TransactionComponent },
+           { path: 'adminDashboard',component: AdminComponentComponent},
           
       ]
     }

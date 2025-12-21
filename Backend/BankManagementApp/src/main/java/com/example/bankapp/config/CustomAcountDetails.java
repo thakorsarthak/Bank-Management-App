@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.bankapp.entity.Account;
+import com.example.bankapp.enums.AccountStatus;
 
 public class CustomAcountDetails implements UserDetails {
 
@@ -76,6 +77,6 @@ public class CustomAcountDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return account.getStatus()== AccountStatus.ACTIVE;
     }
 }

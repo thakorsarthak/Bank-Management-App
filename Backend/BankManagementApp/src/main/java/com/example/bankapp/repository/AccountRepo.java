@@ -16,21 +16,20 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 	boolean existsByContact(Long contact);
 
 	boolean existsByAadhaarNo(String aadharNo);
-	
+
 	boolean existsByPanNo(String panNo);
-	
+
 	Optional<Account> findByEmail(String email);
 
 	Optional<Account> findByContact(Long Contact);
 
 	Optional<Account> findByAccountNumber(String accountNumber);
-	
 
 
 	//Optional<Account> findTopByOrderByAccountNumberDesc();
 
 	Optional<Account> findTopByOrderByIdDesc();
-	
+
 	//Was Created to use in Login but not using it now
 	@Query("SELECT a FROM Account a WHERE " +
 		       "a.email = :id OR " +

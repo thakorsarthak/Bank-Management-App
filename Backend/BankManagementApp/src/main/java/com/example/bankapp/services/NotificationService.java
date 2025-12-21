@@ -7,7 +7,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.example.bankapp.DTO.NotificationRequestDTO;
-import com.twilio.http.Request;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
@@ -44,7 +43,7 @@ public class NotificationService {
 			msg.setSubject(subject);
 			msg.setText(body);
 			mailSender.send(msg);
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			  System.err.println("Email sending failed: " + e.getMessage());
@@ -61,7 +60,7 @@ public class NotificationService {
 			 System.err.println("SMS sending failed: " + e.getMessage());
 		}
 	}
-	
+
 	private String buildMessage(NotificationRequestDTO dto) {
         StringBuilder sb = new StringBuilder();
         sb.append("Transaction Status: ").append(dto.getStatus()).append("\n");

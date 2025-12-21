@@ -17,7 +17,7 @@ public class CustomAccountDetailServiceImp implements CustomAcountDetailService 
 
 	@Autowired
 	private AccountRepo accountRepo;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
 

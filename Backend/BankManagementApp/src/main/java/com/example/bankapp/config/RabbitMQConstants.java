@@ -1,7 +1,7 @@
 package com.example.bankapp.config;
 
 public class RabbitMQConstants {
-	
+
 	    // Exchanges
 	    public static final String NOTIFICATION_EXCHANGE = "notification_exchange";
 
@@ -14,6 +14,6 @@ public class RabbitMQConstants {
 	    // Routing keys
 	    public static final String EMAIL_ROUTING_KEY = "notification.email";
 	    public static final String SMS_ROUTING_KEY = "notification.sms";
-	    public static final String OTP_ROUTING_KEY = "notification.otp";  // <- OTP
+	    public static final String OTP_ROUTING_KEY = "notification.otp";  //  OTP
 	}
 

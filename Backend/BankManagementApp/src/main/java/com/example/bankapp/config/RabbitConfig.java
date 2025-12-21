@@ -16,33 +16,33 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-	
+
 	//JSON message converter
 	@Bean
 	public MessageConverter jsonMessageConverter() {
 		return new Jackson2JsonMessageConverter();
 	}
-	
-	
+
+
 	//rabbittemplate with JSON
 	@Bean
 	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-		
+
 		RabbitTemplate template = new RabbitTemplate(connectionFactory);
 		template.setMessageConverter(jsonMessageConverter());
 		return template;
-		
+
 	}
-	
+
 	@Bean
 	public Queue otpQueue() {
-		
+
 		return QueueBuilder.durable(RabbitMQConstants.OTP_QUEUE)
 				.withArgument("x-dead-letter-exchange", "")
 				.withArgument("x-dead-letter-routing-key", RabbitMQConstants.OTP_DLQ)
 				.build();
 	}
-	
+
 	@Bean
     public Queue otpDlq() {
         return QueueBuilder.durable(RabbitMQConstants.OTP_DLQ).build();
@@ -61,5 +61,5 @@ public class RabbitConfig {
                 .to(notificationExchange)
                 .with(RabbitMQConstants.OTP_ROUTING_KEY);
     }
-	
+
 }

@@ -19,8 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.bankapp.DTO.AccountLoginDTO;
-import com.example.bankapp.DTO.AccountRequestDTO;
 import com.example.bankapp.DTO.AccountResponseDTO;
+import com.example.bankapp.DTO.AccountSignUpDTO;
 import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.ChangePinRequestDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
@@ -30,8 +30,10 @@ import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Address;
+import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Branch;
 import com.example.bankapp.enums.ProductType;
+import com.example.bankapp.enums.Role;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.TransactionRepo;
 import com.example.bankapp.services.AccountService;
@@ -53,6 +55,7 @@ public class AccountServiceImp implements AccountService {
 
 	@Autowired
 	TransactionRepo Trepo;
+
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
@@ -88,7 +91,7 @@ public class AccountServiceImp implements AccountService {
 	}
 
 	@Override
-	public AccountResponseDTO createAccount(AccountRequestDTO accountdto) {
+	public AccountResponseDTO createAccount(AccountSignUpDTO accountdto) {
 
 		List<FieldError> errors = new ArrayList<>();
 
@@ -121,6 +124,8 @@ public class AccountServiceImp implements AccountService {
 
 		String generatedAccountNumber = generateAccountNumber(accountdto.getBranchCode(), accountdto.getProductCode());
 
+
+
 		Account account = new Account();
 
 		Double balance = accountdto.getBalance();
@@ -137,7 +142,10 @@ public class AccountServiceImp implements AccountService {
 		account.setProductCode(accountdto.getProductCode());
 		account.setPassword(encoder.encode(accountdto.getPassword()));
 		account.setPin(encoder.encode(accountdto.getPin()));
+		account.setRole(Role.ROLE_USER);
+		account.setStatus(AccountStatus.PENDING_KYC);
 		// account.setAccountType(accountdto.getAccountType());
+
 
 		System.out.println(account);
 		// for address
@@ -164,7 +172,7 @@ public class AccountServiceImp implements AccountService {
 
 	}
 
-	
+
 	//Identifier for Login through email, AccointNumber and Contact
 	@Override
 	public Optional<Account> findByIdentifier(String identifier) {
@@ -178,8 +186,8 @@ public class AccountServiceImp implements AccountService {
 	        return repo.findByAccountNumber(identifier);
 	    }
 	}
-	
-	
+
+
 	@Override
 	public String verify(AccountLoginDTO account) {
 	    try {
@@ -218,16 +226,16 @@ public class AccountServiceImp implements AccountService {
 	    }
 	}
 
-	
-	
-	// Login Service 
+
+
+	// Login Service
 //	@Override
 //	public String verify(AccountLoginDTO account) {
 //
 //		try {
 //			Authentication authentication = authManage.authenticate(
 //					new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword()));
-//			
+//
 //			if (!authentication.isAuthenticated()) {
 //	            return "Failed";
 //	        }
@@ -428,11 +436,11 @@ public class AccountServiceImp implements AccountService {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("PIN updated successfully", true));
 
 	}
-	
-	
+
+
 	@Override
 	public ResponseEntity<?> ChangePasswordWithOtp(ResetPasswordWithOtpDTO resestPassword) {
-		
+
 		if (!resestPassword.getNewPassword() .equals(resestPassword.getConfirmPassword())) {
 			return ResponseEntity.badRequest()
 					.body(new GlobalAPIResponseDTO<>("Pin and Confirm pin do not match", false));
@@ -523,7 +531,7 @@ public class AccountServiceImp implements AccountService {
 	@Override
 	public Boolean closeAccount(Long accountNumber) {
 		Optional<Account> byId = repo.findById(accountNumber);
-
+		System.out.println("In delete api");
 		if (byId.isPresent()) {
 
 			repo.deleteById(accountNumber);
@@ -532,6 +540,6 @@ public class AccountServiceImp implements AccountService {
 		return false;
 	}
 
-	
+
 
 }

@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 
 import com.example.bankapp.DTO.AccountLoginDTO;
-import com.example.bankapp.DTO.AccountRequestDTO;
 import com.example.bankapp.DTO.AccountResponseDTO;
+import com.example.bankapp.DTO.AccountSignUpDTO;
 import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.ChangePinRequestDTO;
 import com.example.bankapp.DTO.ResetPasswordWithOtpDTO;
@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface AccountService {
 
-	AccountResponseDTO createAccount(AccountRequestDTO accountDto);
+	AccountResponseDTO createAccount(AccountSignUpDTO accountDto);
 
 	// AccountResponseDTO getAccountDetailByAccountNo(String accountNumber);
 

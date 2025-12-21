@@ -57,14 +57,14 @@ public class AccountController {
 
 		return aService.ChangePinWithOtp(resetPin);
 	}
-	
-	
-	
+
+
+
 	@PutMapping("/changePasswordWithOtp")
 	public ResponseEntity<?> setPasswordWithOtp(@RequestBody ResetPasswordWithOtpDTO passwordWithOtpDTO ){
-		
+
 		return aService.ChangePasswordWithOtp(passwordWithOtpDTO);
-		
+
 	}
 
 	@PostMapping("/logout")

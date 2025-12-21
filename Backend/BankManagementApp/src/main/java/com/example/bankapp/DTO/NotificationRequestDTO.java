@@ -18,5 +18,5 @@ public class NotificationRequestDTO {
 	    private String senderAccountNo;
 	    private String receiverAccountNo;
 	    private String status;         // SUCCESS/FAILED
-	    private String transactionTime; 
+	    private String transactionTime;
 }

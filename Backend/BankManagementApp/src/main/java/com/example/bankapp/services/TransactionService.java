@@ -3,7 +3,6 @@ package com.example.bankapp.services;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 import com.example.bankapp.DTO.TransactionHistoryResponseDTO;
@@ -24,7 +23,7 @@ public interface TransactionService {
 	public TransactionHistoryResponseDTO  getTransactions(String accountNumber, int page, int size, String sortby , String sortDirection);
 
 	// public Page<TransactionResponseDTO> getTransactions(String accountNumber, int page, int size);
-	 
+
 		String depositAmount(TransactionReqDTO request);
 
 		// Account depositAmount(Long accountNumber,Double amount);old

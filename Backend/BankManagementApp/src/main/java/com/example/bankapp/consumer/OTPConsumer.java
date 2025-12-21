@@ -10,23 +10,23 @@ import com.example.bankapp.services.SmsService;
 
 @Component
 public class OTPConsumer {
-	
+
 	private final EmailService emailService;
 	private final SmsService smsService;
-	
-	
+
+
 	private OTPConsumer(EmailService emailService , SmsService smsService) {
-		
+
 		this.emailService = emailService;
 		this.smsService = smsService;
 	}
-	
+
 	// This listens to otp_queue
 	@RabbitListener(queues = RabbitMQConstants.OTP_QUEUE)
 	public void handleOtp(NotificationEvent event) {
-		
+
 		System.out.println("Consumer OTP recived" + event);
-		
+
 		 try {
 	            if (event.getEmail() != null) {
 	                emailService.sendOtpEmail(event.getEmail(), event.getOtp());

@@ -1,6 +1,5 @@
 package com.example.bankapp.controller;
 
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankapp.DTO.AccountLoginDTO;
-import com.example.bankapp.DTO.AccountRequestDTO;
 import com.example.bankapp.DTO.AccountResponseDTO;
+import com.example.bankapp.DTO.AccountSignUpDTO;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
@@ -34,12 +33,11 @@ public class MainController {
 
 	// create account
 	@PostMapping("/create")
-	public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody AccountRequestDTO account) {
+	public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody AccountSignUpDTO account) {
 		AccountResponseDTO createAccount = accountService.createAccount(account);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createAccount);
 	}
 
-	
 	@PostMapping("/login-account")
 	public ResponseEntity<?> login(@RequestBody AccountLoginDTO acc) {
 		String token = accountService.verify(acc);
@@ -47,9 +45,9 @@ public class MainController {
 
 			Date expiryDate = jwtService.extractExpiration(token);
 			Map<String, Object> response = new HashMap<>();
-            response.put("token", token);
-            response.put("expiresAt", expiryDate.getTime());
-		//	return ResponseEntity.ok(new TokenResponseDTO(token));
+			response.put("token", token);
+			response.put("expiresAt", expiryDate.getTime());
+			// return ResponseEntity.ok(new TokenResponseDTO(token));
 			return ResponseEntity.ok(response);
 		} else {
 			System.out.println("Wrong credentials");
@@ -63,7 +61,6 @@ public class MainController {
 //		return ResponseEntity.ok(accountDetailByAccountNo);
 //	}
 //
-
 
 	@GetMapping("/getallaccount")
 	public List<Account> getAllAccount() {

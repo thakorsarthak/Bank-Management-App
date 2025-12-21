@@ -36,7 +36,7 @@
           <label for="pin">Login Password</label>
           <span class="p-input-icon-right w-full">
             <i class="pi pi-lock" style="padding-right: 10px;"></i>
-            <input id="password" type="password" pInputText formControlName="password" placeholder="Enter PIN"
+            <input id="password" type="password" pInputText formControlName="password" placeholder="Enter Password"
               maxlength="18" class="w-full" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('password')}">
           </span>
           <small class="error-message" *ngIf="isFieldInvalid('password')">
@@ -49,7 +49,7 @@
           <span class="p-input-icon-right w-full">
             <i class="pi pi-lock" style="padding-right: 10px;"></i>
             <input id="confirmPassword" type="password" pInputText formControlName="confirmPassword"
-              placeholder="Confirm PIN" maxlength="18" class="w-full"
+              placeholder="Confirm Password" maxlength="18" class="w-full"
               [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('confirmPassword')}">
           </span>
           <small class="error-message"

@@ -28,12 +28,12 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 
 	List<Transaction> findByAccountAndDirection(Account acc, String direction);
 
-	
+
 	Long countByAccount_AccountNumber(String accountNumber);
-	
+
 	Long countByAccount_AccountNumberAndDirection(String accountNumber , String direction);
-	
-	
+
+
 	@Query("SELECT t FROM Transaction t " +
 			"WHERE t.account.accountNumber = :accountNumber " +
 			"AND t.timestamp >= :startDate " +
