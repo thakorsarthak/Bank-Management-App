@@ -38,7 +38,7 @@ public class securityConfig {
 
 				.csrf(customizer -> customizer.disable())
 				.authorizeHttpRequests(request -> request
-						.requestMatchers("/account/**","/transaction/**","/main/**","/otp/**","/swagger-ui/**","/v3/api-docs/**","/swagger-resources/**")
+						.requestMatchers("/account/**","/transaction/**","/main/**","/otp/**","/webjars/**","/swagger-ui/**","/swagger-ui.html","/v3/api-docs/**","/swagger-resources/**")
 						.permitAll()
 						.anyRequest().authenticated())
 				// .formLogin(Customizer.withDefaults())

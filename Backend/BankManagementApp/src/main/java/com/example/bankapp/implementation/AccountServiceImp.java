@@ -40,21 +40,23 @@ import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 
 @Service
+
 public class AccountServiceImp implements AccountService {
 
 	@Autowired
-	AccountRepo repo;
+	private  AccountRepo repo;
 
 	@Autowired
 	private JWTservices jService;
 
 	@Autowired
-	AuthenticationManager authManage;
+	private AuthenticationManager authManage;
 
 	@Autowired
-	TransactionRepo Trepo;
+	private TransactionRepo Trepo;
 
 
 	@Autowired
@@ -197,7 +199,7 @@ public class AccountServiceImp implements AccountService {
 	        );
 
 	        if (!authentication.isAuthenticated()) {
-	            return "Failed";
+	            throw new RuntimeException("Invalid credentials");
 	        }
 
 	        // Step 2: Find account by identifier (email/contact/accountNo)
@@ -212,10 +214,17 @@ public class AccountServiceImp implements AccountService {
 	        // Step 3: Generate JWT token
 	        String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber());
 	        System.out.println("Token [From verify]: " + token);
+	        
+	        String redisKey = "session:" + 	acc.getEmail();
+	        
+	       
+
 
 	        // Step 4: Store token in Redis with TTL = 60 minutes
-	        redisTemplate.opsForValue().set("session:" + acc.getAccountNumber(), token, 60, TimeUnit.MINUTES);
+	        redisTemplate.opsForValue().set("session:" + acc.getEmail(), token, 60, TimeUnit.MINUTES);
 
+	        
+	        System.out.println("Redis saved token for " + redisKey);
 	        // Step 5: Return token
 	        return token;
 
