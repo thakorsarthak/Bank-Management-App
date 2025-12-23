@@ -26,7 +26,7 @@ public class AdminBootstrap {
 				Account admin = new Account();
 				admin.setEmail("admin@gmail.com");
 				admin.setPassword(passwordEncoder.encode("Admin@1234"));
-				admin.setRole(Role.ROLE_ADMIN);
+				admin.setRole(Role.ADMIN);
 				admin.setStatus(AccountStatus.ACTIVE);
 				admin.setBalance(0.0);
 

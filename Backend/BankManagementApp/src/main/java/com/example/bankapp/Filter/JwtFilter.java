@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.example.bankapp.services.CustomAcountDetailService;
 import com.example.bankapp.services.JWTservices;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -103,7 +104,8 @@ public class JwtFilter extends OncePerRequestFilter {
 				unauthorized(response, "Invalid Token (JWT filter)");
 				return;
 			}
-
+			
+			 
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
 					null, userDetails.getAuthorities());
 

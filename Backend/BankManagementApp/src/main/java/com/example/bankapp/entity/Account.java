@@ -45,7 +45,7 @@ public class Account {
     @Column(name = "holder_name")
     private String accountHolderName;
 
-    @Column(nullable = false)
+  
     private Double balance;
 
     @Column(nullable = false, unique = true)
@@ -54,16 +54,16 @@ public class Account {
     @Column(nullable = false, name = "password")//login password
     private String password;
 
-    @Column( name="transaction_pin")
+    @Column(name="transaction_pin")
     private String pin;
 
     @Column(unique = true)
     private Long contact;
 
-    @Column( name="pan_number", length = 20 )
+    @Column(name="pan_number", length = 20 )
     private String panNo;
 
-    @Column( name="aadhaar_number" , length = 12 )
+    @Column(name="aadhaar_number" , length = 12 )
     private String aadhaarNo;
 
     @Enumerated(EnumType.STRING)

@@ -36,7 +36,7 @@ public class adminServiceImp implements AdminService {
 		
 		List<FieldError> errors = new ArrayList<>();
 		
-		if (request.getRole() == Role.ROLE_ADMIN || request.getRole() == Role.ROLE_USER) {
+		if (request.getRole() == Role.ADMIN || request.getRole() == Role.USER) {
 			
 			errors.add(new FieldError("Invalid Request", "Can't create User or Admin"));
 			//throw new IllegalArgumentException("Invalid role for creation");
@@ -50,6 +50,7 @@ public class adminServiceImp implements AdminService {
 		
 		account.setEmail(request.getEmail());
 		account.setPassword(passwordEncoder.encode(request.getPassword()));
+		account.setBranchCode(request.getBranchCode());
 		account.setRole(request.getRole());
 		account.setStatus(AccountStatus.ACTIVE);
 		

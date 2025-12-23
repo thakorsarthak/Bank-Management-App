@@ -47,7 +47,7 @@ import lombok.RequiredArgsConstructor;
 public class AccountServiceImp implements AccountService {
 
 	@Autowired
-	private  AccountRepo repo;
+	private AccountRepo repo;
 
 	@Autowired
 	private JWTservices jService;
@@ -57,7 +57,6 @@ public class AccountServiceImp implements AccountService {
 
 	@Autowired
 	private TransactionRepo Trepo;
-
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
@@ -126,8 +125,6 @@ public class AccountServiceImp implements AccountService {
 
 		String generatedAccountNumber = generateAccountNumber(accountdto.getBranchCode(), accountdto.getProductCode());
 
-
-
 		Account account = new Account();
 
 		Double balance = accountdto.getBalance();
@@ -144,10 +141,9 @@ public class AccountServiceImp implements AccountService {
 		account.setProductCode(accountdto.getProductCode());
 		account.setPassword(encoder.encode(accountdto.getPassword()));
 		account.setPin(encoder.encode(accountdto.getPin()));
-		account.setRole(Role.ROLE_USER);
+		account.setRole(Role.USER);
 		account.setStatus(AccountStatus.PENDING_KYC);
 		// account.setAccountType(accountdto.getAccountType());
-
 
 		System.out.println(account);
 		// for address
@@ -174,68 +170,61 @@ public class AccountServiceImp implements AccountService {
 
 	}
 
-
-	//Identifier for Login through email, AccointNumber and Contact
+	// Identifier for Login through email, AccointNumber and Contact
 	@Override
 	public Optional<Account> findByIdentifier(String identifier) {
-	    identifier = identifier.trim();
+		identifier = identifier.trim();
 
-	    if (identifier.contains("@")) {
-	        return repo.findByEmail(identifier.toLowerCase());
-	    } else if (identifier.matches("\\d{10}")) {
-	        return repo.findByContact(Long.parseLong(identifier));
-	    } else {
-	        return repo.findByAccountNumber(identifier);
-	    }
+		if (identifier.contains("@")) {
+			return repo.findByEmail(identifier.toLowerCase());
+		} else if (identifier.matches("\\d{10}")) {
+			return repo.findByContact(Long.parseLong(identifier));
+		} else {
+			return repo.findByAccountNumber(identifier);
+		}
 	}
-
 
 	@Override
 	public String verify(AccountLoginDTO account) {
-	    try {
-	        // Step 1: Authenticate credentials
-	        Authentication authentication = authManage.authenticate(
-	                new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword())
-	        );
+		try {
+			// Step 1: Authenticate credentials
+			Authentication authentication = authManage.authenticate(
+					new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword()));
 
-	        if (!authentication.isAuthenticated()) {
-	            throw new RuntimeException("Invalid credentials");
-	        }
+			if (!authentication.isAuthenticated()) {
+				throw new RuntimeException("Invalid credentials");
+			}
 
-	        // Step 2: Find account by identifier (email/contact/accountNo)
-	        Optional<Account> optionalAcc = findByIdentifier(account.getIdentifier());
-	        if (optionalAcc.isEmpty()) {
-	            System.out.println("Account not found in database after authentication.");
-	            return "Failed";
-	        }
+			// Step 2: Find account by identifier (email/contact/accountNo)
+			Optional<Account> optionalAcc = findByIdentifier(account.getIdentifier());
+			if (optionalAcc.isEmpty()) {
+				System.out.println("Account not found in database after authentication.");
+				return "Failed";
+			}
 
-	        Account acc = optionalAcc.get();
+			Account acc = optionalAcc.get();
 
-	        // Step 3: Generate JWT token
-	        String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber());
-	        System.out.println("Token [From verify]: " + token);
-	        
-	        String redisKey = "session:" + 	acc.getEmail();
-	        
-	       
+			// Step 3: Generate JWT token
+			
+		    Role role = acc.getRole();
+			String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber() , role.name());
+			System.out.println("Token [From verify]: " + token);
 
+			String redisKey = "session:" + acc.getEmail();
 
-	        // Step 4: Store token in Redis with TTL = 60 minutes
-	        redisTemplate.opsForValue().set("session:" + acc.getEmail(), token, 60, TimeUnit.MINUTES);
+			// Step 4: Store token in Redis with TTL = 60 minutes
+			redisTemplate.opsForValue().set("session:" + acc.getEmail(), token, 60, TimeUnit.MINUTES);
 
-	        
-	        System.out.println("Redis saved token for " + redisKey);
-	        // Step 5: Return token
-	        return token;
+			System.out.println("Redis saved token for " + redisKey);
+			// Step 5: Return token
+			return token;
 
-	    } catch (AuthenticationException ex) {
-	        System.err.println("Authentication failed for: " + account.getIdentifier());
-	        System.out.println("Error: " + ex.getMessage());
-	        return "Failed";
-	    }
+		} catch (AuthenticationException ex) {
+			System.err.println("Authentication failed for: " + account.getIdentifier());
+			System.out.println("Error: " + ex.getMessage());
+			return "Failed";
+		}
 	}
-
-
 
 	// Login Service
 //	@Override
@@ -446,11 +435,10 @@ public class AccountServiceImp implements AccountService {
 
 	}
 
-
 	@Override
 	public ResponseEntity<?> ChangePasswordWithOtp(ResetPasswordWithOtpDTO resestPassword) {
 
-		if (!resestPassword.getNewPassword() .equals(resestPassword.getConfirmPassword())) {
+		if (!resestPassword.getNewPassword().equals(resestPassword.getConfirmPassword())) {
 			return ResponseEntity.badRequest()
 					.body(new GlobalAPIResponseDTO<>("Pin and Confirm pin do not match", false));
 		}
@@ -548,7 +536,5 @@ public class AccountServiceImp implements AccountService {
 		}
 		return false;
 	}
-
-
 
 }

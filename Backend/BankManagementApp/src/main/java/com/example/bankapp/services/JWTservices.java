@@ -16,6 +16,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.example.bankapp.enums.Role;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -62,9 +64,10 @@ public class JWTservices {
 	}
 
 
-	public String generateToken(String email , String accountNumber) {
+	public String generateToken(String email , String accountNumber , String role) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("accountNumber", accountNumber);
+		claims.put("role", role);
 
 		String token = Jwts.builder()
 				.claims(claims)

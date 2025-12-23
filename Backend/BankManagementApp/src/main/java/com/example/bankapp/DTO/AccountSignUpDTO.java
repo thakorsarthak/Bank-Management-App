@@ -12,20 +12,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccountSignUpDTO {
 
+	
 	private String accountHolderName;
 
+	@Column(nullable = false)
 	private Double balance;
 
+	@Column(nullable = false)
 	private String email;
 
 	@Column(nullable = false)
 	private String password;
 
+	@Column(nullable = false)
 	private String confirmPassword;
 
 	@Column(nullable = false)
 	private String pin;
 
+	@Column(nullable = false)
 	private String confirmPin;
 
 	@Column(nullable = false, unique = true)
@@ -40,6 +45,7 @@ public class AccountSignUpDTO {
 	@Pattern(regexp = "^[0-9]{12}$", message = "Aadhaar must be 12 digits")
 	private String aadhaarNo;
 
+	@Column(nullable = false)
 	private String accountType;
 
 	@Column(nullable = false, length = 4)
@@ -48,6 +54,7 @@ public class AccountSignUpDTO {
 	@Column(nullable = false, length = 2)
 	private String productCode;
 
+	@Column(nullable = false)
 	private AddressDTO address;
 
 }
