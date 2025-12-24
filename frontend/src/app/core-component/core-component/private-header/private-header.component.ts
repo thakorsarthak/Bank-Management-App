@@ -14,7 +14,7 @@ import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 @Component({
   selector: 'app-private-header',
-  imports: [CommonModule,RouterLink,AvatarModule, OverlayBadgeModule,
+  imports: [CommonModule, RouterLink, AvatarModule, OverlayBadgeModule,
     MenubarModule,
     ButtonModule,
     DialogModule,
@@ -26,19 +26,20 @@ import { OverlayBadgeModule } from 'primeng/overlaybadge';
 })
 export class PrivateHeaderComponent {
 
- items: MenuItem[] = [];
-  
+  items: MenuItem[] = [];
+
   remainingTime: string = '';
   private timerInterval: any;
 
-constructor(private authService: AuthServiceService, private router: Router) {}
-  
+  constructor(private authService: AuthServiceService, private router: Router) { }
+
 
 
   ngOnInit() {
 
     this.startCountdown();
-    console.log('Expires at:', new Date(parseInt(localStorage.getItem('expiresAt') || '0', 10)));
+    const expiresAt = this.authService.getTokenExpiry();
+    console.log('Expires at:', new Date(expiresAt));
     this.items = [
       {
         label: 'Home',
@@ -51,23 +52,23 @@ constructor(private authService: AuthServiceService, private router: Router) {}
         label: 'Accounts',
         icon: 'pi pi-wallet',
         items: [
-          { 
-            label: 'View Accounts', 
+          {
+            label: 'View Accounts',
             icon: 'pi pi-eye',
             command: () => {
               this.router.navigate(['/privateMain/dashBoard']);
             }
           },
-          { 
-            label: 'Transfer Money', 
+          {
+            label: 'Transfer Money',
             icon: 'pi pi-arrow-right-arrow-left',
             command: () => {
               this.router.navigate(['/privateMain/transferMoney']);
               console.log('Transfer money clicked');
             }
           },
-          { 
-            label: 'Transaction History', 
+          {
+            label: 'Transaction History',
             icon: 'pi pi-history',
             command: () => {
               this.router.navigate(['/privateMain/transaction']);
@@ -80,22 +81,22 @@ constructor(private authService: AuthServiceService, private router: Router) {}
         label: 'Services',
         icon: 'pi pi-cog',
         items: [
-          { 
-            label: 'Pay Bills', 
+          {
+            label: 'Pay Bills',
             icon: 'pi pi-file-edit',
             command: () => {
               console.log('Pay bills clicked');
             }
           },
-          { 
-            label: 'Deposit Check', 
+          {
+            label: 'Deposit Check',
             icon: 'pi pi-plus',
             command: () => {
               console.log('Deposit check clicked');
             }
           },
-          { 
-            label: 'Card Management', 
+          {
+            label: 'Card Management',
             icon: 'pi pi-credit-card',
             command: () => {
               console.log('Card management clicked');
@@ -107,15 +108,15 @@ constructor(private authService: AuthServiceService, private router: Router) {}
         label: 'Support',
         icon: 'pi pi-question-circle',
         items: [
-          { 
-            label: 'Help Center', 
+          {
+            label: 'Help Center',
             icon: 'pi pi-info-circle',
             command: () => {
               console.log('Help center clicked');
             }
           },
-          { 
-            label: 'Contact Us', 
+          {
+            label: 'Contact Us',
             icon: 'pi pi-phone',
             command: () => {
               console.log('Contact us clicked');
@@ -128,8 +129,8 @@ constructor(private authService: AuthServiceService, private router: Router) {}
 
   onLogout() {
     // Clear user session and token here
-  
-  this.authService.logout();
+
+    this.authService.logout();
 
     console.log('User logged out');
     this.router.navigate(['/']);
@@ -140,9 +141,9 @@ constructor(private authService: AuthServiceService, private router: Router) {}
   }
 
 
-    startCountdown() {
+  startCountdown() {
     this.timerInterval = setInterval(() => {
-      
+
       const expiresAt = this.authService.getTokenExpiry();
       const remaining = expiresAt - Date.now();
 

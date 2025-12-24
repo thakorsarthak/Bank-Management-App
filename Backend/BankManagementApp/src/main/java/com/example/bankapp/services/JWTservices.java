@@ -73,14 +73,14 @@ public class JWTservices {
 				.claims(claims)
 				.subject(email)
 				.issuedAt(new Date(System.currentTimeMillis()))
-				.expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
+				.expiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
 				.signWith(getKey())
 				.compact();
 
 		// return Jwts.builder() .claims() .add(claims) .subject(null);
 		// return "token";
 
-	 redisTemplate.opsForValue().set("session:" + accountNumber , token, 60 , TimeUnit.MINUTES );
+	 redisTemplate.opsForValue().set("session:" + accountNumber , token, 10 , TimeUnit.MINUTES );
 
 	 return token;
 	}

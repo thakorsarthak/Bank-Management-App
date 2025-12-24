@@ -14,30 +14,31 @@ import { ForgetPinComponent } from '../../component/layout/forget-pin/forget-pin
 import { AdminComponentComponent } from '../../component/layout/admin-component/admin-component.component';
 
 
-const routes:  Routes = [
-   { path: '', 
+const routes: Routes = [
+  {
+    path: '',
     component: CoreComponentComponent,
-    children: [ 
-      { path: '',component: PublicMainComponent},
-       { path: 'forgetPin',component: ForgetPinComponent},
+    children: [
+      { path: '', component: PublicMainComponent },
+      { path: 'forgetPin', component: ForgetPinComponent },
       { path: 'openAccount', component: OpenAccountComponent },
-      { path: 'login',component: LoginPageComponent},
-      { path: 'resetPassword',component: ResetPasswordComponent},
+      { path: 'login', component: LoginPageComponent },
+      { path: 'resetPassword', component: ResetPasswordComponent },
     ]
-    },
-    {
-      path: 'privateMain', component: PrivateMainComponent,
-      canActivate: [authGuardGuard], 
-      children  : [ 
-        
-         { path: 'resetPassword',component: ResetPasswordComponent},
-          { path: 'dashBoard', component: DashboardComponent },
-          { path: 'transferMoney', component: TransferMoneyComponent },
-          { path: 'transaction', component: TransactionComponent },
-           { path: 'adminDashboard',component: AdminComponentComponent},
-          
-      ]
-    }
+  },
+  {
+    path: 'privateMain', component: PrivateMainComponent,
+    canActivate: [authGuardGuard],
+    children: [
+
+      { path: 'resetPassword', component: ResetPasswordComponent },
+      { path: 'dashBoard', component: DashboardComponent },
+      { path: 'transferMoney', component: TransferMoneyComponent },
+      { path: 'transaction', component: TransactionComponent },
+      { path: 'adminDashboard', component: AdminComponentComponent },
+
+    ]
+  }
 ];
 
 @NgModule({

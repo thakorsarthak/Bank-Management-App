@@ -7,10 +7,10 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthServiceService {
-private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
+  private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
   public isLoggedIn$ = this.loggedInSubject.asObservable();
 
-  constructor(private router : Router) {}
+  constructor(private router: Router) { }
 
   private hasToken(): boolean {
     return !!localStorage.getItem('token');
@@ -18,7 +18,6 @@ private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
 
   login(token: string, expiresAt: number): void {
     localStorage.setItem('token', token);
-    localStorage.setItem('expiresAt', expiresAt.toString());
     this.loggedInSubject.next(true);
   }
 
@@ -29,23 +28,64 @@ private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
     this.router.navigate(['/login']);
   }
 
-   getTokenExpiry(): number {
-    return parseInt(localStorage.getItem('expiresAt') || '0', 10);
+  getTokenExpiry(): number {
+    const payload = this.getPayload();
+    if (!payload?.exp) return 0;
+
+    // exp is in seconds → convert to milliseconds
+    return payload.exp * 1000;
   }
-  
+
 
   isLoggedIn(): boolean {
     return this.hasToken();
   }
 
+  checkExpiry(): void {
+    if (Date.now() > this.getTokenExpiry()) {
+      this.logout();
+    }
+  }
+
   getToken(): string | null {
     return localStorage.getItem('token');
   }
-  
+
+  //decoding token
+
+  private getPayload(): any | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      return jwtDecode<any>(token);
+    } catch {
+      return null;
+    }
+  }
+
+
+  getRole(): string | null {
+    return this.getPayload()?.role || null;
+  }
+
+  isAdmin(): boolean {
+    return this.getRole() === 'ADMIN';
+  }
+
+  isEmployee(): boolean {
+    return this.getRole() === 'EMPLOYEE';
+  }
+
+  isUser(): boolean {
+    return this.getRole() === 'USER';
+  }
+
+
   //  getAccountNumber(): string | null {
   //   const token = this.getToken();
   //   if (!token) return null;
-  
+
   //   try {
   //     const decoded: any = jwtDecode(token);
   //     return decoded.accountNumber || null;
