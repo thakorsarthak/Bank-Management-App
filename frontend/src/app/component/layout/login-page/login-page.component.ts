@@ -67,21 +67,33 @@ export class LoginPageComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
+
       const loginData = this.loginForm.value;
+
       this.AccountService.loginAccount(loginData).subscribe({
         next: (res) => {
+          
+          //store token and decode in authservice
           this.authService.login(res.token, res.expiresAt);
-          const token = res.token;
-          const expiresAt = Date.now() + 60 * 60 * 1000; // 10 minutes
+          
+          const role = this.authService.getRole();
+          console.log("User role after login:", role);
 
-          localStorage.setItem('token', token);
-          localStorage.setItem('expiresAt', expiresAt.toString());
+         
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
             detail: 'Login successful! Redirecting to dashboard...'
           });
           setTimeout(() => {
+            if(role === 'ADMIN'){
+              console.log("Navigating to admin dashboard");
+              this.router.navigate(['privateMain/adminDashboard']);
+            }
+            if(role === 'EMPLOYEE'){
+              this.router.navigate(['privateMain/employeeDashboard']);
+            }
+            if(role === 'USER') 
             this.router.navigate(['privateMain/dashBoard']);
           }, 1000);
         },

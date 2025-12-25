@@ -66,9 +66,6 @@ export class TransferMoneyComponent implements OnInit {
           }
         });
       });
-
-
-
   }
 
   isFieldInvalid(field: string): boolean {
@@ -105,8 +102,6 @@ export class TransferMoneyComponent implements OnInit {
 
   onSubmit(): void {
     if (this.transactionForm.invalid) return;
-
-
     // Decoding from token
     //const fromAccountNumber = this.authservice.getAccountNumber(); 
     // if (!fromAccountNumber) {

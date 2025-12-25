@@ -12,6 +12,7 @@ import { TransferMoneyComponent } from '../../component/layout/transfer-money/tr
 import { TransactionComponent } from '../../component/layout/transaction/transaction.component';
 import { ForgetPinComponent } from '../../component/layout/forget-pin/forget-pin.component';
 import { AdminComponentComponent } from '../../component/layout/admin-component/admin-component.component';
+import { roleGuard } from '../../guards/role.guard';
 
 
 const routes: Routes = [
@@ -26,20 +27,50 @@ const routes: Routes = [
       { path: 'resetPassword', component: ResetPasswordComponent },
     ]
   },
+
   {
-    path: 'privateMain', component: PrivateMainComponent,
+    path: 'privateMain',
+    component: PrivateMainComponent,
     canActivate: [authGuardGuard],
     children: [
 
-      { path: 'resetPassword', component: ResetPasswordComponent },
-      { path: 'dashBoard', component: DashboardComponent },
-      { path: 'transferMoney', component: TransferMoneyComponent },
-      { path: 'transaction', component: TransactionComponent },
-      { path: 'adminDashboard', component: AdminComponentComponent },
+      // COMMON (logged-in users only)
+      {
+        path: 'forgetPin',
+        component: ForgetPinComponent
+      },
 
+      // USER ONLY
+      {
+        path: 'dashBoard',
+        component: DashboardComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['USER'] }
+      },
+      {
+        path: 'transferMoney',
+        component: TransferMoneyComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['USER'] }
+      },
+      {
+        path: 'transaction',
+        component: TransactionComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['USER'] }
+      },
+
+      // ADMIN ONLY
+      {
+        path: 'adminDashboard',
+        component: AdminComponentComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] }
+      }
     ]
   }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

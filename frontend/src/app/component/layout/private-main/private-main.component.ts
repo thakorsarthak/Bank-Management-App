@@ -21,10 +21,5 @@ export class PrivateMainComponent implements OnInit {
   ) {}
   ngOnInit(): void {
 
-
-
   }
-
-  
-
 }

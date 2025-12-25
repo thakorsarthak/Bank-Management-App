@@ -11,9 +11,6 @@ export class AdminComponentComponent implements OnInit {
   ngOnInit(): void {
     console.log('admin component loaded');
     
-    throw new Error('Method not implemented.');
+   // throw new Error('Method not implemented.');
   }
-
-  
-
 }

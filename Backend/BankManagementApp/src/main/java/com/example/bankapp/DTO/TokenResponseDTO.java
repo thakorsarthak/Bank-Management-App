@@ -11,6 +11,7 @@ public class TokenResponseDTO {
 
 	private String token;
 	private String expiry;
+	private String role;
 
 
 }

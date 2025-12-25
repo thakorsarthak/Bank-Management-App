@@ -18,6 +18,7 @@ export class AuthServiceService {
 
   login(token: string, expiresAt: number): void {
     localStorage.setItem('token', token);
+    console.log("Token stored:", token);
     this.loggedInSubject.next(true);
   }
 
@@ -65,8 +66,12 @@ export class AuthServiceService {
   }
 
 
-  getRole(): string | null {
-    return this.getPayload()?.role || null;
+  getRole(): any  {
+    const payload = this.getPayload();
+    if(!payload) return null;
+    
+    console.log('Decoded Payload:', payload);
+  return payload.role ;
   }
 
   isAdmin(): boolean {
