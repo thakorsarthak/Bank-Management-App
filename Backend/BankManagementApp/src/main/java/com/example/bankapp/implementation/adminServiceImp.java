@@ -3,20 +3,28 @@ package com.example.bankapp.implementation;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
+import com.example.bankapp.enums.AuditAction;
+import com.example.bankapp.enums.Designation;
 import com.example.bankapp.enums.Role;
 import com.example.bankapp.repository.AccountRepo;
+import com.example.bankapp.repository.AuditRepo;
 import com.example.bankapp.repository.EmployeeRepo;
 import com.example.bankapp.services.AdminService;
-
+import com.example.bankapp.services.AuditService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,11 +33,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class adminServiceImp implements AdminService {
 
+	
 	private final AccountRepo accountRepo;
 	
 	private final EmployeeRepo employeeRepo;
 	
+	
+	private final AuditRepo auditRepo;
+	
+	
+	private final AuditService auditService;
+	
 	private final PasswordEncoder passwordEncoder;
+	
+	
 
 	@Override
 	public void createEmployeeOrManager(CreateStaffDTO request) {
@@ -60,8 +77,8 @@ public class adminServiceImp implements AdminService {
 		profile.setAccount(account);
 		profile.setFullName(request.getFullName());
 		profile.setBranchCode(request.getBranchCode());
-		profile.setDesignation(request.getDesignation());
 		profile.setJoiningDate(LocalDate.now());
+		profile.setDesignation(request.getDesignation());;
 
 		employeeRepo.save(profile);
 	}
@@ -71,6 +88,57 @@ public class adminServiceImp implements AdminService {
 	 public List<Employee> getAllStaff() {
         return employeeRepo.findAll();
     }
+
+	
+	@Override
+	@Transactional
+	public void updateStatus(Long accountId , AccountStatus accountStatus) {
+		
+		Optional<Account> account = accountRepo.findById(accountId);
+		
+		//Account account = accountRepo.findById(id);
+		if(account.isEmpty()) {
+			
+			 throw  new RuntimeException("Account not found");
+		}
+		
+		Account acc =  account.get();
+		
+		
+			acc.setStatus(accountStatus);
+	}
+
+
+	@Override
+	@Transactional
+	public void updateDesignation(Long accountId, Designation designation) {
+		
+		System.out.println("INside service to update designation");
+		Optional<Employee> employee = employeeRepo.findByAccountId(accountId);
+		if(employee.isEmpty()) {
+			
+			throw  new RuntimeException("Account not found");
+			
+		} 
+		
+		Employee e = employee.get();
+		System.out.println("Designation changed to " + designation);
+		e.setDesignation(designation);
+	}
+
+
+//	@Override
+//	public EmployeeResponse getEmployeeById(Long id) {
+//
+//	    Employee employee = employeeRepo.findById(id)
+//	            .orElseThrow(() ->
+//	                    new ResourceNotFoundException("Employee not found with id: " + id)
+//	            );
+//
+//	    return new EmployeeResponse(employee);
+//	}
+	
+	
 	
 	
 }

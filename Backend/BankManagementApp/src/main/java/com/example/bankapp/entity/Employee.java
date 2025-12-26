@@ -2,8 +2,12 @@ package com.example.bankapp.entity;
 
 import java.time.LocalDate;
 
+import com.example.bankapp.enums.Designation;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,8 +35,9 @@ public class Employee {
 	@Column(nullable = false, length = 4, name = "branch_code")
     private String branchCode;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private String designation;
+	private Designation designation;
 	
 	@Column(nullable = false)
     private LocalDate joiningDate;

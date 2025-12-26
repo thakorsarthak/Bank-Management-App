@@ -1,7 +1,9 @@
 package com.example.bankapp.DTO;
 
+import com.example.bankapp.enums.Designation;
 import com.example.bankapp.enums.Role;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,7 +33,7 @@ public class CreateStaffDTO {
 	@NotBlank(message = "Branch code is required")
 	private String branchCode;
 
-	@NotBlank(message = "Designation is required")
-	private String designation;
-
+	@NotNull(message = "Designation is required")
+	@Column(nullable = false)
+	private Designation designation;
 }
