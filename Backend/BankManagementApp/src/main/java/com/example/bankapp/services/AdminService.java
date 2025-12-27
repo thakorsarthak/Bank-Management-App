@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
@@ -19,4 +20,6 @@ public interface AdminService {
 	public void updateStatus(Long accountId , AccountStatus accountStatus) ;
 
 	public void updateDesignation(Long accountId, Designation designation);
+	
+	 public List<AdminEmployeeResponseDTO> getAllEmployees();
 }

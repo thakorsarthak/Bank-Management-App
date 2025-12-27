@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.entity.Account;
@@ -28,104 +29,104 @@ import com.example.bankapp.services.AuditService;
 
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor
 public class adminServiceImp implements AdminService {
 
-	
 	private final AccountRepo accountRepo;
-	
+
 	private final EmployeeRepo employeeRepo;
-	
-	
+
 	private final AuditRepo auditRepo;
-	
-	
+
 	private final AuditService auditService;
-	
+
 	private final PasswordEncoder passwordEncoder;
-	
-	
 
 	@Override
 	public void createEmployeeOrManager(CreateStaffDTO request) {
-		
+
 		List<FieldError> errors = new ArrayList<>();
-		
+
 		if (request.getRole() == Role.ADMIN || request.getRole() == Role.USER) {
-			
+
 			errors.add(new FieldError("Invalid Request", "Can't create User or Admin"));
-			//throw new IllegalArgumentException("Invalid role for creation");
+			// throw new IllegalArgumentException("Invalid role for creation");
 		}
-		
-		if(accountRepo.existsByEmail(request.getEmail())) {
+
+		if (accountRepo.existsByEmail(request.getEmail())) {
 			errors.add(new FieldError("email", "Employee with this email already exist"));
 		}
-		
+
 		Account account = new Account();
-		
+
 		account.setEmail(request.getEmail());
 		account.setPassword(passwordEncoder.encode(request.getPassword()));
 		account.setBranchCode(request.getBranchCode());
 		account.setRole(request.getRole());
 		account.setStatus(AccountStatus.ACTIVE);
-		
+
 		accountRepo.save(account);
-		
+
 		Employee profile = new Employee();
 		profile.setAccount(account);
 		profile.setFullName(request.getFullName());
 		profile.setBranchCode(request.getBranchCode());
 		profile.setJoiningDate(LocalDate.now());
-		profile.setDesignation(request.getDesignation());;
+		profile.setDesignation(request.getDesignation());
+		;
 
 		employeeRepo.save(profile);
 	}
-	
-	
-	@Override 
-	 public List<Employee> getAllStaff() {
-        return employeeRepo.findAll();
-    }
 
-	
 	@Override
-	@Transactional
-	public void updateStatus(Long accountId , AccountStatus accountStatus) {
-		
-		Optional<Account> account = accountRepo.findById(accountId);
-		
-		//Account account = accountRepo.findById(id);
-		if(account.isEmpty()) {
-			
-			 throw  new RuntimeException("Account not found");
-		}
-		
-		Account acc =  account.get();
-		
-		
-			acc.setStatus(accountStatus);
+	public List<Employee> getAllStaff() {
+		return employeeRepo.findAll();
 	}
 
+	@Override
+	@Transactional
+	public void updateStatus(Long accountId, AccountStatus accountStatus) {
+
+		Optional<Account> account = accountRepo.findById(accountId);
+
+		// Account account = accountRepo.findById(id);
+		if (account.isEmpty()) {
+
+			throw new RuntimeException("Account not found");
+		}
+
+		Account acc = account.get();
+
+		acc.setStatus(accountStatus);
+	}
 
 	@Override
 	@Transactional
 	public void updateDesignation(Long accountId, Designation designation) {
-		
+
 		System.out.println("INside service to update designation");
 		Optional<Employee> employee = employeeRepo.findByAccountId(accountId);
-		if(employee.isEmpty()) {
-			
-			throw  new RuntimeException("Account not found");
-			
-		} 
-		
+		if (employee.isEmpty()) {
+
+			throw new RuntimeException("Account not found");
+
+		}
+
 		Employee e = employee.get();
 		System.out.println("Designation changed to " + designation);
 		e.setDesignation(designation);
 	}
 
+	@Override
+	public List<AdminEmployeeResponseDTO> getAllEmployees() {
+
+		return employeeRepo.findAll().stream()
+				.map(emp -> new AdminEmployeeResponseDTO(emp.getAccount().getId(), emp.getFullName(),
+						emp.getAccount().getEmail(), emp.getBranchCode(), emp.getDesignation(),
+						emp.getAccount().getStatus(), emp.getJoiningDate()))
+				.toList();
+	}
 
 //	@Override
 //	public EmployeeResponse getEmployeeById(Long id) {
@@ -137,8 +138,5 @@ public class adminServiceImp implements AdminService {
 //
 //	    return new EmployeeResponse(employee);
 //	}
-	
-	
-	
-	
+
 }

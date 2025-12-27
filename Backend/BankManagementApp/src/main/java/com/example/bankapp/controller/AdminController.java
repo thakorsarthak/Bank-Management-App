@@ -42,7 +42,7 @@ public class AdminController {
 	 @GetMapping("/employee/getAllStaff")
 	  //  @PreAuthorize("hasRole('ADMIN')")
 	    public ResponseEntity<?> getAllStaff() {
-	        return ResponseEntity.ok(adminService.getAllStaff());
+	        return ResponseEntity.ok(adminService.getAllEmployees());
 	    }
 	 
 	 @PatchMapping("/employee/{accountId}/updateStatus")
