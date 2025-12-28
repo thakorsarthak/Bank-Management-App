@@ -157,7 +157,7 @@
   border-radius: 50%;
   transform: translate(50%, -50%);
 }
-.transactions-table-card {
+.employee-table-card {
   margin-bottom: 2rem;
   border-radius: 20px;
   overflow: hidden;
@@ -173,6 +173,27 @@
   color: white;
 }
 
+.edit-form{
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+ 
+}
+
+.form-field label {
+  font-weight: 550;
+  color: #2d3748;
+  font-size: 0.95rem;
+
+  padding-top: 0.70rem;
+}
+
+
 .table-title {
   display: flex;
   align-items: center;
@@ -180,6 +201,7 @@
   font-weight: 600;
   font-size: 1.1rem;
 }
+
 
 .modern-table .p-datatable-thead > tr > th {
   background: #f8fafc;

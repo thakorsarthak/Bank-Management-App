@@ -1,5 +1,7 @@
 package com.example.bankapp.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
+import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.UpdateDesignationRequest;
 import com.example.bankapp.DTO.UpdateStatusRequest;
 import com.example.bankapp.entity.Account;
@@ -42,7 +46,9 @@ public class AdminController {
 	 @GetMapping("/employee/getAllStaff")
 	  //  @PreAuthorize("hasRole('ADMIN')")
 	    public ResponseEntity<?> getAllStaff() {
-	        return ResponseEntity.ok(adminService.getAllEmployees());
+		 
+		 List<AdminEmployeeResponseDTO> response = adminService.getAllEmployees();
+	        return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee fetched sucessfuly", true , response));
 	    }
 	 
 	 @PatchMapping("/employee/{accountId}/updateStatus")

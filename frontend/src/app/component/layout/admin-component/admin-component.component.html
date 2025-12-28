@@ -212,84 +212,183 @@
       </div>
     </div> -->
 
-    <p-card styleClass="transactions-table-card">
+    <p-card styleClass="employees-table-card">
       <ng-template pTemplate="header">
         <div class="table-header">
           <div class="table-title">
-            <i class="pi pi-table"></i>
-            <span>Recent Transactions</span>
+            <i class="pi pi-users"></i>
+            <span>Employees</span>
           </div>
+
           <div class="table-actions">
-            <!-- <p-button pTooltip="Refresh data">
-            </p-button> -->
+            <p-button icon="pi pi-refresh" severity="secondary" [text]="true" (onClick)="loadEmployees()"
+              pTooltip="Refresh employees">
+            </p-button>
           </div>
         </div>
       </ng-template>
 
-      <p-table responsiveLayout="scroll" styleClass="p-datatable-striped modern-table">
+      <p-table [value]="employees" [paginator]="true" [lazy]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+        [totalRecords]="totalRecords" (onLazyLoad)="loadEmployees($event)" responsiveLayout="scroll"
+        styleClass="p-datatable-striped modern-table">
 
+        <!-- TABLE HEADER -->
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="timestamp">
-              <i class="pi pi-calendar"></i> Date & Time <p-sortIcon field="timestamp" />
+            <th pColumn="fullName">
+              <i class="pi pi-user"></i> Name
+              <!-- <p-sortIcon field="fullName"></p-sortIcon> -->
             </th>
-            <th pSortableColumn="description">
-              <i class="pi pi-file-edit"></i> Description <p-sortIcon field="description" />
+
+            <th pColumn="email">
+              <i class="pi pi-envelope"></i> Email
+              <!-- <p-sortIcon field="email"></p-sortIcon> -->
             </th>
-            <th><i class="pi pi-user"></i> To/From</th>
-            <th pSortableColumn="amount">
-              <i class="pi pi-dollar"></i> Amount <p-sortIcon field="amount" />
+
+            <th>
+              <i class="pi pi-building"></i> Branch
             </th>
-            <th><i class="pi pi-wallet"></i> After Balance</th>
-            <th><i class="pi pi-tags"></i> Type</th>
-            <th pSortableColumn="status">
-              <i class="pi pi-flag"></i> Status <p-sortIcon field="status" />
+
+            <th pColumn="designation">
+              <i class="pi pi-briefcase"></i> Designation
+              <!-- <p-sortIcon field="designation"></p-sortIcon> -->
+            </th>
+
+            <th pColumn="status">
+              <i class="pi pi-flag"></i> Status
+              <!-- <p-sortIcon field="status"></p-sortIcon> -->
+            </th>
+
+            <th pColumn="joiningDate">
+              <i class="pi pi-calendar"></i> Joined On
+              <!-- <p-sortIcon field="joiningDate"></p-sortIcon> -->
+            </th>
+
+
+            <th>
+              <i class="pi pi-cog"></i> Actions
             </th>
           </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-transaction let-rowIndex="rowIndex">
+        <!-- TABLE BODY -->
+        <ng-template pTemplate="body" let-employee let-rowIndex="rowIndex">
           <tr [class.highlight-row]="rowIndex % 2 === 0">
+
             <td>
-              <div class="date-wrapper">
-                <span>{{ transaction.timestamp | date: 'dd/MM/yyyy' }}</span>
-                <small class="date-time">{{ transaction.timestamp | date: 'HH:mm' }}</small>
-              </div>
+              <strong>{{ employee.fullName }}</strong>
             </td>
-            <td>{{ transaction.description }}</td>
-            <td>{{ transaction.counterPartyName || '-' }}</td>
+
+            <td>{{ employee.email }}</td>
+
+            <td>{{ employee.branchCode }}</td>
+
             <td>
-              <p-tag [icon]="transaction.direction === 'CREDIT' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"
-                styleClass="amount-tag">
+              <p-tag [value]="employee.designation | titlecase" severity="info">
               </p-tag>
             </td>
-            <td>₹{{ transaction.afterBalance | number: '1.2-2' }}</td>
+
             <td>
-              <p-tag>
+              <p-tag [value]="employee.status" [severity]="employee.status === 'ACTIVE' ? 'success' : 'danger'">
               </p-tag>
             </td>
+
             <td>
-              <p-tag>
-              </p-tag>
+              {{ employee.joiningDate | date:'dd/MM/yyyy' }}
             </td>
+
+            <td>
+              <p-button icon="pi pi-eye" severity="secondary" [text]="true" pTooltip="View details"
+                (click)="viewEmployee(employee)">
+              </p-button>
+
+              <p-button icon="pi pi-pencil" severity="info" [text]="true" pTooltip="Change designation"
+                (onClick)="changeDesignation(employee)">
+              </p-button>
+
+              <p-button icon="pi pi-ban" severity="danger" [text]="true" pTooltip="Disable employee"
+                *ngIf="employee.status === 'ACTIVE'" (onClick)="updateStatus(employee.accountId, false)">
+              </p-button>
+
+              <p-button icon="pi pi-check" severity="success" [text]="true" pTooltip="Enable employee"
+                *ngIf="employee.status !== 'ACTIVE'" (onClick)="updateStatus(employee.accountId, true)">
+              </p-button>
+            </td>
+
           </tr>
         </ng-template>
 
+        <!-- EMPTY STATE -->
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="7" class="text-center">
               <div class="empty-state modern-empty">
-                <i class="pi pi-inbox empty-icon"></i>
-                <h3>No transactions found</h3>
-                <p>Try adjusting your filters to see more results.</p>
-                <p-button label="Reset Filters" icon="pi pi-refresh" severity="secondary" [text]="true">
-                </p-button>
+                <i class="pi pi-users empty-icon"></i>
+                <h3>No employees found</h3>
+                <p>Try adjusting filters or add new employees.</p>
               </div>
             </td>
           </tr>
         </ng-template>
+
       </p-table>
+
+      <p-dialog header="Employee Details" [(visible)]="showEmployeeDialog" [modal]="true" [style]="{ width: '450px' }">
+
+        <form [formGroup]="employeeForm" class="edit-form">
+
+          <div class="p-fluid">
+
+            <div class="form-field">
+              <label>Account ID</label>
+              <input pInputText [value]="selectedEmployee?.accountId" disabled />
+            </div>
+
+            <div class="form-field">
+              <label style="padding-right: 10px;">Email</label>
+              <input pInputText [value]="selectedEmployee?.email" disabled />
+            </div>
+
+            <div class="form-field">
+              <label>Full Name</label>
+              <input pInputText [value]="selectedEmployee?.fullName" disabled />
+            </div>
+
+            <div class="form-field">
+              <label>Branch Code</label>
+              <input pInputText formControlName="branchCode" />
+            </div>
+
+            <div class="form-field">
+              <label>Designation</label>
+              <p-dropdown [options]="designationOptions" formControlName="designation" appendTo="body">
+
+              </p-dropdown>
+            </div>
+
+            <div class="form-field">
+              <label>Status</label>
+              <p-dropdown appendTo="body" [options]="statusOptions" formControlName="status">
+              </p-dropdown>
+            </div>
+
+          </div>
+
+        </form>
+
+        <ng-template pTemplate="footer">
+          <p-button label="Cancel" severity="secondary" (onClick)="closeDialog()">
+          </p-button>
+
+          <p-button label="Update" severity="success" [disabled]="employeeForm.invalid" (onClick)="updateEmployee()">
+          </p-button>
+        </ng-template>
+
+      </p-dialog>
+
+
     </p-card>
+
 
   </div>
 </div>
