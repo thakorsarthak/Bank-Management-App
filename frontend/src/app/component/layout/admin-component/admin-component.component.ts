@@ -83,6 +83,7 @@ export class AdminComponentComponent implements OnInit {
     this.selectedEmployee = employee;
 
     this.employeeForm.patchValue({
+      // accountId: employee.accountId,
       fullName: employee.fullName,
       branchCode: employee.branchCode,
       designation: employee.designation,
@@ -119,8 +120,6 @@ export class AdminComponentComponent implements OnInit {
       status: this.status,
       designation: this.designation
     };
-
-
 
     this.adminService.getEmployees(params).subscribe({
       next: (res) => {

@@ -14,11 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
+import com.example.bankapp.DTO.GlobalAPIResponseDTO;
+import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
-import com.example.bankapp.enums.AuditAction;
 import com.example.bankapp.enums.Designation;
 import com.example.bankapp.enums.Role;
 import com.example.bankapp.repository.AccountRepo;
@@ -126,6 +127,29 @@ public class adminServiceImp implements AdminService {
 						emp.getAccount().getEmail(), emp.getBranchCode(), emp.getDesignation(),
 						emp.getAccount().getStatus(), emp.getJoiningDate()))
 				.toList();
+	}
+
+	@Override
+	public void updateEmployee(Long accountId, UpdateEmployeeRequestDTO req) {
+		
+	Optional<Employee> employee = employeeRepo.findByAccountId(accountId);
+		
+	Employee emp = employee.get();
+	
+	Account account = emp.getAccount();
+	
+	 if (req.getFullName() != null)
+	        emp.setFullName(req.getFullName());
+
+	    if (req.getBranchCode() != null)
+	        emp.setBranchCode(req.getBranchCode());
+
+	    if (req.getDesignation() != null)
+	        emp.setDesignation(req.getDesignation());
+
+	    if (req.getStatus() != null)
+	       account.setStatus(req.getStatus());
+	   
 	}
 
 //	@Override

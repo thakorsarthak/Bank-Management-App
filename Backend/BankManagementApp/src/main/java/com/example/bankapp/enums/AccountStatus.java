@@ -5,6 +5,8 @@ public enum AccountStatus {
 	PENDING_KYC,
 	ACTIVE,
 	SUSPENDED,
-	REJECTED
+	REJECTED,
+	SUBMITED,
+	VERIFIED
 
 }

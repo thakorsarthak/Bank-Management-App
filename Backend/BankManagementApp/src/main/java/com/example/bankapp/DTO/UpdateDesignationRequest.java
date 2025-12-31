@@ -7,5 +7,4 @@ import lombok.Data;
 @Data
 public class UpdateDesignationRequest {
 	 private Designation designation;
-
 }

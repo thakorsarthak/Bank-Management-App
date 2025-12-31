@@ -18,7 +18,7 @@ export class AdminService {
 
   updateEmployee(accountId: number, payload: any) {
   return this.http.put(
-    `/api/admin/staff/${accountId}`,
+    `http://localhost:6011/bankapp/admin/employee/${accountId}`,
     payload
   );
 }

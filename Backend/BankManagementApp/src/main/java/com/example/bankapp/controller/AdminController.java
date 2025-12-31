@@ -16,8 +16,8 @@ import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.UpdateDesignationRequest;
+import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.DTO.UpdateStatusRequest;
-import com.example.bankapp.entity.Account;
 import com.example.bankapp.services.AdminService;
 
 
@@ -67,8 +67,15 @@ public class AdminController {
 		 adminService.updateDesignation(accountId, request.getDesignation());
 	        return ResponseEntity.ok("Employee designation updated successfully");
 	    }
-	 
-	 
+	 @PatchMapping("/employee/{accountId}/updateAllDetails")
+	 public ResponseEntity<?> updateAllEmployee(@PathVariable Long accountId , @RequestBody UpdateEmployeeRequestDTO emp){
+		 
+		 System.out.println("In Update Whole Employee");
+		 adminService.updateEmployee(accountId, emp);
+		 
+		 
+		 return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly", true , emp));
+	 }
 	 
 }
 
