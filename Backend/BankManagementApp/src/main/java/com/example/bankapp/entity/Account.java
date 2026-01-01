@@ -30,71 +30,65 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "accounts",
-uniqueConstraints =  {
-        @UniqueConstraint(columnNames = "email"),
-        @UniqueConstraint(columnNames = "contact"),
-        @UniqueConstraint(columnNames = "aadhaar_number"),
-        @UniqueConstraint(columnNames = "pan_number")
-    })
+@Table(name = "accounts", uniqueConstraints = { @UniqueConstraint(columnNames = "email"),
+		@UniqueConstraint(columnNames = "contact"), @UniqueConstraint(columnNames = "aadhaar_number"),
+		@UniqueConstraint(columnNames = "pan_number") })
 public class Account {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "account_number", unique = true, nullable = true , length = 20)
-    private String accountNumber; // 12-digit generated account number
+	@Column(name = "account_number", unique = true, nullable = true, length = 20)
+	private String accountNumber; // 12-digit generated account number
 
-    @Column(name = "holder_name")
-    private String accountHolderName;
+	@Column(name = "holder_name")
+	private String accountHolderName;
 
-  
-    private Double balance;
+	private Double balance;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+	@Column(nullable = false, unique = true)
+	private String email;
 
-    @Column(nullable = false, name = "password")//login password
-    private String password;
+	@Column(nullable = false, name = "password") // login password
+	private String password;
 
-    @Column(name="transaction_pin")
-    private String pin;
+	@Column(name = "transaction_pin")
+	private String pin;
 
-    @Column(unique = true)
-    private Long contact;
+	@Column(unique = true)
+	private Long contact;
 
-    @Column(name="pan_number", length = 20 )
-    private String panNo;
+	@Column(name = "pan_number", length = 20)
+	private String panNo;
 
-    @Column(name="aadhaar_number" , length = 12 )
-    private String aadhaarNo;
+	@Column(name = "aadhaar_number", length = 12)
+	private String aadhaarNo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Role role;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private AccountStatus status ;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private AccountStatus status;
 
-    @Column(name = "branch_code")
-    private String branchCode;  //  "1001" for Ahmedabad
+	@Column(name = "branch_code")
+	private String branchCode; // "1001" for Ahmedabad
 
-    @Column(name = "product_code")
-    private String productCode; // 01 for savings, 02 for current , 03 Student , O4 Senior Citizen , 05 salary
+	@Column(name = "product_code")
+	private String productCode; // 01 for savings, 02 for current , 03 Student , O4 Senior Citizen , 05 salary
 
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+	@Column(name = "created_at", nullable = false)
+	private Instant createdAt;
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = Instant.now();
-    }
+	@PrePersist
+	public void prePersist() {
+		this.createdAt = Instant.now();
+	}
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private Address address;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "address_id", referencedColumnName = "id")
+	private Address address;
 
 }
-

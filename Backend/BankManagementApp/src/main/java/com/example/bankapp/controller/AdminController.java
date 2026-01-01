@@ -20,62 +20,58 @@ import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.DTO.UpdateStatusRequest;
 import com.example.bankapp.services.AdminService;
 
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/admin")
-@RequiredArgsConstructor //if we are using private final instead of autowired
+@RequiredArgsConstructor // if we are using private final instead of autowired
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
-	
 	private final AdminService adminService;
-	
-	
-	 @PostMapping("/employee/addStaff")
-	   // @PreAuthorize("hasRole('ADMIN')") // Only admin can call
-	 public ResponseEntity<String> createStaff(
-	            @Valid @RequestBody CreateStaffDTO request) {
 
-	        adminService.createEmployeeOrManager(request);
-	        return ResponseEntity.ok("Staff created successfully");
-	    }
-	 
-	 @GetMapping("/employee/getAllStaff")
-	  //  @PreAuthorize("hasRole('ADMIN')")
-	    public ResponseEntity<?> getAllStaff() {
-		 
-		 List<AdminEmployeeResponseDTO> response = adminService.getAllEmployees();
-	        return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee fetched sucessfuly", true , response));
-	    }
-	 
-	 @PatchMapping("/employee/{accountId}/updateStatus")
-	 public ResponseEntity<?> updateAccountStatus(@PathVariable Long accountId , @RequestBody UpdateStatusRequest request){
-		 
-		adminService.updateStatus(accountId , request.getStatus());
-		 
-		 return ResponseEntity.ok("Account status updated successfully");
-	 }
-	 
-	 @PatchMapping("/employee/{accountId}/designation")
-	    public ResponseEntity<?> updateDesignation(
-	            @PathVariable Long accountId,
-	            @RequestBody UpdateDesignationRequest request) {
-		 System.out.println("Inside update Designation");
-		 adminService.updateDesignation(accountId, request.getDesignation());
-	        return ResponseEntity.ok("Employee designation updated successfully");
-	    }
-	 @PatchMapping("/employee/{accountId}/updateAllDetails")
-	 public ResponseEntity<?> updateAllEmployee(@PathVariable Long accountId , @RequestBody UpdateEmployeeRequestDTO emp){
-		 
-		 System.out.println("In Update Whole Employee");
-		 adminService.updateEmployee(accountId, emp);
-		 
-		 
-		 return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly", true , emp));
-	 }
-	 
+	@PostMapping("/employee/addStaff")
+	// @PreAuthorize("hasRole('ADMIN')") // Only admin can call
+	public ResponseEntity<String> createStaff(@Valid @RequestBody CreateStaffDTO request) {
+
+		adminService.createEmployeeOrManager(request);
+		return ResponseEntity.ok("Staff created successfully");
+	}
+
+	@GetMapping("/employee/getAllStaff")
+	// @PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> getAllStaff() {
+
+		List<AdminEmployeeResponseDTO> response = adminService.getAllEmployees();
+		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee fetched sucessfuly", true, response));
+	}
+
+	@PatchMapping("/employee/{accountId}/updateStatus")
+	public ResponseEntity<?> updateAccountStatus(@PathVariable Long accountId,
+			@RequestBody UpdateStatusRequest request) {
+
+		adminService.updateStatus(accountId, request.getStatus());
+
+		return ResponseEntity.ok("Account status updated successfully");
+	}
+
+	@PatchMapping("/employee/{accountId}/designation")
+	public ResponseEntity<?> updateDesignation(@PathVariable Long accountId,
+			@RequestBody UpdateDesignationRequest request) {
+		System.out.println("Inside update Designation");
+		adminService.updateDesignation(accountId, request.getDesignation());
+		return ResponseEntity.ok("Employee designation updated successfully");
+	}
+
+	@PatchMapping("/employee/{accountId}/updateAllDetails")
+	public ResponseEntity<?> updateAllEmployee(@PathVariable Long accountId,
+			@RequestBody UpdateEmployeeRequestDTO emp) {
+
+		System.out.println("In Update Whole Employee");
+		adminService.updateEmployee(accountId, emp);
+
+		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly", true, emp));
+	}
+
 }
-

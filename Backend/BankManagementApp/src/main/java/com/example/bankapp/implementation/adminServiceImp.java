@@ -131,25 +131,25 @@ public class adminServiceImp implements AdminService {
 
 	@Override
 	public void updateEmployee(Long accountId, UpdateEmployeeRequestDTO req) {
-		
-	Optional<Employee> employee = employeeRepo.findByAccountId(accountId);
-		
-	Employee emp = employee.get();
-	
-	Account account = emp.getAccount();
-	
-	 if (req.getFullName() != null)
-	        emp.setFullName(req.getFullName());
 
-	    if (req.getBranchCode() != null)
-	        emp.setBranchCode(req.getBranchCode());
+		Optional<Employee> employee = employeeRepo.findByAccountId(accountId);
 
-	    if (req.getDesignation() != null)
-	        emp.setDesignation(req.getDesignation());
+		Employee emp = employee.get();
 
-	    if (req.getStatus() != null)
-	       account.setStatus(req.getStatus());
-	   
+		Account account = emp.getAccount();
+
+		if (req.getFullName() != null)
+			emp.setFullName(req.getFullName());
+
+		if (req.getBranchCode() != null)
+			emp.setBranchCode(req.getBranchCode());
+
+		if (req.getDesignation() != null)
+			emp.setDesignation(req.getDesignation());
+
+		if (req.getStatus() != null)
+			account.setStatus(req.getStatus());
+
 	}
 
 //	@Override
