@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateEmployeeRequestDTO {
-
 	
 	private String fullName;
 	private String branchCode;

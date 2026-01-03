@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminEmployeeResponseDTO {
 
-	private Long accountId;
+	private Long employeeId;
     private String fullName;
     private String email;
     private String branchCode;

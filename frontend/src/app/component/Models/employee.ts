@@ -1,5 +1,5 @@
 export interface Employee {
-  accountId: number;
+  employeeId: number;
   fullName: string;
   email: string;
   branchCode: string;

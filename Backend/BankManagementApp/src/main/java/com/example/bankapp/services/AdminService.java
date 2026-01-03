@@ -24,5 +24,5 @@ public interface AdminService {
 	
 	public List<AdminEmployeeResponseDTO> getAllEmployees();
 	 
-	public void updateEmployee(Long accountId , UpdateEmployeeRequestDTO employee);
+	public void updateEmployee(Long employeeID , UpdateEmployeeRequestDTO employee);
 }

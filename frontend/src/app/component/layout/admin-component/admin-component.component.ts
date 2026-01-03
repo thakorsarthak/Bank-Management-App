@@ -14,7 +14,7 @@ import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { Employee } from '../../Models/employee';
-import { LazyLoadEvent } from 'primeng/api';
+import { LazyLoadEvent, MessageService } from 'primeng/api';
 import { AdminService } from '../../services/admin.service';
 import { Dialog } from "primeng/dialog";
 
@@ -33,7 +33,8 @@ import { Dialog } from "primeng/dialog";
     DropdownModule,
     PaginatorModule, Dialog],
   templateUrl: './admin-component.component.html',
-  styleUrl: './admin-component.component.css'
+  styleUrl: './admin-component.component.css',
+  providers: [MessageService]
 })
 export class AdminComponentComponent implements OnInit {
 
@@ -48,8 +49,11 @@ export class AdminComponentComponent implements OnInit {
 
 
 
-  constructor(private adminService: AdminService,
-    private fb: FormBuilder,) { }
+  constructor(
+    private adminService: AdminService,
+    private fb: FormBuilder,
+    private messageService: MessageService
+  ) { }
 
   employeeForm!: FormGroup;
 
@@ -60,6 +64,7 @@ export class AdminComponentComponent implements OnInit {
       branchCode: ['', Validators.required],
       designation: ['', Validators.required],
       status: ['', Validators.required]
+
     });
 
   }
@@ -94,15 +99,39 @@ export class AdminComponentComponent implements OnInit {
   }
 
   updateEmployee(): void {
+
+    if (!this.selectedEmployee?.employeeId) {
+    console.error('Employee ID missing', this.selectedEmployee);
+     this.messageService.add({
+            severity: 'danger',
+            summary: 'error',
+            detail: 'Employee id missing!'
+          });
+    return;
+  }
     if (this.employeeForm.invalid) return;
 
     const payload = this.employeeForm.value;
 
     this.adminService
-      .updateEmployee(this.selectedEmployee.accountId, payload)
-      .subscribe(() => {
+      .updateEmployee(this.selectedEmployee.employeeId, payload)
+      .subscribe({ next: (res) => {
         this.showEmployeeDialog = false;
         this.loadEmployees();
+
+       this.messageService.add({
+          severity: res.success ? 'success' : 'warn',
+          summary: res.success ? 'Success' : 'Warning',
+          detail: res.message   
+        });
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.error?.message || 'Something went wrong'
+        });
+      }
       });
   }
 
@@ -162,8 +191,8 @@ export class AdminComponentComponent implements OnInit {
   }
 
   //  Enable / Disable employee
-  updateStatus(accountId: number, active: boolean): void {
-    this.adminService.updateStatus(accountId, active).subscribe({
+  updateStatus(employeeId: number, active: boolean): void {
+    this.adminService.updateStatus(employeeId, active).subscribe({
       next: () => this.loadEmployees(),
       error: (err) => console.error(err)
     });

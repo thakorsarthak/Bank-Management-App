@@ -7,6 +7,7 @@ public enum AccountStatus {
 	SUSPENDED,
 	REJECTED,
 	SUBMITED,
-	VERIFIED
+	VERIFIED,
+	INACTIVE
 
 }

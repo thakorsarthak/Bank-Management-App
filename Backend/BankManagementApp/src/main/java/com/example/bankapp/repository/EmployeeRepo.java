@@ -8,6 +8,8 @@ import com.example.bankapp.entity.Employee;
 
 public interface EmployeeRepo extends JpaRepository<Employee, Long>{
 	Optional<Employee> findByAccountId(Long accountId);
+	
+	Optional<Employee> findByEmployeeId(Long employeeId);
 	 
 	// findByAccountId(Long aacountID);
 

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { GlobalAPIResponse } from '../Models/global-api-response';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +17,9 @@ export class AdminService {
     return this.http.put(`/api/admin/staff/${accountId}/status`, { active });
   }
 
-  updateEmployee(accountId: number, payload: any) {
-  return this.http.put(
-    `http://localhost:6011/bankapp/admin/employee/${accountId}`,
+  updateEmployee(employeeId: number, payload: any) {
+  return this.http.patch<GlobalAPIResponse<any>>(
+    `http://localhost:6011/bankapp/admin/employee/${employeeId}/updateAllDetails`,
     payload
   );
 }

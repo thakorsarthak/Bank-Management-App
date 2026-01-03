@@ -106,7 +106,7 @@ public class adminServiceImp implements AdminService {
 	@Transactional
 	public void updateDesignation(Long accountId, Designation designation) {
 
-		System.out.println("INside service to update designation");
+		System.out.println("Inside service to update designation");
 		Optional<Employee> employee = employeeRepo.findByAccountId(accountId);
 		if (employee.isEmpty()) {
 
@@ -123,21 +123,26 @@ public class adminServiceImp implements AdminService {
 	public List<AdminEmployeeResponseDTO> getAllEmployees() {
 
 		return employeeRepo.findAll().stream()
-				.map(emp -> new AdminEmployeeResponseDTO(emp.getAccount().getId(), emp.getFullName(),
+				.map(emp -> new AdminEmployeeResponseDTO(emp.getEmployeeId(), emp.getFullName(),
 						emp.getAccount().getEmail(), emp.getBranchCode(), emp.getDesignation(),
 						emp.getAccount().getStatus(), emp.getJoiningDate()))
 				.toList();
 	}
 
 	@Override
-	public void updateEmployee(Long accountId, UpdateEmployeeRequestDTO req) {
+	@Transactional
+	public void updateEmployee(Long employeeId, UpdateEmployeeRequestDTO req) {
 
-		Optional<Employee> employee = employeeRepo.findByAccountId(accountId);
+		Optional<Employee> employee = employeeRepo.findByEmployeeId(employeeId);
 
 		Employee emp = employee.get();
 
+		System.out.println(emp);
+		
 		Account account = emp.getAccount();
 
+		System.out.println(account);
+		
 		if (req.getFullName() != null)
 			emp.setFullName(req.getFullName());
 
@@ -149,7 +154,6 @@ public class adminServiceImp implements AdminService {
 
 		if (req.getStatus() != null)
 			account.setStatus(req.getStatus());
-
 	}
 
 //	@Override

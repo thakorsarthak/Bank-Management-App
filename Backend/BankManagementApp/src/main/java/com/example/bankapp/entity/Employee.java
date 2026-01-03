@@ -23,7 +23,7 @@ public class Employee {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long employeeId;
 	
 	@OneToOne
 	@JoinColumn(name = "account_id" , nullable = false ,  unique = true )

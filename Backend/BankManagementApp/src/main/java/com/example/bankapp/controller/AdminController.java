@@ -64,14 +64,14 @@ public class AdminController {
 		return ResponseEntity.ok("Employee designation updated successfully");
 	}
 
-	@PatchMapping("/employee/{accountId}/updateAllDetails")
-	public ResponseEntity<?> updateAllEmployee(@PathVariable Long accountId,
+	@PatchMapping("/employee/{employeeId}/updateAllDetails")
+	public ResponseEntity<?> updateAllEmployee(@PathVariable Long employeeId,
 			@RequestBody UpdateEmployeeRequestDTO emp) {
 
 		System.out.println("In Update Whole Employee");
-		adminService.updateEmployee(accountId, emp);
+		adminService.updateEmployee(employeeId, emp);
 
-		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly", true, emp));
+		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true, emp));
 	}
 
 }
