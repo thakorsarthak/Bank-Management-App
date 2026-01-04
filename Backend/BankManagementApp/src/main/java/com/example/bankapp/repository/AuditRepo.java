@@ -7,6 +7,6 @@ import com.example.bankapp.entity.AuditLog;
 
 @Repository
 public interface AuditRepo extends JpaRepository<AuditLog, Long> {
-	
+
 
 }

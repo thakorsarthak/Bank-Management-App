@@ -40,7 +40,6 @@ import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 
 @Service
 
@@ -205,7 +204,7 @@ public class AccountServiceImp implements AccountService {
 			Account acc = optionalAcc.get();
 
 			// Step 3: Generate JWT token
-			
+
 		    Role role = acc.getRole();
 			String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber() , role.name());
 			System.out.println("Token [From verify]: " + token);

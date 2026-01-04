@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccountSignUpDTO {
 
-	
+
 	private String accountHolderName;
 
 	@Column(nullable = false)

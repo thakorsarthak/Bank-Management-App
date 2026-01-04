@@ -24,22 +24,22 @@ public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long employeeId;
-	
+
 	@OneToOne
 	@JoinColumn(name = "account_id" , nullable = false ,  unique = true )
 	private Account account;
-	
+
 	@Column(nullable = false)
     private String fullName;
-	
+
 	@Column(nullable = false, length = 4, name = "branch_code")
     private String branchCode;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Designation designation;
-	
+
 	@Column(nullable = false)
     private LocalDate joiningDate;
-	
+
 }

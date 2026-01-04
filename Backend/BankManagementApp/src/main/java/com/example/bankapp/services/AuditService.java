@@ -17,7 +17,7 @@ public class AuditService {
 
 	public void log(AuditAction action, String performedBy, String roleType, Long targetId, String oldValue,
 			String newValue) {
-		
+
 		AuditLog log = new AuditLog();
         log.setAction(action.name());
         log.setPerformedBy(performedBy);

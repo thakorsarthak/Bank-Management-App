@@ -5,16 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
-import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.entity.Account;
@@ -75,7 +71,7 @@ public class adminServiceImp implements AdminService {
 		profile.setBranchCode(request.getBranchCode());
 		profile.setJoiningDate(LocalDate.now());
 		profile.setDesignation(request.getDesignation());
-		;
+
 
 		employeeRepo.save(profile);
 	}
@@ -138,22 +134,26 @@ public class adminServiceImp implements AdminService {
 		Employee emp = employee.get();
 
 		System.out.println(emp);
-		
+
 		Account account = emp.getAccount();
 
 		System.out.println(account);
-		
-		if (req.getFullName() != null)
+
+		if (req.getFullName() != null) {
 			emp.setFullName(req.getFullName());
+		}
 
-		if (req.getBranchCode() != null)
+		if (req.getBranchCode() != null) {
 			emp.setBranchCode(req.getBranchCode());
+		}
 
-		if (req.getDesignation() != null)
+		if (req.getDesignation() != null) {
 			emp.setDesignation(req.getDesignation());
+		}
 
-		if (req.getStatus() != null)
+		if (req.getStatus() != null) {
 			account.setStatus(req.getStatus());
+		}
 	}
 
 //	@Override

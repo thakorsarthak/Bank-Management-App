@@ -15,7 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.example.bankapp.services.CustomAcountDetailService;
 import com.example.bankapp.services.JWTservices;
 
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,14 +39,8 @@ public class JwtFilter extends OncePerRequestFilter {
 		String requestURI = request.getRequestURI();
 
 		// for skipping public and swagger endpoint
-		if (isPublicEndpoint(requestURI) || isSwaggerEndpoint(requestURI)) {
-
-			filterChain.doFilter(request, response);
-			return;
-		}
-
 		// for skiping OPTIONs of CROS
-		if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+		if (isPublicEndpoint(requestURI) || isSwaggerEndpoint(requestURI) || "OPTIONS".equalsIgnoreCase(request.getMethod())) {
 
 			filterChain.doFilter(request, response);
 			return;
@@ -104,8 +97,8 @@ public class JwtFilter extends OncePerRequestFilter {
 				unauthorized(response, "Invalid Token (JWT filter)");
 				return;
 			}
-			
-			 
+
+
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
 					null, userDetails.getAuthorities());
 

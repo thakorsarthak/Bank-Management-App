@@ -15,18 +15,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class AuditLog {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
 	private String action;
-	
+
 	private String performedBy;
-	
+
 	private String targetType;
-	
-	private Long targetId;          // employeeId 
+
+	private Long targetId;          // employeeId
 
     private String oldValue;
     private String newValue;
