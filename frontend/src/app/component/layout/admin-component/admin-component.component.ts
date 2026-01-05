@@ -101,37 +101,38 @@ export class AdminComponentComponent implements OnInit {
   updateEmployee(): void {
 
     if (!this.selectedEmployee?.employeeId) {
-    console.error('Employee ID missing', this.selectedEmployee);
-     this.messageService.add({
-            severity: 'danger',
-            summary: 'error',
-            detail: 'Employee id missing!'
-          });
-    return;
-  }
+      console.error('Employee ID missing', this.selectedEmployee);
+      this.messageService.add({
+        severity: 'danger',
+        summary: 'error',
+        detail: 'Employee id missing!'
+      });
+      return;
+    }
     if (this.employeeForm.invalid) return;
 
     const payload = this.employeeForm.value;
 
     this.adminService
       .updateEmployee(this.selectedEmployee.employeeId, payload)
-      .subscribe({ next: (res) => {
-        this.showEmployeeDialog = false;
-        this.loadEmployees();
+      .subscribe({
+        next: (res) => {
+          this.showEmployeeDialog = false;
+          this.loadEmployees();
 
-       this.messageService.add({
-          severity: res.success ? 'success' : 'warn',
-          summary: res.success ? 'Success' : 'Warning',
-          detail: res.message   
-        });
-      },
-      error: (err) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: err.error?.message || 'Something went wrong'
-        });
-      }
+          this.messageService.add({
+            severity: res.success ? 'success' : 'warn',
+            summary: res.success ? 'Success' : 'Warning',
+            detail: res.message
+          });
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: err.error?.message || 'Something went wrong'
+          });
+        }
       });
   }
 
@@ -191,11 +192,29 @@ export class AdminComponentComponent implements OnInit {
   }
 
   //  Enable / Disable employee
-  updateStatus(employeeId: number, active: boolean): void {
-    this.adminService.updateStatus(employeeId, active).subscribe({
-      next: () => this.loadEmployees(),
-      error: (err) => console.error(err)
+  updateStatus(employeeId: number, status: 'ACTIVE' | 'INACTIVE') {
+
+  this.adminService.updateEmployeeStatus(employeeId, { status })
+    .subscribe({
+      next: (res) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: res.message
+        });
+        this.loadEmployees();
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.error?.message || 'Status update failed'
+        });
+      }
     });
-  }
+}
+
+
+
 
 }

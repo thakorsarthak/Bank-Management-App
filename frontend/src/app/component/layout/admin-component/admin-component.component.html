@@ -214,16 +214,12 @@
                 (click)="viewEmployee(employee)">
               </p-button>
 
-              <p-button icon="pi pi-pencil" severity="info" [text]="true" pTooltip="Change designation"
-                (onClick)="changeDesignation(employee)">
-              </p-button>
-
               <p-button icon="pi pi-ban" severity="danger" [text]="true" pTooltip="Disable employee"
-                *ngIf="employee.status === 'ACTIVE'" (onClick)="updateStatus(employee.accountId, false)">
+                *ngIf="employee.status === 'ACTIVE'" (onClick)="updateStatus(employee.employeeId, 'INACTIVE')">
               </p-button>
 
               <p-button icon="pi pi-check" severity="success" [text]="true" pTooltip="Enable employee"
-                *ngIf="employee.status !== 'ACTIVE'" (onClick)="updateStatus(employee.accountId, true)">
+                *ngIf="employee.status !== 'ACTIVE'"  (onClick)="updateStatus(employee.employeeId, 'ACTIVE')">
               </p-button>
             </td>
 

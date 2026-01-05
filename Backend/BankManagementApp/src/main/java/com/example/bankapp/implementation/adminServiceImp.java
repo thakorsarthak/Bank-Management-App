@@ -83,19 +83,21 @@ public class adminServiceImp implements AdminService {
 
 	@Override
 	@Transactional
-	public void updateStatus(Long accountId, AccountStatus accountStatus) {
+	public void updateStatusEmployee(Long employeeId, AccountStatus accountStatus) {
 
-		Optional<Account> account = accountRepo.findById(accountId);
-
+		Optional<Employee> emp = employeeRepo.findById(employeeId);
+		
+		Employee employee = emp.get();
+		
 		// Account account = accountRepo.findById(id);
-		if (account.isEmpty()) {
+		if (emp.isEmpty()) {
 
 			throw new RuntimeException("Account not found");
 		}
 
-		Account acc = account.get();
+		Account acc = employee.getAccount();
 
-		acc.setStatus(accountStatus);
+		acc.setStatus(accountStatus);;
 	}
 
 	@Override

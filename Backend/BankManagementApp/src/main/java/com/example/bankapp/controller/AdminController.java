@@ -18,6 +18,7 @@ import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.UpdateDesignationRequest;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.DTO.UpdateStatusRequest;
+import com.example.bankapp.entity.Employee;
 import com.example.bankapp.services.AdminService;
 
 import jakarta.validation.Valid;
@@ -47,13 +48,13 @@ public class AdminController {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee fetched sucessfuly", true, response));
 	}
 
-	@PatchMapping("/employee/{accountId}/updateStatus")
-	public ResponseEntity<?> updateAccountStatus(@PathVariable Long accountId,
+	@PatchMapping("/employee/{employeeId}/updateStatus")
+	public ResponseEntity<?> updateAccountStatus(@PathVariable Long employeeId,
 			@RequestBody UpdateStatusRequest request) {
 
-		adminService.updateStatus(accountId, request.getStatus());
+		 adminService.updateStatusEmployee(employeeId, request.getStatus());
 
-		return ResponseEntity.ok("Account status updated successfully");
+		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true));
 	}
 
 	@PatchMapping("/employee/{accountId}/designation")

@@ -13,16 +13,17 @@ export class AdminService {
     return this.http.get<any>('http://localhost:6011/bankapp/admin/employee/getAllStaff', { params });
   }
 
-  updateStatus(accountId: number, active: boolean) {
-    return this.http.put(`/api/admin/staff/${accountId}/status`, { active });
+  updateEmployeeStatus(employeeId: number, payload: { status: string }) {
+    return this.http.patch<GlobalAPIResponse<any>>(
+      `http://localhost:6011/bankapp/admin/employee/${employeeId}/updateStatus`, payload);
   }
 
   updateEmployee(employeeId: number, payload: any) {
-  return this.http.patch<GlobalAPIResponse<any>>(
-    `http://localhost:6011/bankapp/admin/employee/${employeeId}/updateAllDetails`,
-    payload
-  );
-}
+    return this.http.patch<GlobalAPIResponse<any>>(
+      `http://localhost:6011/bankapp/admin/employee/${employeeId}/updateAllDetails`,
+      payload
+    );
+  }
 
 
 }

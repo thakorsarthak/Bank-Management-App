@@ -15,11 +15,13 @@ public interface AdminService {
 
 	List<Employee> getAllStaff();
 
-	public void updateStatus(Long accountId , AccountStatus accountStatus) ;
+	public void updateStatusEmployee(Long employeeId, AccountStatus accountStatus);
 
 	public void updateDesignation(Long accountId, Designation designation);
 
 	public List<AdminEmployeeResponseDTO> getAllEmployees();
 
 	public void updateEmployee(Long employeeID , UpdateEmployeeRequestDTO employee);
+
+	
 }
