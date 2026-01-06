@@ -122,8 +122,8 @@ public class TransactionServiceImp implements TransactionService {
 		Long debitCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "DEBIT");
 		Long creditCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "CREDIT");
 
-		System.out.println(debitCount);
-		System.out.println(creditCount);
+		System.out.println("Total debit counts: "+debitCount);
+		System.out.println("Total credit counts: "+creditCount);
 
 		return new TransactionHistoryResponseDTO(dtos, total, debitCount, creditCount, transactionsPage.getNumber(),
 				transactionsPage.getTotalPages());

@@ -34,10 +34,11 @@ public class AdminController {
 
 	@PostMapping("/employee/addStaff")
 	// @PreAuthorize("hasRole('ADMIN')") // Only admin can call
-	public ResponseEntity<String> createStaff(@Valid @RequestBody CreateStaffDTO request) {
+	public ResponseEntity<?> createStaff(@Valid @RequestBody CreateStaffDTO request) {
 
-		adminService.createEmployeeOrManager(request);
-		return ResponseEntity.ok("Staff created successfully");
+	 adminService.createEmployeeOrManager(request);
+	
+		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee Created Successfully", true));
 	}
 
 	@GetMapping("/employee/getAllStaff")

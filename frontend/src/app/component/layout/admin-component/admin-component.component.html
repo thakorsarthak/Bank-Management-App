@@ -2,8 +2,8 @@
 <div class="account">
   <div class="hero-section">
     <div class="hero-content">
-      <h1 class="page-title">Account Dashboard</h1>
-      <p class="page-subtitle">Manage your banking experience</p>
+      <h1 class="page-title">Admin Dashboard</h1>
+      <p class="page-subtitle">Manage Employee Information and Users</p>
     </div>
     <div class="hero-decoration">
       <div class="floating-shapes">
@@ -104,19 +104,19 @@
               <span class="value">SBIN</span>
             </div>
           </div>
-          <!-- 
+          
           <div class="detail-card balance-card">
             <div class="detail-icon balance-icon">
               <i class="pi pi-wallet"></i>
             </div>
             <div class="detail-content">
               <span class="label">Current Balance</span>
-              <span class="value balance-value">₹</span>
+              <span class="value balance-value  ">₹</span>
             </div>
             <div class="balance-indicator">
               <div class="indicator-dot"></div>
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
@@ -140,9 +140,15 @@
         </div>
       </ng-template>
 
-      <p-table [value]="employees" [paginator]="true" [lazy]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
-        [totalRecords]="totalRecords" (onLazyLoad)="loadEmployees($event)" responsiveLayout="scroll"
-        styleClass="p-datatable-striped modern-table">
+      <p-table [value]="employees" 
+      [paginator]="true" 
+      [lazy]="true" 
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [totalRecords]="totalRecords" 
+      (onLazyLoad)="loadEmployees($event)" 
+      responsiveLayout="scroll"
+      styleClass="p-datatable-striped modern-table">
 
         <!-- TABLE HEADER -->
         <ng-template pTemplate="header">
@@ -166,12 +172,12 @@
               <!-- <p-sortIcon field="designation"></p-sortIcon> -->
             </th>
 
-            <th pColumn="status">
+            <th  pSortableColumn="status">
               <i class="pi pi-flag"></i> Status
               <!-- <p-sortIcon field="status"></p-sortIcon> -->
             </th>
 
-            <th pColumn="joiningDate">
+            <th pSortableColumn="joiningDate">
               <i class="pi pi-calendar"></i> Joined On
               <!-- <p-sortIcon field="joiningDate"></p-sortIcon> -->
             </th>
@@ -219,7 +225,7 @@
               </p-button>
 
               <p-button icon="pi pi-check" severity="success" [text]="true" pTooltip="Enable employee"
-                *ngIf="employee.status !== 'ACTIVE'"  (onClick)="updateStatus(employee.employeeId, 'ACTIVE')">
+                *ngIf="employee.status !== 'ACTIVE'" (onClick)="updateStatus(employee.employeeId, 'ACTIVE')">
               </p-button>
             </td>
 
