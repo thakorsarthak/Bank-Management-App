@@ -1,7 +1,9 @@
 package com.example.bankapp.DTO;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
 
@@ -14,12 +16,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminEmployeeResponseDTO {
 
-	private Long employeeId;
-    private String fullName;
-    private String email;
-    private String branchCode;
-    private Designation designation;
-    private AccountStatus status;
-    private LocalDate joiningDate;
+//	private Long employeeId;
+//    private String fullName;
+//    private String email;
+//    private String branchCode;
+//    private Designation designation;
+//    private AccountStatus status;
+//    private LocalDate joiningDate;
+    
+    private List<Employee> data;
+    private long totalRecords;
 
 }

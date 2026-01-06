@@ -18,8 +18,18 @@ public interface AdminService {
 	public void updateStatusEmployee(Long employeeId, AccountStatus accountStatus);
 
 	public void updateDesignation(Long accountId, Designation designation);
+	
+	public List<AdminEmployeeResponseDTO> getAllEmployees( int page,int size,
+	        String sortField,
+	        String sortOrder) ;
+	
+	public AdminEmployeeResponseDTO getEmployees(
+            int page,
+            int size,
+            String sortField,
+            String sortOrder);
 
-	public List<AdminEmployeeResponseDTO> getAllEmployees();
+	//public List<AdminEmployeeResponseDTO> getAllEmployees();
 
 	public void updateEmployee(Long employeeID , UpdateEmployeeRequestDTO employee);
 

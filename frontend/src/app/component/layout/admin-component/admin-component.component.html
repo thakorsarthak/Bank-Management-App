@@ -104,7 +104,7 @@
               <span class="value">SBIN</span>
             </div>
           </div>
-          
+
           <div class="detail-card balance-card">
             <div class="detail-icon balance-icon">
               <i class="pi pi-wallet"></i>
@@ -139,16 +139,17 @@
           </div>
         </div>
       </ng-template>
-
+ <!-- [pSortField]="'joiningDate'" 
+        [pSortOrder]="-1" for pagination -->
       <p-table [value]="employees" 
-      [paginator]="true" 
-      [lazy]="true" 
-      [rows]="10"
-      [rowsPerPageOptions]="[10, 25, 50]"
-      [totalRecords]="totalRecords" 
-      (onLazyLoad)="loadEmployees($event)" 
-      responsiveLayout="scroll"
-      styleClass="p-datatable-striped modern-table">
+      [paginator]="true"
+       [lazy]="true"
+        [rows]="10"
+         [rowsPerPageOptions]="[10, 25, 50]"
+        [totalRecords]="totalRecords" 
+       
+        (onLazyLoad)="loadEmployees($event)"
+         responsiveLayout="scroll" styleClass="p-datatable-striped modern-table">
 
         <!-- TABLE HEADER -->
         <ng-template pTemplate="header">
@@ -172,15 +173,16 @@
               <!-- <p-sortIcon field="designation"></p-sortIcon> -->
             </th>
 
-            <th  pSortableColumn="status">
+            <th pSortableColumn="status">
               <i class="pi pi-flag"></i> Status
-              <!-- <p-sortIcon field="status"></p-sortIcon> -->
+              <p-sortIcon field="status"></p-sortIcon>
             </th>
 
             <th pSortableColumn="joiningDate">
               <i class="pi pi-calendar"></i> Joined On
-              <!-- <p-sortIcon field="joiningDate"></p-sortIcon> -->
+              <p-sortIcon field="joiningDate"></p-sortIcon>
             </th>
+
 
 
             <th>

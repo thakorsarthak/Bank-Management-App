@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,6 +103,8 @@ public class adminServiceImp implements AdminService {
 
 		acc.setStatus(accountStatus);;
 	}
+	
+	 
 
 	@Override
 	@Transactional
@@ -117,15 +123,63 @@ public class adminServiceImp implements AdminService {
 		e.setDesignation(designation);
 	}
 
+//	@Override
+//	public List<AdminEmployeeResponseDTO> getAllEmployees(int page, int size, String sortField, String sortOrder) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//	
+	
 	@Override
-	public List<AdminEmployeeResponseDTO> getAllEmployees() {
-
-		return employeeRepo.findAll().stream()
-				.map(emp -> new AdminEmployeeResponseDTO(emp.getEmployeeId(), emp.getFullName(),
-						emp.getAccount().getEmail(), emp.getBranchCode(), emp.getDesignation(),
-						emp.getAccount().getStatus(), emp.getJoiningDate()))
-				.toList();
+	public List<AdminEmployeeResponseDTO> getAllEmployees(int page, int size, String sortField, String sortOrder) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+	
+	@Override
+	 public AdminEmployeeResponseDTO getEmployees(
+	            int page,
+	            int size,
+	            String sortField,
+	            String sortOrder) {
+
+	        Pageable pageable = PageRequest.of(page, size);
+
+	        // 🔥 Custom status sorting via Account
+	        if ("status".equals(sortField)) {
+	            Page<Employee> pageResult =
+	                    employeeRepo.sortByAccountStatus(pageable);
+
+	            return new AdminEmployeeResponseDTO(
+	                    pageResult.getContent(),
+	                    pageResult.getTotalElements()
+	            );
+	        }
+
+	        // Normal sorting (joiningDate, etc.)
+	        Sort sort = sortOrder.equalsIgnoreCase("ASC")
+	                ? Sort.by(sortField).ascending()
+	                : Sort.by(sortField).descending();
+
+	        pageable = PageRequest.of(page, size, sort);
+
+	        Page<Employee> pageResult = employeeRepo.findAll(pageable);
+
+	        return new AdminEmployeeResponseDTO(
+	                pageResult.getContent(),
+	                pageResult.getTotalElements()
+	        );
+	    }
+	
+	
+//	public List<AdminEmployeeResponseDTO> getAllEmployees() {
+//
+//		return employeeRepo.findAll().stream()
+//				.map(emp -> new AdminEmployeeResponseDTO(emp.getEmployeeId(), emp.getFullName(),
+//						emp.getAccount().getEmail(), emp.getBranchCode(), emp.getDesignation(),
+//						emp.getAccount().getStatus(), emp.getJoiningDate()))
+//				.toList();
+//	}
 
 	@Override
 	@Transactional
@@ -157,6 +211,10 @@ public class adminServiceImp implements AdminService {
 			account.setStatus(req.getStatus());
 		}
 	}
+
+	
+
+	
 
 //	@Override
 //	public EmployeeResponse getEmployeeById(Long id) {

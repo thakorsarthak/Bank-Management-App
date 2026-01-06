@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
@@ -40,14 +41,25 @@ public class AdminController {
 	
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee Created Successfully", true));
 	}
-
-	@GetMapping("/employee/getAllStaff")
-	// @PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> getAllStaff() {
-
-		List<AdminEmployeeResponseDTO> response = adminService.getAllEmployees();
-		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee fetched sucessfuly", true, response));
+	
+	@GetMapping("/employee/getAllEmployee")
+	public AdminEmployeeResponseDTO getAllEmployeePag( 
+	        @RequestParam int page,
+	        @RequestParam int size,
+	        @RequestParam String sortField,
+	        @RequestParam String sortOrder){
+		
+	//	AdminEmployeeResponseDTO dto = adminService.
+	    return adminService.getEmployees(page, size, sortField, sortOrder);
+		
 	}
+
+//	@GetMapping("/employee/getAllStaff")
+//	// @PreAuthorize("hasRole('ADMIN')")
+//	public ResponseEntity<?> getAllStaff() {
+//		List<AdminEmployeeResponseDTO> response = adminService.getAllEmployees();
+//		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee fetched sucessfuly", true, response));
+//	}
 
 	@PatchMapping("/employee/{employeeId}/updateStatus")
 	public ResponseEntity<?> updateAccountStatus(@PathVariable Long employeeId,

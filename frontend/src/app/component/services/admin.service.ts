@@ -12,6 +12,7 @@ export class AdminService {
   getEmployees(params: any) {
     return this.http.get<any>('http://localhost:6011/bankapp/admin/employee/getAllStaff', { params });
   }
+  
 
   updateEmployeeStatus(employeeId: number, payload: { status: string }) {
     return this.http.patch<GlobalAPIResponse<any>>(
