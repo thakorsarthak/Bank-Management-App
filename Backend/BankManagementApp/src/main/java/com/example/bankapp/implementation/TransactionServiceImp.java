@@ -103,13 +103,18 @@ public class TransactionServiceImp implements TransactionService {
 //	        // convert each Transaction to TransactionResponseDTO
 //	        return transactions.map(TransactionResponseDTO::from);
 //	}
+	
+	
+	
+	
+	//  Here Direction means ascending and decending & 
 
 	@Override
-	public TransactionHistoryResponseDTO getTransactions(String accountNumber, int page, int size, String sortByTime,
+	public TransactionHistoryResponseDTO getTransactions(String accountNumber, int page, int size, String sortFeid,
 			String sortDirection) {
 
-		Sort sort = sortDirection.equalsIgnoreCase("desc") ? Sort.by(sortByTime).descending()
-				: Sort.by(sortByTime).ascending();
+		Sort sort = sortDirection.equalsIgnoreCase("desc") ? Sort.by(sortFeid).descending()
+				: Sort.by(sortFeid).ascending();
 
 		Pageable pageable = PageRequest.of(page, size, sort);
 
