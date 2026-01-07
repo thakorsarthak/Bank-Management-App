@@ -39,7 +39,8 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 			"AND t.timestamp >= :startDate " +
 		       "AND t.timestamp < :endDate " +
 			"ORDER BY t.timestamp DESC")
-	List<Transaction>findByAccountAndDateRange( @Param("accountNumber") String accountNumber,
+	List<Transaction>findByAccountAndDateRange(
+			@Param("accountNumber") String accountNumber,
 			@Param("startDate")  LocalDateTime startDate ,
 			@Param("endDate")  LocalDateTime endDate);
 

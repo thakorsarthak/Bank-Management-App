@@ -20,6 +20,7 @@ import com.example.bankapp.DTO.UpdateDesignationRequest;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.DTO.UpdateStatusRequest;
 import com.example.bankapp.entity.Employee;
+import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.services.AdminService;
 
 import jakarta.validation.Valid;
@@ -43,16 +44,21 @@ public class AdminController {
 	}
 	
 	@GetMapping("/employee/getAllEmployee")
-	public AdminEmployeeResponseDTO getAllEmployeePag( 
-	        @RequestParam int page,
-	        @RequestParam int size,
-	        @RequestParam String sortField,
-	        @RequestParam String sortOrder){
+	public ResponseEntity<GlobalAPIResponseDTO> getEmployees(
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size,
+	        @RequestParam(defaultValue = "joiningDate") String sortField,
+	        @RequestParam(defaultValue = "DESC") String sortOrder,
+	        @RequestParam(required = false) AccountStatus status) {
 		
-	//	AdminEmployeeResponseDTO dto = adminService.
-	    return adminService.getEmployees(page, size, sortField, sortOrder);
+		AdminEmployeeResponseDTO dto =  adminService.getEmployees(page, size, sortField, sortOrder, status);
 		
+		GlobalAPIResponseDTO<AdminEmployeeResponseDTO> response = 
+				new	GlobalAPIResponseDTO<AdminEmployeeResponseDTO>("employee fetched Successfully", true , dto);
+		
+	    return ResponseEntity.ok(response) ;
 	}
+
 
 //	@GetMapping("/employee/getAllStaff")
 //	// @PreAuthorize("hasRole('ADMIN')")

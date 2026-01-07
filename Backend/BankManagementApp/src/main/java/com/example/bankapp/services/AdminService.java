@@ -27,7 +27,8 @@ public interface AdminService {
             int page,
             int size,
             String sortField,
-            String sortOrder);
+            String sortOrder,
+            AccountStatus status);
 
 	//public List<AdminEmployeeResponseDTO> getAllEmployees();
 

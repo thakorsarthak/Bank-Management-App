@@ -66,7 +66,7 @@ export class AdminComponentComponent implements OnInit {
       status: ['', Validators.required]
 
     });
-
+ this.loadEmployees();
   }
 
 
@@ -142,42 +142,83 @@ export class AdminComponentComponent implements OnInit {
   }
 
 
-  loadEmployees(event?: TableLazyLoadEvent): void {
-    this.loading = true;
+//for pagination
 
-    const params = {
-      search: this.search,
-      status: this.status,
-      designation: this.designation
-    };
+loadEmployees(event?: any) {
+  this.loading = true;
 
-    this.adminService.getEmployees(params).subscribe({
-      next: (res) => {
-        this.employees = res.data;
-        this.totalRecords = res.totalRecords;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
+  const first = event?.first ?? 0;
+  const rows = event?.rows ?? 10;
+
+  const page = Math.floor(first / rows);
+  const size = rows;
+
+  let sortField = event?.sortField ?? 'joiningDate';
+  const sortOrder = event?.sortOrder === 1 ? 'ASC' : 'DESC';
+
+  const params: any = {
+    page,
+    size,
+    sortField,
+    sortOrder
+  };
+
+  if (this.status) {
+    params.status = this.status;
   }
+
+  this.adminService.getEmployees(params).subscribe({
+    next: (res) => {
+      this.employees = res.data;
+      this.totalRecords = res.totalRecords;
+      this.loading = false;
+    },
+    error: () => {
+      this.loading = false;
+    }
+  });
+}
+
+
+
+
+
+  // loadEmployees(event?: TableLazyLoadEvent): void {
+  //   this.loading = true;
+
+  //   const params = {
+  //     search: this.search,
+  //     status: this.status,
+  //     designation: this.designation
+  //   };
+
+  //   this.adminService.getEmployees(params).subscribe({
+  //     next: (res) => {
+  //       this.employees = res.data;
+  //       this.totalRecords = res.totalRecords;
+  //       this.loading = false;
+  //     },
+  //     error: () => {
+  //       this.loading = false;
+  //     }
+  //   });
+  // }
 
   //  Filter trigger
-  applyFilters(): void {
-    this.loadEmployees({
-      first: 0,
-      rows: 10
-    });
-  }
+  // applyFilters(): void {
+  //   this.loadEmployees({
+  //     first: 0,
+  //     rows: 10
+  //   });
+  // }
 
   //  Clear filters
-  clearFilters(): void {
-    this.search = '';
-    this.status = null;
-    this.designation = null;
-    this.applyFilters();
-  }
+  // clearFilters(): void {
+  //   this.search = '';
+  //   this.status = null;
+  //   this.designation = null;
+  //   this.applyFilters();
+  // }
 
   // //  View employee
   // viewEmployee(accountId: number): void {
@@ -186,10 +227,10 @@ export class AdminComponentComponent implements OnInit {
   // }
 
   // 🏷 Change designation
-  changeDesignation(employee: any): void {
-    console.log('Change designation:', employee);
-    // open dialog later
-  }
+  // changeDesignation(employee: any): void {
+  //   console.log('Change designation:', employee);
+  //   // open dialog later
+  // }
 
   //  Enable / Disable employee
   updateStatus(employeeId: number, status: 'ACTIVE' | 'INACTIVE') {

@@ -9,14 +9,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
+import com.example.bankapp.DTO.EmployeeListDTO;
+import com.example.bankapp.DTO.TransactionResponseDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.Exception.FieldError;
+import com.example.bankapp.Specification.EmployeeSpecification;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
@@ -27,6 +31,7 @@ import com.example.bankapp.repository.AuditRepo;
 import com.example.bankapp.repository.EmployeeRepo;
 import com.example.bankapp.services.AdminService;
 import com.example.bankapp.services.AuditService;
+import com.example.bankapp.util.EmployeeSortBuilder;
 
 import lombok.RequiredArgsConstructor;
 
@@ -123,12 +128,7 @@ public class adminServiceImp implements AdminService {
 		e.setDesignation(designation);
 	}
 
-//	@Override
-//	public List<AdminEmployeeResponseDTO> getAllEmployees(int page, int size, String sortField, String sortOrder) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//	
+
 	
 	@Override
 	public List<AdminEmployeeResponseDTO> getAllEmployees(int page, int size, String sortField, String sortOrder) {
@@ -137,40 +137,30 @@ public class adminServiceImp implements AdminService {
 	}
 	
 	@Override
-	 public AdminEmployeeResponseDTO getEmployees(
-	            int page,
-	            int size,
-	            String sortField,
-	            String sortOrder) {
+	public AdminEmployeeResponseDTO getEmployees(
+	        int page,
+	        int size,
+	        String sortField,
+	        String sortOrder,
+	        AccountStatus status
+	) {
+	   
+		Pageable pageable = PageRequest.of(page, size , EmployeeSortBuilder.build(sortField, sortOrder));
+		
+		Specification<Employee> specification = Specification.where(null);
 
-	        Pageable pageable = PageRequest.of(page, size);
+		specification = specification.and(EmployeeSpecification.hasAccountStatus(status));
+		
+		Page<Employee> empPage = employeeRepo.findAll(specification,pageable); 
+		
+		List<EmployeeListDTO> dto = empPage.getContent().stream().map(EmployeeListDTO :: from).toList(); 
+				empPage.getTotalElements();
+		
+			
+		return new AdminEmployeeResponseDTO(dto, empPage.getTotalElements());
+	}
 
-	        // 🔥 Custom status sorting via Account
-	        if ("status".equals(sortField)) {
-	            Page<Employee> pageResult =
-	                    employeeRepo.sortByAccountStatus(pageable);
 
-	            return new AdminEmployeeResponseDTO(
-	                    pageResult.getContent(),
-	                    pageResult.getTotalElements()
-	            );
-	        }
-
-	        // Normal sorting (joiningDate, etc.)
-	        Sort sort = sortOrder.equalsIgnoreCase("ASC")
-	                ? Sort.by(sortField).ascending()
-	                : Sort.by(sortField).descending();
-
-	        pageable = PageRequest.of(page, size, sort);
-
-	        Page<Employee> pageResult = employeeRepo.findAll(pageable);
-
-	        return new AdminEmployeeResponseDTO(
-	                pageResult.getContent(),
-	                pageResult.getTotalElements()
-	        );
-	    }
-	
 	
 //	public List<AdminEmployeeResponseDTO> getAllEmployees() {
 //
@@ -212,6 +202,7 @@ public class adminServiceImp implements AdminService {
 		}
 	}
 
+	
 	
 
 	

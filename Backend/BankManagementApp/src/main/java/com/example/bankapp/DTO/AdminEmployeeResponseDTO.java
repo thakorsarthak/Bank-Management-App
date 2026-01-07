@@ -3,6 +3,8 @@ package com.example.bankapp.DTO;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
@@ -15,16 +17,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminEmployeeResponseDTO {
-
-//	private Long employeeId;
-//    private String fullName;
-//    private String email;
-//    private String branchCode;
-//    private Designation designation;
-//    private AccountStatus status;
-//    private LocalDate joiningDate;
     
-    private List<Employee> data;
+    private List<EmployeeListDTO> data;
     private long totalRecords;
+    
+    public static AdminEmployeeResponseDTO fromPage(Page<Employee> page) {
+
+        List<EmployeeListDTO> list = page.getContent()
+                .stream()
+                .map(EmployeeListDTO::from)
+                .toList();
+
+        return new AdminEmployeeResponseDTO(
+                list,
+                page.getTotalElements()
+        );
+    }
 
 }
