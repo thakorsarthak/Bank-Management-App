@@ -106,7 +106,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
-			System.out.println("Toekn + Redis is authenticated Successfully(JWT filter)");
+			System.out.println("Token + Redis is authenticated Successfully(JWT filter)");
 		}
 
 //		// Skip JWT + Redis validation for public endpoints

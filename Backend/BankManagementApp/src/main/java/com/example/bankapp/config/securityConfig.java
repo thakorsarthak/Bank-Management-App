@@ -38,11 +38,21 @@ public class securityConfig {
 
 				.csrf(customizer -> customizer.disable())
 				.authorizeHttpRequests(request -> request
-						.requestMatchers("/account/**","/transaction/**","/main/**","/otp/**","/webjars/**","/swagger-ui/**","/swagger-ui.html","/v3/api-docs/**","/swagger-resources/**")
+						.requestMatchers("/account/**",
+								"/transaction/**",
+								"/main/**",
+								"/otp/**",
+								"/webjars/**",
+								"/swagger-ui/**",
+								"/swagger-ui.html",
+								"/v3/api-docs/**",
+								"/swagger-resources/**")
 						.permitAll()
+						.requestMatchers("/admin/**")
+			            .hasRole("ADMIN") 
 						.anyRequest().authenticated())
 				// .formLogin(Customizer.withDefaults())
-				.httpBasic(Customizer.withDefaults())
+			//	.httpBasic(Customizer.withDefaults())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();

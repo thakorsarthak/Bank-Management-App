@@ -66,7 +66,9 @@ public class JWTservices {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("accountNumber", accountNumber);
 		claims.put("role", role);
-
+		
+		System.out.println("Role from JWTservice" + role);
+		
 		String token = Jwts.builder()
 				.claims(claims)
 				.subject(email)

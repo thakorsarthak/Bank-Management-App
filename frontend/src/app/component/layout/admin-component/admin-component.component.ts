@@ -58,16 +58,17 @@ export class AdminComponentComponent implements OnInit {
   employeeForm!: FormGroup;
 
 
-  ngOnInit(): void {
-    this.employeeForm = this.fb.group({
-      fullName: ['', Validators.required],
-      branchCode: ['', Validators.required],
-      designation: ['', Validators.required],
-      status: ['', Validators.required]
+ ngOnInit(): void {
+  this.employeeForm = this.fb.group({
+    fullName: ['', Validators.required],
+    branchCode: ['', Validators.required],
+    designation: ['', Validators.required],
+    status: ['', Validators.required]
+  });
 
-    });
- this.loadEmployees();
-  }
+  this.loadEmployees();
+}
+
 
 
 
@@ -169,8 +170,8 @@ loadEmployees(event?: any) {
 
   this.adminService.getEmployees(params).subscribe({
     next: (res) => {
-      this.employees = res.data;
-      this.totalRecords = res.totalRecords;
+      this.employees = res.data.data;
+      this.totalRecords = res.data.totalRecords;
       this.loading = false;
     },
     error: () => {
@@ -178,6 +179,7 @@ loadEmployees(event?: any) {
     }
   });
 }
+
 
 
 

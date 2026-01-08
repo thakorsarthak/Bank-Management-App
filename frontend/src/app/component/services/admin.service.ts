@@ -10,7 +10,7 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
   getEmployees(params: any) {
-    return this.http.get<any>('http://localhost:6011/bankapp/admin/employee/getAllStaff', { params });
+    return this.http.get<any>('http://localhost:6011/bankapp/admin/employee/getAllEmployee', { params });
   }
   
 

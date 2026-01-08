@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +54,11 @@ public class AdminController {
 	        @RequestParam(required = false) AccountStatus status) {
 		
 		AdminEmployeeResponseDTO dto =  adminService.getEmployees(page, size, sortField, sortOrder, status);
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		System.out.println(auth.getAuthorities());
+
 		
 		GlobalAPIResponseDTO<AdminEmployeeResponseDTO> response = 
 				new	GlobalAPIResponseDTO<AdminEmployeeResponseDTO>("employee fetched Successfully", true , dto);

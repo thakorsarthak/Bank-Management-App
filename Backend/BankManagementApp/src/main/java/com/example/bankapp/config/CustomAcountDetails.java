@@ -20,11 +20,25 @@ public class CustomAcountDetails implements UserDetails {
         this.identifier = identifier;
     }
 
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return Collections.singletonList(new SimpleGrantedAuthority("USER"));
+//    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("USER"));
+
+        Collection<? extends GrantedAuthority> authorities =
+                Collections.singletonList(
+                    new SimpleGrantedAuthority("ROLE_" + account.getRole().name())
+                );
+
+        System.out.println("Authorities: " + authorities); 
+
+        return authorities;
     }
 
+    
     @Override
     public String getPassword() {
         // This must be the encoded pin from DB

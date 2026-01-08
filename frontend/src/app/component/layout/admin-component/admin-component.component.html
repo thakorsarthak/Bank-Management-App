@@ -139,29 +139,23 @@
           </div>
         </div>
       </ng-template>
- <!-- [pSortField]="'joiningDate'" 
+      <!-- [pSortField]="'joiningDate'" 
         [pSortOrder]="-1" for pagination -->
-      <p-table [value]="employees" 
-      [paginator]="true"
-       [lazy]="true"
-        [rows]="10"
-         [rowsPerPageOptions]="[10, 25, 50]"
-        [totalRecords]="totalRecords" 
-       
-        (onLazyLoad)="loadEmployees($event)"
-         responsiveLayout="scroll" styleClass="p-datatable-striped modern-table">
+      <p-table [value]="employees" [paginator]="true" [lazy]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+        [totalRecords]="totalRecords" (onLazyLoad)="loadEmployees($event)" responsiveLayout="scroll"
+        styleClass="p-datatable-striped modern-table">
 
         <!-- TABLE HEADER -->
         <ng-template pTemplate="header">
           <tr>
             <th pColumn="fullName">
               <i class="pi pi-user"></i> Name
-              <!-- <p-sortIcon field="fullName"></p-sortIcon> -->
+              <p-sortIcon field="fullName"></p-sortIcon>
             </th>
 
             <th pColumn="email">
               <i class="pi pi-envelope"></i> Email
-              <!-- <p-sortIcon field="email"></p-sortIcon> -->
+              <p-sortIcon field="email"></p-sortIcon>
             </th>
 
             <th>
@@ -170,7 +164,7 @@
 
             <th pColumn="designation">
               <i class="pi pi-briefcase"></i> Designation
-              <!-- <p-sortIcon field="designation"></p-sortIcon> -->
+              <p-sortIcon field="designation"></p-sortIcon>
             </th>
 
             <th pSortableColumn="status">
@@ -182,6 +176,7 @@
               <i class="pi pi-calendar"></i> Joined On
               <p-sortIcon field="joiningDate"></p-sortIcon>
             </th>
+
 
 
 
