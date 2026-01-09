@@ -50,7 +50,7 @@ public class AdminController {
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size,
 	        @RequestParam(defaultValue = "joiningDate") String sortField,
-	        @RequestParam(defaultValue = "DESC") String sortOrder,
+	        @RequestParam(defaultValue = "ASC") String sortOrder,
 	        @RequestParam(required = false) AccountStatus status) {
 		
 		AdminEmployeeResponseDTO dto =  adminService.getEmployees(page, size, sortField, sortOrder, status);

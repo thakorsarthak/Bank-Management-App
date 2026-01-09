@@ -12,7 +12,8 @@ public final class EmployeeSortBuilder {
 	
 	private static final Map<String , String> FEIED_MAP = Map.of(
 			"status", "account_status",
-			"joiningDate", "joiningDate"
+			"joiningDate", "joiningDate",
+			"designation","designation"
 			);
 			
 			

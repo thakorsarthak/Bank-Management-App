@@ -10,17 +10,17 @@ import jakarta.persistence.criteria.Join;
 
 public class EmployeeSpecification {
 
-	public static Specification<Employee> hasAccountStatus(AccountStatus accountStatus){
+	public static Specification<Employee> hasAccountStatus(AccountStatus status){
 		
 		return (root, query , cb) -> {
-			if(accountStatus == null) {
+			if(status == null) {
 				
 				return cb.conjunction();
 			}
 			
 			Join<Employee, Account> accountJoin	= root.join("account");
 			
-			return cb.equal(accountJoin.get("status"),accountStatus);
+			return cb.equal(accountJoin.get("status"),status);
 			
 		};
 	}

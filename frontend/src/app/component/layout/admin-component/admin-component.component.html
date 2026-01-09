@@ -15,113 +15,86 @@
   </div>
 
   <div class="dashboard-container">
-    <!-- Account Information Card -->
-    <div class="account-card-wrapper">
-      <div class="account-card glass-card">
-        <div class="card-header">
-          <div class="header-content">
-            <div class="header-icon">
-              <i class="pi pi-user"></i>
-            </div>
-            <div class="header-text">
-              <h2>Account Overview</h2>
-              <span class="header-subtitle">Your account information at a glance</span>
-            </div>
-          </div>
-          <div class="status-badge active">
-            <i class="pi pi-check-circle"></i>
-            <span>Active</span>
-          </div>
-        </div>
 
-        <div class="account-grid">
-          <div class="detail-card">
-            <div class="detail-icon">
-              <i class="pi pi-user-plus"></i>
-            </div>
-            <div class="detail-content">
-              <span class="label">Account Holder</span>
-              <span class="value"></span>
-            </div>
-          </div>
 
-          <div class="detail-card">
-            <div class="detail-icon">
-              <i class="pi pi-envelope"></i>
-            </div>
-            <div class="detail-content">
-              <span class="label">Email Address</span>
-              <span class="value"></span>
-            </div>
-          </div>
+    
 
-          <div class="detail-card">
-            <div class="detail-icon">
-              <i class="pi pi-phone"></i>
-            </div>
-            <div class="detail-content">
-              <span class="label">Phone Number</span>
-              <span class="value"></span>
-            </div>
-          </div>
+    <!-- Enhanced Filters Section with Collapsible Design -->
+    <p-card styleClass="filters-card">
 
-          <div class="detail-card">
-            <div class="detail-icon">
-              <i class="pi pi-id-card"></i>
-            </div>
-            <div class="detail-content">
-              <span class="label">Account Number</span>
-              <span class="value"></span>
-            </div>
-          </div>
-
-          <div class="detail-card">
-            <div class="detail-icon">
-              <i class="pi pi-tag"></i>
-            </div>
-            <div class="detail-content">
-              <span class="label">Account Type</span>
-              <span class="value"></span>
-            </div>
-          </div>
-
-          <div class="detail-card">
-            <div class="detail-icon">
-              <i class="pi pi-building"></i>
-            </div>
-            <div class="detail-content">
-              <span class="label">Branch</span>
-              <span class="value"></span>
-            </div>
-          </div>
-
-          <div class="detail-card">
-            <div class="detail-icon">
-              <i class="pi pi-code"></i>
-            </div>
-            <div class="detail-content">
-              <span class="label">IFSC Code</span>
-              <span class="value">SBIN</span>
-            </div>
-          </div>
-
-          <div class="detail-card balance-card">
-            <div class="detail-icon balance-icon">
-              <i class="pi pi-wallet"></i>
-            </div>
-            <div class="detail-content">
-              <span class="label">Current Balance</span>
-              <span class="value balance-value  ">₹</span>
-            </div>
-            <div class="balance-indicator">
-              <div class="indicator-dot"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- for selecting employee or user -->
+    <div class="mb-3">
+      <p-dropdown [options]="entityOptions" [(ngModel)]="selectedEntity" placeholder="Select Type"
+        (onChange)="onEntityChange()" styleClass="w-full">
+      </p-dropdown>
     </div>
+      <ng-template pTemplate="header">
+        <div class="filter-header">
 
-    <!-- Transaction Overview -->
+          <div class="filter-title">
+            <i class="pi pi-filter"></i>
+            <span>
+              Filter {{ selectedEntity ?
+              (selectedEntity === 'EMPLOYEE' ? 'Employees' : 'Users')
+              : '' }}
+            </span>
+          </div>
+
+        </div>
+      </ng-template>
+
+
+      <div *ngIf="selectedEntity === 'EMPLOYEE'" class="filters-grid">
+
+        <!-- Designation -->
+        <div class="filter-field">
+          <label>Designation</label>
+          <p-dropdown [options]="designationOptions" [(ngModel)]="designation" (onChange)="applyEmployeeFilters()"
+            placeholder="Select designation" appendTo="body">
+          </p-dropdown>
+        </div>
+
+        <!-- Status -->
+        <div class="filter-field">
+          <label>Status</label>
+          <p-dropdown [options]="statusOptions" [(ngModel)]="status" (onChange)="applyEmployeeFilters()"
+            placeholder="Active / Inactive" appendTo="body">
+          </p-dropdown>
+        </div>
+
+        <!-- Search -->
+        <div class="filter-field">
+          <label>Search Name</label>
+          <input pInputText [(ngModel)]="searchName" (input)="applyEmployeeFilters()" placeholder="Search by name">
+        </div>
+
+        <!-- Sort -->
+        <div class="filter-field">
+          <label>Joining Date</label>
+          <p-dropdown [options]="dateSortOptions" [(ngModel)]="dateSort" (onChange)="applyEmployeeFilters()"
+            placeholder="Sort by date" appendTo="body">
+          </p-dropdown>
+        </div>
+
+        <!-- Branch -->
+        <div class="filter-field">
+          <label>Branch</label>
+          <p-dropdown [options]="branchOptions" [(ngModel)]="branch" (onChange)="applyEmployeeFilters()"
+            placeholder="Select branch" appendTo="body">
+          </p-dropdown>
+        </div>
+
+        <!-- Clear -->
+        <div class="filter-field">
+          <p-button label="Clear Filters" icon="pi pi-times" severity="secondary" (onClick)="clearFilters()"
+            styleClass="w-full">
+          </p-button>
+        </div>
+
+      </div>
+
+
+    </p-card>
 
     <!-- Employees Table Card -->
     <p-card styleClass="employees-table-card">
@@ -133,7 +106,7 @@
           </div>
 
           <div class="table-actions">
-            <p-button icon="pi pi-refresh" severity="secondary" [text]="true" (onClick)="loadEmployees()"
+            <p-button icon="pi pi-refresh" severity="secondary" [text]="true" (onClick)="refeshEmployees()"
               pTooltip="Refresh employees">
             </p-button>
           </div>
@@ -176,9 +149,6 @@
               <i class="pi pi-calendar"></i> Joined On
               <p-sortIcon field="joiningDate"></p-sortIcon>
             </th>
-
-
-
 
             <th>
               <i class="pi pi-cog"></i> Actions
