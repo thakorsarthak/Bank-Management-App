@@ -6,6 +6,8 @@ import org.springframework.data.jpa.domain.Specification;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
+import com.example.bankapp.enums.Designation;
+
 import jakarta.persistence.criteria.Join;
 
 public class EmployeeSpecification {
@@ -24,4 +26,17 @@ public class EmployeeSpecification {
 			
 		};
 	}
+	
+	public static Specification<Employee> hasDesignation(Designation designation) {
+
+	    return (root, query, cb) -> {
+
+	        if (designation == null) {
+	            return cb.conjunction();
+	        }
+
+	        return cb.equal(root.get("designation"), designation);
+	    };
+	}
+
 }

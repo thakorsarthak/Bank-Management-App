@@ -72,7 +72,7 @@ export class AdminComponentComponent implements OnInit {
     });
   }
 
-  // ---------------- OPTIONS ---------------- //
+  //  OPTIONS for filter and dropdown //
 
   designationOptions = [
     { label: 'Cashier', value: 'CASHIER' },
@@ -98,7 +98,7 @@ export class AdminComponentComponent implements OnInit {
 
   branchOptions: any[] = [];
 
-  // ---------------- ENTITY CHANGE ---------------- //
+  //  ENTITY CHANGE or choosing Employee/User //
 
   onEntityChange() {
     this.clearFilters();
@@ -108,7 +108,7 @@ export class AdminComponentComponent implements OnInit {
     }
   }
 
-  // ---------------- PAGINATION ---------------- //
+  // main PAGINATION loading employee //
 
   loadEmployees(event?: any) {
 
@@ -147,7 +147,7 @@ export class AdminComponentComponent implements OnInit {
     });
   }
 
-  // ---------------- FILTER LOGIC ---------------- //
+  //  filtering block or logics //
 
   applyEmployeeFilters() {
 
@@ -180,7 +180,7 @@ export class AdminComponentComponent implements OnInit {
       });
   }
 
-  // ---------------- CLEAR ---------------- //
+  // filter CLEAR and refreshing employee table //
 
   clearFilters() {
     this.searchName = '';
@@ -188,15 +188,17 @@ export class AdminComponentComponent implements OnInit {
     this.designation = null;
     this.dateSort = null;
     this.branch = null;
-  }
-
-  // ---------------- REFRESH ---------------- //
-
-  refeshEmployees() {
+    // this.refeshEmployees();
     this.loadEmployees({ first: 0, rows: 10 });
   }
 
-  // ---------------- VIEW ---------------- //
+  // for Refreshing employees table  //
+
+  // refeshEmployees() {
+  //   this.loadEmployees({ first: 0, rows: 10 });
+  // }
+
+  //  Viewing employee //
 
   viewEmployee(employee: Employee): void {
 
@@ -212,7 +214,7 @@ export class AdminComponentComponent implements OnInit {
     this.showEmployeeDialog = true;
   }
 
-  // ---------------- UPDATE ---------------- //
+  // for  UPDATE  //
 
   updateEmployee(): void {
 
@@ -257,7 +259,7 @@ export class AdminComponentComponent implements OnInit {
     this.employeeForm.reset();
   }
 
-  // ---------------- STATUS ---------------- //
+  // for Updating  STATUS  //
 
   updateStatus(employeeId: number, status: 'ACTIVE' | 'INACTIVE') {
 

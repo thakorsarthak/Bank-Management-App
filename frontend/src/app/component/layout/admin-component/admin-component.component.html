@@ -15,14 +15,10 @@
   </div>
 
   <div class="dashboard-container">
-
-
-    
-
     <!-- Enhanced Filters Section with Collapsible Design -->
     <p-card styleClass="filters-card">
 
-      <!-- for selecting employee or user -->
+      <!-- for selecting employee or user -->   
     <div class="mb-3">
       <p-dropdown [options]="entityOptions" [(ngModel)]="selectedEntity" placeholder="Select Type"
         (onChange)="onEntityChange()" styleClass="w-full">
@@ -106,7 +102,7 @@
           </div>
 
           <div class="table-actions">
-            <p-button icon="pi pi-refresh" severity="secondary" [text]="true" (onClick)="refeshEmployees()"
+            <p-button icon="pi pi-refresh" severity="secondary" [text]="true" (onClick)="clearFilters()"
               pTooltip="Refresh employees">
             </p-button>
           </div>
@@ -115,7 +111,7 @@
       <!-- [pSortField]="'joiningDate'" 
         [pSortOrder]="-1" for pagination -->
       <p-table [value]="employees" [paginator]="true" [lazy]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
-        [totalRecords]="totalRecords" (onLazyLoad)="loadEmployees($event)" responsiveLayout="scroll"
+        [totalRecords]="totalRecords" responsiveLayout="scroll"
         styleClass="p-datatable-striped modern-table">
 
         <!-- TABLE HEADER -->

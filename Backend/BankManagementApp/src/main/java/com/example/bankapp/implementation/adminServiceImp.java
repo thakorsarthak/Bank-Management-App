@@ -142,7 +142,8 @@ public class adminServiceImp implements AdminService {
 	        int size,
 	        String sortField,
 	        String sortOrder,
-	        AccountStatus status
+	        AccountStatus status,
+	        Designation designation
 	) {
 	   
 		Pageable pageable = PageRequest.of(page, size , EmployeeSortBuilder.build(sortField, sortOrder));
@@ -150,6 +151,10 @@ public class adminServiceImp implements AdminService {
 		Specification<Employee> specification = Specification.where(null);
 
 		specification = specification.and(EmployeeSpecification.hasAccountStatus(status));
+		
+		specification = specification.and(
+	            EmployeeSpecification.hasDesignation(designation)
+	    );
 		
 		Page<Employee> empPage = employeeRepo.findAll(specification,pageable); 
 		

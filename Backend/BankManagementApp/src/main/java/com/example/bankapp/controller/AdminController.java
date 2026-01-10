@@ -23,6 +23,7 @@ import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.DTO.UpdateStatusRequest;
 import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
+import com.example.bankapp.enums.Designation;
 import com.example.bankapp.services.AdminService;
 
 import jakarta.validation.Valid;
@@ -51,9 +52,9 @@ public class AdminController {
 	        @RequestParam(defaultValue = "10") int size,
 	        @RequestParam(defaultValue = "joiningDate") String sortField,
 	        @RequestParam(defaultValue = "ASC") String sortOrder,
-	        @RequestParam(required = false) AccountStatus status) {
-		
-		AdminEmployeeResponseDTO dto =  adminService.getEmployees(page, size, sortField, sortOrder, status);
+	        @RequestParam(required = false) AccountStatus status,
+	        @RequestParam(required = false) Designation designation){
+		AdminEmployeeResponseDTO dto =  adminService.getEmployees(page, size, sortField, sortOrder, status , designation);
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
