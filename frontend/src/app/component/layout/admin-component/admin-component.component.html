@@ -93,7 +93,7 @@
     </p-card>
 
     <!-- Employees Table Card -->
-    <p-card styleClass="employees-table-card">
+  <p-card *ngIf="selectedEntity === 'EMPLOYEE'">
       <ng-template pTemplate="header">
         <div class="table-header">
           <div class="table-title">
@@ -110,9 +110,26 @@
       </ng-template>
       <!-- [pSortField]="'joiningDate'" 
         [pSortOrder]="-1" for pagination -->
-      <p-table [value]="employees" [paginator]="true" [lazy]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
-        [totalRecords]="totalRecords" responsiveLayout="scroll"
-        styleClass="p-datatable-striped modern-table">
+      <!-- <p-table 
+      [value]="employees" 
+      [paginator]="true" 
+      [lazy]="true" 
+      [rows]="10" 
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [totalRecords]="totalRecords" 
+      responsiveLayout="scroll"
+      styleClass="p-datatable-striped modern-table"> -->
+      <p-table 
+  [value]="employees"
+  [paginator]="true"
+  [lazy]="true"
+  [rows]="10"
+  [rowsPerPageOptions]="[10,25,50]"
+  [totalRecords]="totalRecords"
+  (onLazyLoad)="loadEmployees($event)"
+  responsiveLayout="scroll"
+  styleClass="p-datatable-striped modern-table">
+
 
         <!-- TABLE HEADER -->
         <ng-template pTemplate="header">

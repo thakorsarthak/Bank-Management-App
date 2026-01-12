@@ -103,14 +103,19 @@ export class AdminComponentComponent implements OnInit {
   onEntityChange() {
     this.clearFilters();
 
-    if (this.selectedEntity === 'EMPLOYEE') {
-      this.loadEmployees();
-    }
+    // if (this.selectedEntity === 'EMPLOYEE') {
+    //   this.loadEmployees();
+    // }
   }
 
   // main PAGINATION loading employee //
 
   loadEmployees(event?: any) {
+
+    //only if employee entity is selected by admin
+     if (this.selectedEntity !== 'EMPLOYEE') {
+    return;
+  }
 
     this.loading = true;
 
