@@ -1,10 +1,8 @@
 package com.example.bankapp.DTO;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import com.example.bankapp.entity.Employee;
-import com.example.bankapp.entity.Transaction;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
 
@@ -24,8 +22,8 @@ public class EmployeeListDTO {
 	private Designation designation;
 	private AccountStatus status;
 	private LocalDate joiningDate;
-	
-	 
+
+
 	public static EmployeeListDTO from (Employee employee) {
 	    EmployeeListDTO dto = new EmployeeListDTO();
 

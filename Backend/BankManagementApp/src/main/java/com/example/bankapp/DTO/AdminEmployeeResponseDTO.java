@@ -1,13 +1,10 @@
 package com.example.bankapp.DTO;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 
 import com.example.bankapp.entity.Employee;
-import com.example.bankapp.enums.AccountStatus;
-import com.example.bankapp.enums.Designation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,10 +14,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminEmployeeResponseDTO {
-    
+
     private List<EmployeeListDTO> data;
     private long totalRecords;
-    
+
     public static AdminEmployeeResponseDTO fromPage(Page<Employee> page) {
 
         List<EmployeeListDTO> list = page.getContent()

@@ -49,7 +49,7 @@ public class securityConfig {
 								"/swagger-resources/**")
 						.permitAll()
 						.requestMatchers("/admin/**")
-			            .hasRole("ADMIN") 
+			            .hasRole("ADMIN")
 						.anyRequest().authenticated())
 				// .formLogin(Customizer.withDefaults())
 			//	.httpBasic(Customizer.withDefaults())

@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.EmployeeListDTO;
-import com.example.bankapp.DTO.TransactionResponseDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.Specification.EmployeeSpecification;
@@ -95,9 +93,9 @@ public class adminServiceImp implements AdminService {
 	public void updateStatusEmployee(Long employeeId, AccountStatus accountStatus) {
 
 		Optional<Employee> emp = employeeRepo.findById(employeeId);
-		
+
 		Employee employee = emp.get();
-		
+
 		// Account account = accountRepo.findById(id);
 		if (emp.isEmpty()) {
 
@@ -106,10 +104,10 @@ public class adminServiceImp implements AdminService {
 
 		Account acc = employee.getAccount();
 
-		acc.setStatus(accountStatus);;
+		acc.setStatus(accountStatus);
 	}
-	
-	 
+
+
 
 	@Override
 	@Transactional
@@ -129,13 +127,13 @@ public class adminServiceImp implements AdminService {
 	}
 
 
-	
+
 	@Override
 	public List<AdminEmployeeResponseDTO> getAllEmployees(int page, int size, String sortField, String sortOrder) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public AdminEmployeeResponseDTO getEmployees(
 	        int page,
@@ -145,28 +143,28 @@ public class adminServiceImp implements AdminService {
 	        AccountStatus status,
 	        Designation designation
 	) {
-	   
+
 		Pageable pageable = PageRequest.of(page, size , EmployeeSortBuilder.build(sortField, sortOrder));
-		
+
 		Specification<Employee> specification = Specification.where(null);
 
 		specification = specification.and(EmployeeSpecification.hasAccountStatus(status));
-		
+
 		specification = specification.and(
 	            EmployeeSpecification.hasDesignation(designation)
 	    );
-		
-		Page<Employee> empPage = employeeRepo.findAll(specification,pageable); 
-		
-		List<EmployeeListDTO> dto = empPage.getContent().stream().map(EmployeeListDTO :: from).toList(); 
+
+		Page<Employee> empPage = employeeRepo.findAll(specification,pageable);
+
+		List<EmployeeListDTO> dto = empPage.getContent().stream().map(EmployeeListDTO :: from).toList();
 				empPage.getTotalElements();
-		
-			
+
+
 		return new AdminEmployeeResponseDTO(dto, empPage.getTotalElements());
 	}
 
 
-	
+
 //	public List<AdminEmployeeResponseDTO> getAllEmployees() {
 //
 //		return employeeRepo.findAll().stream()
@@ -207,10 +205,10 @@ public class adminServiceImp implements AdminService {
 		}
 	}
 
-	
-	
 
-	
+
+
+
 
 //	@Override
 //	public EmployeeResponse getEmployeeById(Long id) {

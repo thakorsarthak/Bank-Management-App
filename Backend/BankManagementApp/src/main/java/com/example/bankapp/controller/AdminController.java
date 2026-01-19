@@ -1,7 +1,5 @@
 package com.example.bankapp.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -21,7 +19,6 @@ import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.UpdateDesignationRequest;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.DTO.UpdateStatusRequest;
-import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
 import com.example.bankapp.services.AdminService;
@@ -42,10 +39,10 @@ public class AdminController {
 	public ResponseEntity<?> createStaff(@Valid @RequestBody CreateStaffDTO request) {
 
 	 adminService.createEmployeeOrManager(request);
-	
+
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee Created Successfully", true));
 	}
-	
+
 	@GetMapping("/employee/getAllEmployee")
 	public ResponseEntity<GlobalAPIResponseDTO> getEmployees(
 	        @RequestParam(defaultValue = "0") int page,
@@ -55,15 +52,15 @@ public class AdminController {
 	        @RequestParam(required = false) AccountStatus status,
 	        @RequestParam(required = false) Designation designation){
 		AdminEmployeeResponseDTO dto =  adminService.getEmployees(page, size, sortField, sortOrder, status , designation);
-		
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		
+
 		System.out.println(auth.getAuthorities());
 
-		
-		GlobalAPIResponseDTO<AdminEmployeeResponseDTO> response = 
-				new	GlobalAPIResponseDTO<AdminEmployeeResponseDTO>("employee fetched Successfully", true , dto);
-		
+
+		GlobalAPIResponseDTO<AdminEmployeeResponseDTO> response =
+				new	GlobalAPIResponseDTO<>("employee fetched Successfully", true , dto);
+
 	    return ResponseEntity.ok(response) ;
 	}
 

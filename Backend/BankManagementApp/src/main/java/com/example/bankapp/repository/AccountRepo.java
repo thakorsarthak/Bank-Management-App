@@ -37,6 +37,6 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 		       "CAST(a.contact AS string) = :id OR " +
 		       "a.aadhaarNo = :id OR " +
 		       "a.panNo = :id")
-	Optional<Account> findByIdentifier(@Param("id") String identifier);	
+	Optional<Account> findByIdentifier(@Param("id") String identifier);
 
 }

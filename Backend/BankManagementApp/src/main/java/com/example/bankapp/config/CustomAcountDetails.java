@@ -33,12 +33,12 @@ public class CustomAcountDetails implements UserDetails {
                     new SimpleGrantedAuthority("ROLE_" + account.getRole().name())
                 );
 
-        System.out.println("Authorities: " + authorities); 
+        System.out.println("Authorities: " + authorities);
 
         return authorities;
     }
 
-    
+
     @Override
     public String getPassword() {
         // This must be the encoded pin from DB
