@@ -6,9 +6,9 @@ public class CustomValidationException extends RuntimeException{
 
 	private final List<FieldError> errors;
 
-	public CustomValidationException(List<FieldError> errors) {
+	public CustomValidationException(String message,List<FieldError> errors) {
 
-		super("validation failed");
+		 super(message);
 		this.errors = errors;
 	}
 

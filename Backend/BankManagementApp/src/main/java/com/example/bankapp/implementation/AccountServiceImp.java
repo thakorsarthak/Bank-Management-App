@@ -119,7 +119,7 @@ public class AccountServiceImp implements AccountService {
 		}
 
 		if (!errors.isEmpty()) {
-			throw new CustomValidationException(errors);
+			throw new CustomValidationException("error creating account",errors);
 		}
 
 		String generatedAccountNumber = generateAccountNumber(accountdto.getBranchCode(), accountdto.getProductCode());

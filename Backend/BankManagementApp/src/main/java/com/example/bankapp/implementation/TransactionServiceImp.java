@@ -24,6 +24,8 @@ import com.example.bankapp.DTO.TransactionHistoryResponseDTO;
 import com.example.bankapp.DTO.TransactionReqDTO;
 import com.example.bankapp.DTO.TransactionResponseDTO;
 import com.example.bankapp.DTO.TransferRequestDTO;
+import com.example.bankapp.Exception.CustomValidationException;
+import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Transaction;
 import com.example.bankapp.enums.TransactionStatus;
@@ -140,6 +142,8 @@ public class TransactionServiceImp implements TransactionService {
 		LocalDateTime endDateTime = toDate.plusDays(1).atStartOfDay();
 		return transactionRepo.findByAccountAndDateRange(accountNumber, startDateTime, endDateTime);
 	}
+	
+	
 
 	@Override
 	public ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request) {
@@ -167,8 +171,16 @@ public class TransactionServiceImp implements TransactionService {
 		if (fromAccount.equals(toAccount)) {
 			saveFailedTransaction(fromAccount, toAccount, request, TransactionStatus.FAILED,
 					"Can't transfer to same account", toAccount.getAccountHolderName());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new GlobalAPIResponseDTO<>("You cannot transfer to your account", false));
+			 List<FieldError> errors = List.of(
+				        new FieldError("toAccount" ,
+				        "You cannot transfer to your own account " + toAccount.getAccountNumber()));
+
+				            throw new CustomValidationException(
+				                "Can't Transfer to same Account",
+				                errors);
+
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//					.body(new GlobalAPIResponseDTO<>("You cannot transfer to your account", false));
 		}
 
 		// check pin
@@ -238,7 +250,7 @@ public class TransactionServiceImp implements TransactionService {
 		transactionRepo.save(transactionForSender);
 		transactionRepo.save(transactionForReceiver);
 
-		// --- Send Notifications ---
+		// --- Sending Notifications ---
 		String time = transactionForSender.getTimestamp().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
 
 		TransactionResponseDTO dto = new TransactionResponseDTO();

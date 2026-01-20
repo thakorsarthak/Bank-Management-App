@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	  // Handles validation errors (like @NotBlank, @Size)
+	  //Handles validation errors (like @NotBlank, @Size)
     @ExceptionHandler(CustomValidationException.class)
     public ResponseEntity<ApiError> handleCustomValidation(CustomValidationException ex){
 
@@ -35,6 +35,21 @@ public class GlobalExceptionHandler {
     	return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 
     	}
+    
+    
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleGlobal(Exception ex){
+
+        ApiError error = new ApiError(
+                500,
+                "Internal server error",
+                null
+        );
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(error);
+    }
+
    }
 //    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
 //        Map<String, String> errors = new HashMap<>();
