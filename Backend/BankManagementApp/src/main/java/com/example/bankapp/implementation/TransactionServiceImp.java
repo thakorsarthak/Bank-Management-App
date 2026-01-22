@@ -106,9 +106,7 @@ public class TransactionServiceImp implements TransactionService {
 //	        return transactions.map(TransactionResponseDTO::from);
 //	}
 
-
-
-
+	
 	//  Here Direction means ascending and decending &
 
 	@Override
@@ -144,7 +142,6 @@ public class TransactionServiceImp implements TransactionService {
 	}
 	
 	
-
 	@Override
 	public ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request) {
 

@@ -29,14 +29,16 @@ public class EmployeeSpecification {
 
 	public static Specification<Employee> hasDesignation(Designation designation) {
 
-	    return (root, query, cb) -> {
+	    return (root, query, cb) -> 
 
-	        if (designation == null) {
-	            return cb.conjunction();
-	        }
-
-	        return cb.equal(root.get("designation"), designation);
-	    };
+//	        if (designation == null) {
+//	            return cb.conjunction();
+//	            
+//	        }
+//
+//	        return cb.equal(root.get("designation"), designation);
+	    	designation == null ? null : cb.equal(root.get("designation"), designation);
+	    
 	}
 
 }

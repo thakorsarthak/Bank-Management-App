@@ -8,9 +8,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.bankapp.entity.Account;
+import com.example.bankapp.enums.AccountStatus;
 
 @Repository
 public interface AccountRepo extends JpaRepository<Account, Long> {
+	
+	long count();
+
+	long countByStatus(AccountStatus status);
+	
 	boolean existsByEmail(String email);
 
 	boolean existsByContact(Long contact);
@@ -25,7 +31,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
 	Optional<Account> findByAccountNumber(String accountNumber);
 
-
+	 
 
 	//Optional<Account> findTopByOrderByAccountNumberDesc();
 

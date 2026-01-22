@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminEmployeeResponseDTO {
 
-    private List<EmployeeListDTO> data;
+    private List<EmployeeListDTO> Employees;
     private long totalRecords;
 
     public static AdminEmployeeResponseDTO fromPage(Page<Employee> page) {

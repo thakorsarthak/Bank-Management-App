@@ -142,7 +142,7 @@ export class AdminComponentComponent implements OnInit {
 
     this.adminService.getEmployees(params).subscribe({
       next: (res) => {
-        this.employees = res.data.data;
+        this.employees = res.data.employees;
         this.totalRecords = res.data.totalRecords;
         this.loading = false;
       },
@@ -180,7 +180,7 @@ export class AdminComponentComponent implements OnInit {
 
     this.adminService.getEmployees(params)
       .subscribe(res => {
-        this.employees = res.data.data;
+        this.employees = res.data.employees;
         this.totalRecords = res.data.totalRecords;
       });
   }

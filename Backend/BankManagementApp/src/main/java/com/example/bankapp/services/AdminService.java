@@ -2,6 +2,7 @@ package com.example.bankapp.services;
 
 import java.util.List;
 
+import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
@@ -15,13 +16,12 @@ public interface AdminService {
 
 	List<Employee> getAllStaff();
 
+	AdminDashboardResponseDTO getStats();
+	
 	public void updateStatusEmployee(Long employeeId, AccountStatus accountStatus);
 
 	public void updateDesignation(Long accountId, Designation designation);
 
-	public List<AdminEmployeeResponseDTO> getAllEmployees( int page,int size,
-	        String sortField,
-	        String sortOrder) ;
 
 	public AdminEmployeeResponseDTO getEmployees(
             int page,
@@ -34,6 +34,8 @@ public interface AdminService {
 	//public List<AdminEmployeeResponseDTO> getAllEmployees();
 
 	public void updateEmployee(Long employeeID , UpdateEmployeeRequestDTO employee);
+
+	
 
 
 }

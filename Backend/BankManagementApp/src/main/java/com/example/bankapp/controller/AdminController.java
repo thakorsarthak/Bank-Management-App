@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
@@ -22,6 +23,7 @@ import com.example.bankapp.DTO.UpdateStatusRequest;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
 import com.example.bankapp.services.AdminService;
+
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,18 @@ public class AdminController {
 	 adminService.createEmployeeOrManager(request);
 
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee Created Successfully", true));
+	}
+	
+	
+	@GetMapping("/employee/stats")
+	public ResponseEntity<?> getStats(){
+		
+		AdminDashboardResponseDTO data = adminService.getStats();
+		
+		return ResponseEntity.ok(
+                new GlobalAPIResponseDTO<>("Dashboard stats fetched", true, data));
+		
+		
 	}
 
 	@GetMapping("/employee/getAllEmployee")
@@ -98,5 +112,7 @@ public class AdminController {
 
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true, emp));
 	}
+	
+	
 
 }

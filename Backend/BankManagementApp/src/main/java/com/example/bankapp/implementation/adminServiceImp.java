@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.EmployeeListDTO;
@@ -46,6 +47,25 @@ public class adminServiceImp implements AdminService {
 	private final AuditService auditService;
 
 	private final PasswordEncoder passwordEncoder;
+	
+	
+	@Override
+	public  AdminDashboardResponseDTO getStats() {
+		
+		long totalEmp = employeeRepo.count();
+		long activeEmp = employeeRepo.countByAccountStatus(AccountStatus.ACTIVE);
+		long inactiveEmp = employeeRepo.countByAccountStatus(AccountStatus.INACTIVE);
+		
+		long totalUser = accountRepo.count();
+		long activeUser = accountRepo.countByStatus(AccountStatus.ACTIVE);
+		long inactiveUser = accountRepo.countByStatus(AccountStatus.INACTIVE);
+		
+		
+		return new 	AdminDashboardResponseDTO(
+				new AdminDashboardResponseDTO.Stats(totalEmp, activeEmp, inactiveEmp),
+                new AdminDashboardResponseDTO.Stats(totalUser, activeUser, inactiveUser));
+		
+	}
 
 	@Override
 	public void createEmployeeOrManager(CreateStaffDTO request) {
@@ -127,13 +147,6 @@ public class adminServiceImp implements AdminService {
 	}
 
 
-
-	@Override
-	public List<AdminEmployeeResponseDTO> getAllEmployees(int page, int size, String sortField, String sortOrder) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	public AdminEmployeeResponseDTO getEmployees(
 	        int page,
@@ -156,11 +169,7 @@ public class adminServiceImp implements AdminService {
 
 		Page<Employee> empPage = employeeRepo.findAll(specification,pageable);
 
-		List<EmployeeListDTO> dto = empPage.getContent().stream().map(EmployeeListDTO :: from).toList();
-				empPage.getTotalElements();
-
-
-		return new AdminEmployeeResponseDTO(dto, empPage.getTotalElements());
+		return  AdminEmployeeResponseDTO.fromPage(empPage);
 	}
 
 
@@ -204,21 +213,5 @@ public class adminServiceImp implements AdminService {
 			account.setStatus(req.getStatus());
 		}
 	}
-
-
-
-
-
-
-//	@Override
-//	public EmployeeResponse getEmployeeById(Long id) {
-//
-//	    Employee employee = employeeRepo.findById(id)
-//	            .orElseThrow(() ->
-//	                    new ResourceNotFoundException("Employee not found with id: " + id)
-//	            );
-//
-//	    return new EmployeeResponse(employee);
-//	}
 
 }
