@@ -30,11 +30,12 @@ import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Address;
+import com.example.bankapp.entity.Branch;
 import com.example.bankapp.enums.AccountStatus;
-import com.example.bankapp.enums.Branch;
-import com.example.bankapp.enums.ProductType;
+import com.example.bankapp.enums.AccountType;
 import com.example.bankapp.enums.Role;
 import com.example.bankapp.repository.AccountRepo;
+import com.example.bankapp.repository.BranchRepository;
 import com.example.bankapp.repository.TransactionRepo;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
@@ -56,6 +57,10 @@ public class AccountServiceImp implements AccountService {
 
 	@Autowired
 	private TransactionRepo Trepo;
+	
+
+	@Autowired
+	private BranchRepository branchRepo;
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
@@ -121,6 +126,26 @@ public class AccountServiceImp implements AccountService {
 		if (!errors.isEmpty()) {
 			throw new CustomValidationException("error creating account",errors);
 		}
+		
+		
+		// 1. Validate AccountType
+	    AccountType accountType = AccountType.fromCode(accountdto.getProductCode())
+	        .orElseThrow(() -> new CustomValidationException(
+	            "Invalid Account Type",
+	            List.of(new FieldError("productCode", "Invalid account type"))
+	        ));
+	    
+
+	    // 2. Validate Branch
+	   Branch branch = branchRepo
+	        .findByBranchCodeAndActiveTrue(accountdto.getBranchCode())
+	        .orElseThrow(() -> new CustomValidationException(
+	            "Invalid Branch",
+	            List.of(new FieldError("branchCode", "Branch not found or inactive"))
+	        ));
+		
+	   
+		
 
 		String generatedAccountNumber = generateAccountNumber(accountdto.getBranchCode(), accountdto.getProductCode());
 
@@ -134,14 +159,20 @@ public class AccountServiceImp implements AccountService {
 		account.setEmail(accountdto.getEmail());
 		account.setAadhaarNo(accountdto.getAadhaarNo());
 		account.setPanNo(accountdto.getPanNo());
+		
 		// account.setBalance(accountdto.getBalance());
 		account.setBalance(balance != null ? balance : 10000.0);
-		account.setBranchCode(accountdto.getBranchCode());
-		account.setProductCode(accountdto.getProductCode());
 		account.setPassword(encoder.encode(accountdto.getPassword()));
 		account.setPin(encoder.encode(accountdto.getPin()));
 		account.setRole(Role.USER);
 		account.setStatus(AccountStatus.PENDING_KYC);
+		
+		
+		//for branch and account type
+
+		account.setAccountType(accountType);
+	    account.setBranch(branch);
+		
 		// account.setAccountType(accountdto.getAccountType());
 
 		System.out.println(account);
@@ -344,18 +375,19 @@ public class AccountServiceImp implements AccountService {
 		Account accountFound = account.get();
 
 		AccountResponseDTO response = new AccountResponseDTO();
-
 		response.setAccountHolderName(accountFound.getAccountHolderName());
 		response.setAccountNumber(accountFound.getAccountNumber());
 		response.setEmail(accountFound.getEmail());
 		response.setBalance(accountFound.getBalance());
 		response.setContact(accountFound.getContact());
 
-		response.setBranchCode(accountFound.getBranchCode());
-		response.setBranchName(Branch.getNameByCode(accountFound.getBranchCode()));
+		Branch branch = accountFound.getBranch();
+		response.setBranchCode(branch.getBranchCode());
+		response.setBranchName(branch.getBranchName());
+		response.setIfscCode(branch.getIfscCode());
 
-		response.setProductCode(accountFound.getProductCode());
-		response.setProductType(ProductType.getNameByCode(accountFound.getProductCode()));
+		System.out.println(branch);
+		response.setProductType(accountFound.getAccountType().name());
 
 		System.out.println("Details fetched succesfully :" + response);
 		return response;

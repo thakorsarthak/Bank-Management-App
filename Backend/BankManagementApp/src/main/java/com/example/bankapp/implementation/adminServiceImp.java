@@ -18,15 +18,18 @@ import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.EmployeeListDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
+import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.Specification.EmployeeSpecification;
 import com.example.bankapp.entity.Account;
+import com.example.bankapp.entity.Branch;
 import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
 import com.example.bankapp.enums.Role;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.AuditRepo;
+import com.example.bankapp.repository.BranchRepository;
 import com.example.bankapp.repository.EmployeeRepo;
 import com.example.bankapp.services.AdminService;
 import com.example.bankapp.services.AuditService;
@@ -48,6 +51,7 @@ public class adminServiceImp implements AdminService {
 
 	private final PasswordEncoder passwordEncoder;
 	
+	private final BranchRepository  branchRepo;
 	
 	@Override
 	public  AdminDashboardResponseDTO getStats() {
@@ -81,12 +85,20 @@ public class adminServiceImp implements AdminService {
 		if (accountRepo.existsByEmail(request.getEmail())) {
 			errors.add(new FieldError("email", "Employee with this email already exist"));
 		}
+		
+		
+		Branch branch = branchRepo
+		        .findByBranchCodeAndActiveTrue(request.getBranchCode())
+		        .orElseThrow(() -> new CustomValidationException(
+		            "Invalid Branch",
+		            List.of(new FieldError("branchCode", "Branch not found or inactive"))
+		        ));
 
 		Account account = new Account();
 
 		account.setEmail(request.getEmail());
 		account.setPassword(passwordEncoder.encode(request.getPassword()));
-		account.setBranchCode(request.getBranchCode());
+		account.setBranch(branch);
 		account.setRole(request.getRole());
 		account.setStatus(AccountStatus.ACTIVE);
 

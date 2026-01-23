@@ -7,9 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.bankapp.entity.Account;
+import com.example.bankapp.entity.Branch;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Role;
 import com.example.bankapp.repository.AccountRepo;
+import com.example.bankapp.repository.BranchRepository;
 
 @Configuration
 public class AdminBootstrap {
@@ -17,6 +19,9 @@ public class AdminBootstrap {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private BranchRepository branchRepository;
+	
 	@Bean
 	CommandLineRunner initAdmin(AccountRepo accountRepo) {
 		return args -> {
@@ -29,6 +34,10 @@ public class AdminBootstrap {
 				admin.setRole(Role.ADMIN);
 				admin.setStatus(AccountStatus.ACTIVE);
 				admin.setBalance(0.0);
+				Branch branch = branchRepository.findByBranchCodeAndActiveTrue("1001").get();
+
+				admin.setBranch(branch); 
+				
 
 				accountRepo.save(admin);
 				System.out.println(" Default admin created");

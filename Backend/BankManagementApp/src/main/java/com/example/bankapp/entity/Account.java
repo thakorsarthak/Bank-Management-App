@@ -3,6 +3,7 @@ package com.example.bankapp.entity;
 import java.time.Instant;
 
 import com.example.bankapp.enums.AccountStatus;
+import com.example.bankapp.enums.AccountType;
 import com.example.bankapp.enums.Role;
 
 import jakarta.persistence.CascadeType;
@@ -10,10 +11,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -73,12 +76,17 @@ public class Account {
 	@Column(nullable = false)
 	private AccountStatus status;
 
-	@Column(name = "branch_code")
-	private String branchCode; // "1001" for Ahmedabad
+//	@Column(name = "branch_code")
+//	private String branchCode;  "1001" for Ahmedabad
 
-	@Column(name = "product_code")
-	private String productCode; // 01 for savings, 02 for current , 03 Student , O4 Senior Citizen , 05 salary
+	@Enumerated(EnumType.STRING)
+	private AccountType accountType;   // 01 for savings, 02 for current , 03 Student , O4 Senior Citizen , 05 salary
 
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "branch_id")
+    private Branch branch;
+	
 	@Column(name = "created_at", nullable = false)
 	private Instant createdAt;
 

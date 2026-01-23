@@ -15,15 +15,16 @@
   </div>
 
   <div class="dashboard-container">
+
     <!-- Enhanced Filters Section with Collapsible Design -->
     <p-card styleClass="filters-card">
 
-      <!-- for selecting employee or user -->   
-    <div class="mb-3">
-      <p-dropdown [options]="entityOptions" [(ngModel)]="selectedEntity" placeholder="Select Type"
-        (onChange)="onEntityChange()" styleClass="w-full">
-      </p-dropdown>
-    </div>
+      <!-- for selecting employee or user -->
+      <div class="mb-3">
+        <p-dropdown [options]="entityOptions" [(ngModel)]="selectedEntity" placeholder="Select Type"
+          (onChange)="onEntityChange()" styleClass="w-full">
+        </p-dropdown>
+      </div>
       <ng-template pTemplate="header">
         <div class="filter-header">
 
@@ -39,9 +40,45 @@
         </div>
       </ng-template>
 
+             <!-- total employees/user overview -->
+  <div class="summary-cards">
+    <p-card styleClass="summary-card total">
+      <div class="summary-content">
+        <div class="summary-info">
+          <div class="summary-label">
+            <h3>Total Employees</h3>
+          </div>
+          <p class="summary-number">{{ totalRecords }}</p>
+        </div>
+
+      </div>
+    </p-card>
+
+    <p-card styleClass="summary-card credit">
+      <div class="summary-content">
+        <div class="summary-info">
+          <div class="summary-label">
+            <h3>Active Employees</h3>
+          </div>
+          <p class="summary-number"></p>
+  
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="summary-card debit">
+      <div class="summary-content">
+        <div class="summary-info">
+          <div class="summary-label">
+            <h3>Inactive Employees</h3>
+          </div>
+          <p class="summary-number"></p>
+        </div>
+      </div>
+    </p-card>
+  </div>
 
       <div *ngIf="selectedEntity === 'EMPLOYEE'" class="filters-grid">
-
         <!-- Designation -->
         <div class="filter-field">
           <label>Designation</label>
@@ -93,7 +130,7 @@
     </p-card>
 
     <!-- Employees Table Card -->
-  <p-card *ngIf="selectedEntity === 'EMPLOYEE'">
+    <p-card *ngIf="selectedEntity === 'EMPLOYEE'">
       <ng-template pTemplate="header">
         <div class="table-header">
           <div class="table-title">
@@ -119,16 +156,9 @@
       [totalRecords]="totalRecords" 
       responsiveLayout="scroll"
       styleClass="p-datatable-striped modern-table"> -->
-      <p-table 
-  [value]="employees"
-  [paginator]="true"
-  [lazy]="true"
-  [rows]="10"
-  [rowsPerPageOptions]="[10,25,50]"
-  [totalRecords]="totalRecords"
-  (onLazyLoad)="loadEmployees($event)"
-  responsiveLayout="scroll"
-  styleClass="p-datatable-striped modern-table">
+      <p-table [value]="employees" [paginator]="true" [lazy]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
+        [totalRecords]="totalRecords" (onLazyLoad)="loadEmployees($event)" responsiveLayout="scroll"
+        styleClass="p-datatable-striped modern-table">
 
 
         <!-- TABLE HEADER -->

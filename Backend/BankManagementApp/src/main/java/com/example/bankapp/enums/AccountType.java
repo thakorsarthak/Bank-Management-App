@@ -4,25 +4,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public enum ProductType {
+public enum AccountType {
 	SAVING("01","Saving"),
 	CURRENT("02","Current"),
-	STUDENT("03","Saving"),
-	SENIORCITIZEN("04","Current"),
-	SALARY("05","Saving");
+	STUDENT("03","Student"),
+	SENIORCITIZEN("04","Senior"),
+	SALARY("05","Salary");
 
 	private final String code;
     private final String name;
 
-    private static final Map<String, ProductType> codeMap = new HashMap<>();
+    private static final Map<String, AccountType> codeMap = new HashMap<>();
 
     static {
-        for (ProductType p : values()) {
+        for (AccountType p : values()) {
         	codeMap.put(p.code, p);
         }
     }
 
-    ProductType(String code, String name) {
+    AccountType(String code, String name) {
         this.code = code;
         this.name = name;
     }
@@ -30,11 +30,11 @@ public enum ProductType {
     public String getCode() { return code; }
     public String getName() { return name; }
 
-    public static Optional<ProductType> fromCode(String code) {
+    public static Optional<AccountType> fromCode(String code) {
         return Optional.ofNullable(codeMap.get(code));
     }
 
     public static String getNameByCode(String code) {
-        return fromCode(code).map(ProductType::getName).orElse("Unknown Product");
+        return fromCode(code).map(AccountType::getName).orElse("Unknown Product");
     }
 }

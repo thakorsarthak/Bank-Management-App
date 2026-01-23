@@ -40,7 +40,7 @@ public class AdminController {
 	// @PreAuthorize("hasRole('ADMIN')") // Only admin can call
 	public ResponseEntity<?> createStaff(@Valid @RequestBody CreateStaffDTO request) {
 
-	 adminService.createEmployeeOrManager(request);
+	  adminService.createEmployeeOrManager(request);
 
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee Created Successfully", true));
 	}

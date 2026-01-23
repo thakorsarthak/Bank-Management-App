@@ -111,6 +111,7 @@
   z-index: 1;
 }
 
+
 /* Glass Card Effect */
 .glass-card {
   background: var(--glass-bg);
@@ -119,6 +120,129 @@
   border-radius: 20px;
   box-shadow: var(--shadow-medium);
 }
+
+
+/* Transaction Overview Summary Card */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.summary-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.summary-card.credit::before {
+  background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+}
+
+.summary-card.debit::before {
+  background: linear-gradient(90deg, #fc466b 0%, #3f5efb 100%);
+}
+
+.summary-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.summary-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  background: white;
+  position: relative;
+}
+
+.summary-info {
+  flex: 1;
+}
+
+.summary-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.summary-label i {
+  font-size: 1.1rem;
+  color: #667eea;
+}
+
+.summary-info h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin: 0;
+}
+
+.summary-number {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin: 0.5rem 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.summary-card.credit .summary-number {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.summary-card.debit .summary-number {
+  background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.summary-subtitle {
+  font-size: 0.9rem;
+  color: #718096;
+  font-weight: 500;
+}
+
+/* .summary-icon-wrapper {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  opacity: 0.9;
+}
+
+.summary-icon-wrapper.credit-bg {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.summary-icon-wrapper.debit-bg {
+  background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+}
+
+.summary-icon {
+  font-size: 2rem;
+  color: white;
+} */
 
 /* filter table */
 .filters-card {

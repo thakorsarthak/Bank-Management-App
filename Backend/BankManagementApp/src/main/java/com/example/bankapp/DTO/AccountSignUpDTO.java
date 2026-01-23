@@ -45,14 +45,11 @@ public class AccountSignUpDTO {
 	@Pattern(regexp = "^[0-9]{12}$", message = "Aadhaar must be 12 digits")
 	private String aadhaarNo;
 
-	@Column(nullable = false)
-	private String accountType;
-
 	@Column(nullable = false, length = 4)
 	private String branchCode;
 
 	@Column(nullable = false, length = 2)
-	private String productCode;
+	private String productCode;    // for account type saving and all
 
 	@Column(nullable = false)
 	private AddressDTO address;

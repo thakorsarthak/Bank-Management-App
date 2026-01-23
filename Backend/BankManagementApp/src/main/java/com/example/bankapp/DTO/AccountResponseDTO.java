@@ -14,6 +14,7 @@ public class AccountResponseDTO {
     private String email;
     private Long contact;
     private String branchCode;
+    private String ifscCode;
     private String branchName;
     private String productCode;
     private String productType;

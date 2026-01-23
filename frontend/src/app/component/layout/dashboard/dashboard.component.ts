@@ -16,7 +16,7 @@ import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterLink, MessageModule, Button, CardModule, TableModule, TagModule, ProgressBarModule, ChartModule, OverlayBadgeModule ],
+  imports: [RouterLink, MessageModule, Button, CardModule, TableModule, TagModule, ProgressBarModule, ChartModule, OverlayBadgeModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   providers: [MessageService]
@@ -37,18 +37,18 @@ export class DashboardComponent implements OnInit {
     console.log('dashboard component');
     this.transactionService.getAccountHolderDetails().subscribe(data => {
       this.account = data;
-this.transactionService.getTransactionHistory().subscribe({
-    next: (res) => {
-      const transactions = res.data; // assuming GlobalAPIResponse<Transaction[]>
-      
-      this.totalTransactions = transactions.length;
-      this.creditTransactions = transactions.filter(t => t.direction === 'CREDIT').length;
-      this.debitTransactions = transactions.filter(t => t.direction === 'DEBIT').length;
-    },
-    error: (err) => {
-      console.error('Failed to fetch transactions:', err);
-    }
-  });
+      this.transactionService.getTransactionHistory().subscribe({
+        next: (res) => {
+          const transactions = res.data; // assuming GlobalAPIResponse<Transaction[]>
+
+          this.totalTransactions = transactions.length;
+          this.creditTransactions = transactions.filter(t => t.direction === 'CREDIT').length;
+          this.debitTransactions = transactions.filter(t => t.direction === 'DEBIT').length;
+        },
+        error: (err) => {
+          console.error('Failed to fetch transactions:', err);
+        }
+      });
     });
   }
 
