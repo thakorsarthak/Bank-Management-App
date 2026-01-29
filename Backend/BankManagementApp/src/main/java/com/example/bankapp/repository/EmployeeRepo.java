@@ -12,10 +12,14 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> , JpaSpecifi
 	Optional<Employee> findByAccountId(Long accountId);
 
 	Optional<Employee> findByEmployeeId(Long employeeId);
-	
-    long count();
+
+    @Override
+	long count();
 
     long countByAccountStatus(AccountStatus status);
 	// findByAccountId(Long aacountID);
 
-}
+
+
+
+    }

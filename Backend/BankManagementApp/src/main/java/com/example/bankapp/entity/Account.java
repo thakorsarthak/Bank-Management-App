@@ -33,9 +33,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "accounts", uniqueConstraints = { @UniqueConstraint(columnNames = "email"),
-		@UniqueConstraint(columnNames = "contact"), @UniqueConstraint(columnNames = "aadhaar_number"),
-		@UniqueConstraint(columnNames = "pan_number") })
+@Table(name = "accounts")
 public class Account {
 
 	@Id
@@ -73,7 +71,7 @@ public class Account {
 	private Role role;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
+	@Column(nullable = false) 
 	private AccountStatus status;
 
 //	@Column(name = "branch_code")
@@ -82,11 +80,11 @@ public class Account {
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType;   // 01 for savings, 02 for current , 03 Student , O4 Senior Citizen , 05 salary
 
-	
+
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "branch_id")
     private Branch branch;
-	
+
 	@Column(name = "created_at", nullable = false)
 	private Instant createdAt;
 

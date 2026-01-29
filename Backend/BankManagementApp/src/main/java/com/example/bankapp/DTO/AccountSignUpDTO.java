@@ -12,13 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccountSignUpDTO {
 
-
 	private String accountHolderName;
 
 	@Column(nullable = false)
 	private Double balance;
 
-	@Column(nullable = false)
+	@Column(nullable = false , unique = true)
 	private String email;
 
 	@Column(nullable = false)
@@ -36,11 +35,12 @@ public class AccountSignUpDTO {
 	@Column(nullable = false, unique = true)
 	private Long contact;
 
-	@Column(nullable = false, length = 20)
+	@Column(nullable = false, length = 20 , unique = true)
 	@NotBlank(message = "PAN is required")
 	@Pattern(regexp = "^[A-Z]{5}[0-9]{4}[A-Z]{1}$", message = "Invalid PAN format")
 	private String panNo;
 
+	@Column(nullable = false, unique = true)
 	@NotBlank(message = "Aadhaar number is required")
 	@Pattern(regexp = "^[0-9]{12}$", message = "Aadhaar must be 12 digits")
 	private String aadhaarNo;

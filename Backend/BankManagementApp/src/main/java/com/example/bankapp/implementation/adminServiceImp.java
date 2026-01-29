@@ -39,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class adminServiceImp implements AdminService {
 
 	private final AccountRepo accountRepo;
@@ -50,34 +51,34 @@ public class adminServiceImp implements AdminService {
 	private final AuditService auditService;
 
 	private final PasswordEncoder passwordEncoder;
-	
-	private final BranchRepository  branchRepo;
-	
+
+	private final BranchRepository branchRepo;
+
+	// response on dashboard
 	@Override
-	public  AdminDashboardResponseDTO getStats() {
-		
+	public AdminDashboardResponseDTO getStats() {
+
 		long totalEmp = employeeRepo.count();
 		long activeEmp = employeeRepo.countByAccountStatus(AccountStatus.ACTIVE);
 		long inactiveEmp = employeeRepo.countByAccountStatus(AccountStatus.INACTIVE);
-		
+
 		long totalUser = accountRepo.count();
 		long activeUser = accountRepo.countByStatus(AccountStatus.ACTIVE);
 		long inactiveUser = accountRepo.countByStatus(AccountStatus.INACTIVE);
-		
-		
-		return new 	AdminDashboardResponseDTO(
-				new AdminDashboardResponseDTO.Stats(totalEmp, activeEmp, inactiveEmp),
-                new AdminDashboardResponseDTO.Stats(totalUser, activeUser, inactiveUser));
-		
+
+		return new AdminDashboardResponseDTO(new AdminDashboardResponseDTO.Stats(totalEmp, activeEmp, inactiveEmp),
+				new AdminDashboardResponseDTO.Stats(totalUser, activeUser, inactiveUser));
+
 	}
 
+	// creating staff
 	@Override
+	@Transactional
 	public void createEmployeeOrManager(CreateStaffDTO request) {
 
 		List<FieldError> errors = new ArrayList<>();
 
 		if (request.getRole() == Role.ADMIN || request.getRole() == Role.USER) {
-
 			errors.add(new FieldError("Invalid Request", "Can't create User or Admin"));
 			// throw new IllegalArgumentException("Invalid role for creation");
 		}
@@ -85,24 +86,27 @@ public class adminServiceImp implements AdminService {
 		if (accountRepo.existsByEmail(request.getEmail())) {
 			errors.add(new FieldError("email", "Employee with this email already exist"));
 		}
-		
-		
-		Branch branch = branchRepo
-		        .findByBranchCodeAndActiveTrue(request.getBranchCode())
-		        .orElseThrow(() -> new CustomValidationException(
-		            "Invalid Branch",
-		            List.of(new FieldError("branchCode", "Branch not found or inactive"))
-		        ));
+
+
+	    if (!errors.isEmpty()) {
+	        throw new CustomValidationException("Validation Failed", errors); //  STOP HERE
+	    }
+
+		Branch branch = branchRepo.findByBranchCodeAndActiveTrue(request.getBranchCode())
+				.orElseThrow(() -> new CustomValidationException("Invalid Branch",
+						List.of(new FieldError("branchCode", "Branch not found or inactive"))));
 
 		Account account = new Account();
-
+		account.setAccountHolderName(request.getFullName());
 		account.setEmail(request.getEmail());
 		account.setPassword(passwordEncoder.encode(request.getPassword()));
 		account.setBranch(branch);
 		account.setRole(request.getRole());
 		account.setStatus(AccountStatus.ACTIVE);
-
+		
 		accountRepo.save(account);
+		
+		System.out.println(account);
 
 		Employee profile = new Employee();
 		profile.setAccount(account);
@@ -111,15 +115,51 @@ public class adminServiceImp implements AdminService {
 		profile.setJoiningDate(LocalDate.now());
 		profile.setDesignation(request.getDesignation());
 
-
 		employeeRepo.save(profile);
 	}
 
+	// for adding bulk staff
+
+	@Override
+	public List<EmployeeListDTO> saveAllEmployees(List<CreateStaffDTO> staffList) {
+
+		List<Employee> employees = staffList.stream().map(dto -> {
+
+			Branch branch = branchRepo.findByBranchCodeAndActiveTrue(dto.getBranchCode())
+					.orElseThrow(() -> new CustomValidationException("Invalid Branch",
+							List.of(new FieldError("branchCode", "Branch not found or inactive"))));
+
+			Account account = new Account();
+
+			account.setEmail(dto.getEmail());
+			account.setPassword(passwordEncoder.encode(dto.getPassword()));
+			account.setBranch(branch);
+			account.setRole(dto.getRole());
+			account.setStatus(AccountStatus.ACTIVE);
+			
+
+			Employee profile = new Employee();
+			profile.setAccount(account);
+			profile.setFullName(dto.getFullName());
+			profile.setBranchCode(dto.getBranchCode());
+			profile.setJoiningDate(LocalDate.now());
+			profile.setDesignation(dto.getDesignation());
+
+			return profile;
+		}).toList();
+
+		List<Employee> saved = employeeRepo.saveAll(employees);
+		System.out.println(employees);
+		return saved.stream().map(EmployeeListDTO::from).toList();
+	}
+
+	// for getting employee swagger based
 	@Override
 	public List<Employee> getAllStaff() {
 		return employeeRepo.findAll();
 	}
 
+	// changing status from dashboard
 	@Override
 	@Transactional
 	public void updateStatusEmployee(Long employeeId, AccountStatus accountStatus) {
@@ -139,8 +179,7 @@ public class adminServiceImp implements AdminService {
 		acc.setStatus(accountStatus);
 	}
 
-
-
+	// changing designation from admin dashboard
 	@Override
 	@Transactional
 	public void updateDesignation(Long accountId, Designation designation) {
@@ -158,33 +197,24 @@ public class adminServiceImp implements AdminService {
 		e.setDesignation(designation);
 	}
 
+	// paginated response
 
 	@Override
-	public AdminEmployeeResponseDTO getEmployees(
-	        int page,
-	        int size,
-	        String sortField,
-	        String sortOrder,
-	        AccountStatus status,
-	        Designation designation
-	) {
+	public AdminEmployeeResponseDTO getEmployees(int page, int size, String sortField, String sortOrder,
+			AccountStatus status, Designation designation) {
 
-		Pageable pageable = PageRequest.of(page, size , EmployeeSortBuilder.build(sortField, sortOrder));
+		Pageable pageable = PageRequest.of(page, size, EmployeeSortBuilder.build(sortField, sortOrder));
 
 		Specification<Employee> specification = Specification.where(null);
 
 		specification = specification.and(EmployeeSpecification.hasAccountStatus(status));
 
-		specification = specification.and(
-	            EmployeeSpecification.hasDesignation(designation)
-	    );
+		specification = specification.and(EmployeeSpecification.hasDesignation(designation));
 
-		Page<Employee> empPage = employeeRepo.findAll(specification,pageable);
+		Page<Employee> empPage = employeeRepo.findAll(specification, pageable);
 
-		return  AdminEmployeeResponseDTO.fromPage(empPage);
+		return AdminEmployeeResponseDTO.fromPage(empPage);
 	}
-
-
 
 //	public List<AdminEmployeeResponseDTO> getAllEmployees() {
 //
@@ -195,6 +225,7 @@ public class adminServiceImp implements AdminService {
 //				.toList();
 //	}
 
+	// updating
 	@Override
 	@Transactional
 	public void updateEmployee(Long employeeId, UpdateEmployeeRequestDTO req) {

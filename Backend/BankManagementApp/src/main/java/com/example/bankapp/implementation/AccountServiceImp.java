@@ -57,7 +57,7 @@ public class AccountServiceImp implements AccountService {
 
 	@Autowired
 	private TransactionRepo Trepo;
-	
+
 
 	@Autowired
 	private BranchRepository branchRepo;
@@ -126,15 +126,15 @@ public class AccountServiceImp implements AccountService {
 		if (!errors.isEmpty()) {
 			throw new CustomValidationException("error creating account",errors);
 		}
-		
-		
+
+
 		// 1. Validate AccountType
 	    AccountType accountType = AccountType.fromCode(accountdto.getProductCode())
 	        .orElseThrow(() -> new CustomValidationException(
 	            "Invalid Account Type",
 	            List.of(new FieldError("productCode", "Invalid account type"))
 	        ));
-	    
+
 
 	    // 2. Validate Branch
 	   Branch branch = branchRepo
@@ -143,9 +143,9 @@ public class AccountServiceImp implements AccountService {
 	            "Invalid Branch",
 	            List.of(new FieldError("branchCode", "Branch not found or inactive"))
 	        ));
-		
-	   
-		
+
+
+
 
 		String generatedAccountNumber = generateAccountNumber(accountdto.getBranchCode(), accountdto.getProductCode());
 
@@ -159,20 +159,20 @@ public class AccountServiceImp implements AccountService {
 		account.setEmail(accountdto.getEmail());
 		account.setAadhaarNo(accountdto.getAadhaarNo());
 		account.setPanNo(accountdto.getPanNo());
-		
+
 		// account.setBalance(accountdto.getBalance());
 		account.setBalance(balance != null ? balance : 10000.0);
 		account.setPassword(encoder.encode(accountdto.getPassword()));
 		account.setPin(encoder.encode(accountdto.getPin()));
 		account.setRole(Role.USER);
 		account.setStatus(AccountStatus.PENDING_KYC);
-		
-		
+
+
 		//for branch and account type
 
 		account.setAccountType(accountType);
 	    account.setBranch(branch);
-		
+
 		// account.setAccountType(accountdto.getAccountType());
 
 		System.out.println(account);

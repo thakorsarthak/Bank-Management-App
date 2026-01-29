@@ -1,5 +1,7 @@
 package com.example.bankapp.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -24,7 +26,6 @@ import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
 import com.example.bankapp.services.AdminService;
 
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -44,17 +45,26 @@ public class AdminController {
 
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee Created Successfully", true));
 	}
-	
-	
+
+	@PostMapping("/employee/bulk")
+	public ResponseEntity<?> bulkStaff(@RequestBody List<CreateStaffDTO> request){
+
+		adminService.saveAllEmployees(request);
+
+		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Staff Created Successfully", true));
+
+	}
+
+
 	@GetMapping("/employee/stats")
 	public ResponseEntity<?> getStats(){
-		
+
 		AdminDashboardResponseDTO data = adminService.getStats();
-		
+
 		return ResponseEntity.ok(
                 new GlobalAPIResponseDTO<>("Dashboard stats fetched", true, data));
-		
-		
+
+
 	}
 
 	@GetMapping("/employee/getAllEmployee")
@@ -112,7 +122,7 @@ public class AdminController {
 
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true, emp));
 	}
-	
-	
+
+
 
 }

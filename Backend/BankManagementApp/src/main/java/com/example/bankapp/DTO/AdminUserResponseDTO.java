@@ -1,7 +1,7 @@
 package com.example.bankapp.DTO;
 
 public class AdminUserResponseDTO {
-	
-	
+
+
 
 }

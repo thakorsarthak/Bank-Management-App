@@ -106,7 +106,7 @@ public class TransactionServiceImp implements TransactionService {
 //	        return transactions.map(TransactionResponseDTO::from);
 //	}
 
-	
+
 	//  Here Direction means ascending and decending &
 
 	@Override
@@ -140,8 +140,8 @@ public class TransactionServiceImp implements TransactionService {
 		LocalDateTime endDateTime = toDate.plusDays(1).atStartOfDay();
 		return transactionRepo.findByAccountAndDateRange(accountNumber, startDateTime, endDateTime);
 	}
-	
-	
+
+
 	@Override
 	public ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request) {
 

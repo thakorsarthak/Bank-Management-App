@@ -21,7 +21,7 @@ public class AdminBootstrap {
 
 	@Autowired
 	private BranchRepository branchRepository;
-	
+
 	@Bean
 	CommandLineRunner initAdmin(AccountRepo accountRepo) {
 		return args -> {
@@ -29,6 +29,7 @@ public class AdminBootstrap {
 			if (!accountRepo.existsByEmail("admin@gmail.com")) {
 
 				Account admin = new Account();
+				admin.setAccountHolderName("ADMIN");
 				admin.setEmail("admin@gmail.com");
 				admin.setPassword(passwordEncoder.encode("Admin@1234"));
 				admin.setRole(Role.ADMIN);
@@ -36,8 +37,8 @@ public class AdminBootstrap {
 				admin.setBalance(0.0);
 				Branch branch = branchRepository.findByBranchCodeAndActiveTrue("1001").get();
 
-				admin.setBranch(branch); 
-				
+				admin.setBranch(branch);
+
 
 				accountRepo.save(admin);
 				System.out.println(" Default admin created");

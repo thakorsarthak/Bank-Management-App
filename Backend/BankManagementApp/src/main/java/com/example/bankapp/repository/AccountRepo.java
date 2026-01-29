@@ -12,11 +12,12 @@ import com.example.bankapp.enums.AccountStatus;
 
 @Repository
 public interface AccountRepo extends JpaRepository<Account, Long> {
-	
+
+	@Override
 	long count();
 
 	long countByStatus(AccountStatus status);
-	
+
 	boolean existsByEmail(String email);
 
 	boolean existsByContact(Long contact);
@@ -31,7 +32,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
 	Optional<Account> findByAccountNumber(String accountNumber);
 
-	 
+
 
 	//Optional<Account> findTopByOrderByAccountNumberDesc();
 
