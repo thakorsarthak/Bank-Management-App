@@ -71,7 +71,7 @@ public class adminServiceImp implements AdminService {
 
 	}
 
-	// creating staff
+	// creating staff this method works due to  Persistence Context [hibernate session] only 
 	@Override
 	@Transactional
 	public void createEmployeeOrManager(CreateStaffDTO request) {
@@ -120,38 +120,81 @@ public class adminServiceImp implements AdminService {
 
 	// for adding bulk staff
 
+	@Transactional
 	@Override
 	public List<EmployeeListDTO> saveAllEmployees(List<CreateStaffDTO> staffList) {
 
-		List<Employee> employees = staffList.stream().map(dto -> {
+	    List<Account> accounts = staffList.stream().map(dto -> {
+	        Branch branch = branchRepo.findByBranchCodeAndActiveTrue(dto.getBranchCode())
+	            .orElseThrow(() -> new CustomValidationException("Invalid Branch",
+	                List.of(new FieldError("branchCode", "Branch not found or inactive"))));
 
-			Branch branch = branchRepo.findByBranchCodeAndActiveTrue(dto.getBranchCode())
-					.orElseThrow(() -> new CustomValidationException("Invalid Branch",
-							List.of(new FieldError("branchCode", "Branch not found or inactive"))));
+	        Account account = new Account();
+	        account.setAccountHolderName(dto.getFullName());
+	        account.setEmail(dto.getEmail());
+	        account.setPassword(passwordEncoder.encode(dto.getPassword()));
+	        account.setBranch(branch);
+	        account.setRole(dto.getRole());
+	        account.setStatus(AccountStatus.ACTIVE);
+	        return account;
+	    }).toList();
 
-			Account account = new Account();
+	    List<Account> savedAccounts = accountRepo.saveAll(accounts);
 
-			account.setEmail(dto.getEmail());
-			account.setPassword(passwordEncoder.encode(dto.getPassword()));
-			account.setBranch(branch);
-			account.setRole(dto.getRole());
-			account.setStatus(AccountStatus.ACTIVE);
-			
+	    List<Employee> employees = new ArrayList<>();
 
-			Employee profile = new Employee();
-			profile.setAccount(account);
-			profile.setFullName(dto.getFullName());
-			profile.setBranchCode(dto.getBranchCode());
-			profile.setJoiningDate(LocalDate.now());
-			profile.setDesignation(dto.getDesignation());
+	    for (int i = 0; i < staffList.size(); i++) {
+	        CreateStaffDTO dto = staffList.get(i);
 
-			return profile;
-		}).toList();
+	        Employee emp = new Employee();
+	        emp.setAccount(savedAccounts.get(i));
+	        emp.setFullName(dto.getFullName());
+	        emp.setBranchCode(dto.getBranchCode());
+	        emp.setJoiningDate(LocalDate.now());
+	        emp.setDesignation(dto.getDesignation());
 
-		List<Employee> saved = employeeRepo.saveAll(employees);
-		System.out.println(employees);
-		return saved.stream().map(EmployeeListDTO::from).toList();
+	        employees.add(emp);
+	    }
+
+	    return employeeRepo.saveAll(employees)
+	            .stream()
+	            .map(EmployeeListDTO::from)
+	            .toList();
 	}
+
+	
+//	@Override
+//	public List<EmployeeListDTO> saveAllEmployees(List<CreateStaffDTO> staffList) {
+//
+//		List<Employee> employees = staffList.stream().map(dto -> {
+//
+//			Branch branch = branchRepo.findByBranchCodeAndActiveTrue(dto.getBranchCode())
+//					.orElseThrow(() -> new CustomValidationException("Invalid Branch",
+//							List.of(new FieldError("branchCode", "Branch not found or inactive"))));
+//
+//			Account account = new Account();
+//
+//			account.setEmail(dto.getEmail());
+//			account.setPassword(passwordEncoder.encode(dto.getPassword()));
+//			account.setBranch(branch);
+//			account.setRole(dto.getRole());
+//			account.setStatus(AccountStatus.ACTIVE);
+//			
+//
+//			Employee profile = new Employee();
+//			profile.setAccount(account);
+//			profile.setFullName(dto.getFullName());
+//			profile.setBranchCode(dto.getBranchCode());
+//			profile.setJoiningDate(LocalDate.now());
+//			profile.setDesignation(dto.getDesignation());
+//
+//			return profile;
+//		}).toList();
+//
+//		List<Employee> saved = employeeRepo.saveAll(employees);
+//		System.out.println(employees);
+//		return saved.stream().map(EmployeeListDTO::from).toList();
+//	}
 
 	// for getting employee swagger based
 	@Override
