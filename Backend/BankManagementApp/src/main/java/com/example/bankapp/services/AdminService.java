@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
+import com.example.bankapp.DTO.AdminUserResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.EmployeeListDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
@@ -23,7 +24,9 @@ public interface AdminService {
 
 	public void updateDesignation(Long accountId, Designation designation);
 
-
+	public AdminUserResponseDTO getUsers(int page, int size, String sortField, String sortOrder,
+			AccountStatus status);
+	
 	public AdminEmployeeResponseDTO getEmployees(
             int page,
             int size,

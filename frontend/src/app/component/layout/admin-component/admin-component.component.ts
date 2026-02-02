@@ -39,8 +39,10 @@ import { Dialog } from "primeng/dialog";
 export class AdminComponentComponent implements OnInit {
 
   employees: Employee[] = [];
+  users: any[] = [];
   totalRecords = 0;
   loading = false;
+  
 
   // FILTER MODEL
   selectedEntity!: string;
@@ -96,26 +98,68 @@ export class AdminComponentComponent implements OnInit {
     { label: 'User', value: 'USER' }
   ];
 
+
   branchOptions: any[] = [];
 
   //  ENTITY CHANGE or choosing Employee/User //
 
   onEntityChange() {
     this.clearFilters();
-
     // if (this.selectedEntity === 'EMPLOYEE') {
     //   this.loadEmployees();
     // }
   }
 
-  // main PAGINATION loading employee //
+  loadEntities(event: any) {
+    console.log('Selected Entity:', this.selectedEntity, event); 
+    if (this.selectedEntity === 'EMPLOYEE') {
+      this.loadEmployees(event);
+    } else if (this.selectedEntity === 'USER')  {
+      this.loadUsers(event);
+    }
+  }
+
+  loadUsers(event?: any) {
+    // Implement user loading logic here  
+    const first = event?.first ?? 0;
+    const rows = event?.rows ?? 10;
+
+    const page = Math.floor(first / rows);
+    const size = rows;
+
+    const sortField = event?.sortField ?? 'createdAt';
+    const sortOrder =
+      event?.sortOrder !== undefined
+        ? (event.sortOrder === 1 ? 'ASC' : 'DESC')
+        : 'ASC';
+
+    const params: any = {
+      page,
+      size,
+      sortField,
+      sortOrder
+    };
+
+    if (this.status) params.status = this.status;
+
+    this.adminService.getAllUser(params).subscribe({
+      next: (res) => {
+        this.users = res.data.users;
+        this.totalRecords = res.data.totalRecords;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      }
+    });
+
+  }
+  // main PAGINATION loading employee 
 
   loadEmployees(event?: any) {
 
     //only if employee entity is selected by admin
-     if (this.selectedEntity !== 'EMPLOYEE') {
-    return;
-  }
+
 
     this.loading = true;
 

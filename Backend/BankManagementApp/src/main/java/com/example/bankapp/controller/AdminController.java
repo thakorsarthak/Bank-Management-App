@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
+import com.example.bankapp.DTO.AdminUserResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.UpdateDesignationRequest;
@@ -89,6 +90,26 @@ public class AdminController {
 	}
 
 
+	@GetMapping("/user/getAllUser")
+	public ResponseEntity<GlobalAPIResponseDTO> getUsers(
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size,
+	        @RequestParam(defaultValue = "createdAt") String sortField,
+	        @RequestParam(defaultValue = "ASC") String sortOrder,
+	        @RequestParam(required = false) AccountStatus status){
+		
+		AdminUserResponseDTO dto = adminService.getUsers(page, size, sortField, sortOrder, status);
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		System.out.println(auth.getAuthorities());
+
+		GlobalAPIResponseDTO<AdminUserResponseDTO> response =
+				new	GlobalAPIResponseDTO<>("user fetched Successfully", true , dto);
+
+	    return ResponseEntity.ok(response) ;
+	}
+	
 //	@GetMapping("/employee/getAllStaff")
 //	// @PreAuthorize("hasRole('ADMIN')")
 //	public ResponseEntity<?> getAllStaff() {

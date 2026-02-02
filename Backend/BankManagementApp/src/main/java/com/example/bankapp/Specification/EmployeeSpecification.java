@@ -40,5 +40,6 @@ public class EmployeeSpecification {
 	    	designation == null ? null : cb.equal(root.get("designation"), designation);
 
 	}
+	
 
 }

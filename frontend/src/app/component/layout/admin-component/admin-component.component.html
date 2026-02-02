@@ -21,9 +21,16 @@
 
       <!-- for selecting employee or user -->
       <div class="mb-3">
-        <p-dropdown [options]="entityOptions" [(ngModel)]="selectedEntity" placeholder="Select Type"
-          (onChange)="onEntityChange()" styleClass="w-full">
-        </p-dropdown>
+     <p-dropdown 
+    [options]="entityOptions" 
+    [(ngModel)]="selectedEntity" 
+    placeholder="Select Type"
+    optionLabel="label"
+    optionValue="value"
+    (onChange)="onEntityChange()"
+    styleClass="w-full">
+</p-dropdown>
+
       </div>
       <ng-template pTemplate="header">
         <div class="filter-header">
@@ -32,7 +39,7 @@
             <i class="pi pi-filter"></i>
             <span>
               Filter {{ selectedEntity ?
-              (selectedEntity === 'EMPLOYEE' ? 'Employees' : 'Users')
+              (selectedEntity === 'EMPLOYEE' ? 'Employee' : 'USER')
               : '' }}
             </span>
           </div>
@@ -40,47 +47,49 @@
         </div>
       </ng-template>
 
-             <!-- total employees/user overview -->
-  <div class="summary-cards">
-    <p-card styleClass="summary-card total">
-      <div class="summary-content">
-        <div class="summary-info">
-          <div class="summary-label">
-            <h3>Total Employees</h3>
-          </div>
-          <p class="summary-number">{{ totalRecords }}</p>
+
+      <div *ngIf="selectedEntity === 'EMPLOYEE'"  class="filters-grid">
+
+        <!-- total employees/user overview -->
+        <div class="summary-cards">
+          <p-card styleClass="summary-card total">
+            <div class="summary-content">
+              <div class="summary-info">
+                <div class="summary-label">
+                  <h3>Total {{ selectedEntity }}</h3>
+                </div>
+                <p class="summary-number">{{ totalRecords }}</p>
+              </div>
+            </div>
+          </p-card>
+
+          <!-- <p-card styleClass="summary-card credit">
+            <div class="summary-content">
+              <div class="summary-info">
+                <div class="summary-label">
+                  <h3>Active Employees</h3>
+                </div>
+                <p class="summary-number"></p>
+
+              </div>
+            </div>
+          </p-card>
+
+          <p-card styleClass="summary-card debit">
+            <div class="summary-content">
+              <div class="summary-info">
+                <div class="summary-label">
+                  <h3>Inactive Employees</h3>
+                </div>
+                <p class="summary-number"></p>
+              </div>
+            </div>
+          </p-card> -->
         </div>
 
-      </div>
-    </p-card>
 
-    <p-card styleClass="summary-card credit">
-      <div class="summary-content">
-        <div class="summary-info">
-          <div class="summary-label">
-            <h3>Active Employees</h3>
-          </div>
-          <p class="summary-number"></p>
-  
-        </div>
-      </div>
-    </p-card>
-
-    <p-card styleClass="summary-card debit">
-      <div class="summary-content">
-        <div class="summary-info">
-          <div class="summary-label">
-            <h3>Inactive Employees</h3>
-          </div>
-          <p class="summary-number"></p>
-        </div>
-      </div>
-    </p-card>
-  </div>
-
-      <div *ngIf="selectedEntity === 'EMPLOYEE'" class="filters-grid">
         <!-- Designation -->
-        <div class="filter-field">
+        <div class="filter-field" *ngIf="selectedEntity === 'EMPLOYEE'" >
           <label>Designation</label>
           <p-dropdown [options]="designationOptions" [(ngModel)]="designation" (onChange)="applyEmployeeFilters()"
             placeholder="Select designation" appendTo="body">
@@ -130,7 +139,7 @@
     </p-card>
 
     <!-- Employees Table Card -->
-    <p-card *ngIf="selectedEntity === 'EMPLOYEE'">
+    <p-card *ngIf="selectedEntity === 'EMPLOYEE'" >
       <ng-template pTemplate="header">
         <div class="table-header">
           <div class="table-title">
@@ -156,20 +165,26 @@
       [totalRecords]="totalRecords" 
       responsiveLayout="scroll"
       styleClass="p-datatable-striped modern-table"> -->
-      <p-table [value]="employees" [paginator]="true" [lazy]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]"
-        [totalRecords]="totalRecords" (onLazyLoad)="loadEmployees($event)" responsiveLayout="scroll"
-        styleClass="p-datatable-striped modern-table">
+      <p-table [value]="employees"
+       [paginator]="true" 
+       [lazy]="true"
+       [rows]="10" 
+       [rowsPerPageOptions]="[10,25,50]"
+       [totalRecords]="totalRecords" 
+       (onLazyLoad)="loadEntities($event)" 
+       responsiveLayout="scroll"
+       styleClass="p-datatable-striped modern-table">
 
 
         <!-- TABLE HEADER -->
-        <ng-template pTemplate="header">
+        <ng-template pTemplate="header" >
           <tr>
             <th pColumn="fullName">
               <i class="pi pi-user"></i> Name
               <p-sortIcon field="fullName"></p-sortIcon>
             </th>
 
-            <th pColumn="email">
+            <th pColumn="email" >
               <i class="pi pi-envelope"></i> Email
               <p-sortIcon field="email"></p-sortIcon>
             </th>
@@ -178,7 +193,7 @@
               <i class="pi pi-building"></i> Branch
             </th>
 
-            <th pColumn="designation">
+            <th pColumn="designation" *ngIf="selectedEntity === 'EMPLOYEE'">
               <i class="pi pi-briefcase"></i> Designation
               <p-sortIcon field="designation"></p-sortIcon>
             </th>
@@ -194,7 +209,7 @@
             </th>
 
             <th>
-              <i class="pi pi-cog"></i> Actions
+              <i class="pi pi-cog" *ngIf="selectedEntity === 'EMPLOYEE'"></i> Actions
             </th>
           </tr>
         </ng-template>
@@ -257,6 +272,7 @@
 
       </p-table>
 
+      <!-- Employee Details Dialog to updateEmployee -->
       <p-dialog header="Employee Details" [(visible)]="showEmployeeDialog" [modal]="true" [style]="{ width: '450px' }">
 
         <form [formGroup]="employeeForm" class="edit-form">

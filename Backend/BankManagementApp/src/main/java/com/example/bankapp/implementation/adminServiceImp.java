@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
+import com.example.bankapp.DTO.AdminUserResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.EmployeeListDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
@@ -34,6 +35,7 @@ import com.example.bankapp.repository.EmployeeRepo;
 import com.example.bankapp.services.AdminService;
 import com.example.bankapp.services.AuditService;
 import com.example.bankapp.util.EmployeeSortBuilder;
+import com.example.bankapp.util.UserSortBulder;
 
 import lombok.RequiredArgsConstructor;
 
@@ -96,7 +98,7 @@ public class adminServiceImp implements AdminService {
 				.orElseThrow(() -> new CustomValidationException("Invalid Branch",
 						List.of(new FieldError("branchCode", "Branch not found or inactive"))));
 
-		Account account = new Account();
+		Account account = new Account(); // transient not stored in db till now 
 		account.setAccountHolderName(request.getFullName());
 		account.setEmail(request.getEmail());
 		account.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -104,7 +106,7 @@ public class adminServiceImp implements AdminService {
 		account.setRole(request.getRole());
 		account.setStatus(AccountStatus.ACTIVE);
 		
-		accountRepo.save(account);
+		accountRepo.save(account); // still not saved  its kind off scheduled to be inserted 
 		
 		System.out.println(account);
 
@@ -258,6 +260,31 @@ public class adminServiceImp implements AdminService {
 
 		return AdminEmployeeResponseDTO.fromPage(empPage);
 	}
+	
+	@Override
+	public AdminUserResponseDTO getUsers(int page, int size, String sortField, String sortOrder, AccountStatus status) {
+		
+	//	Pageable pageable = PageRequest.of(page, size, EmployeeSortBuilder.build(sortField, sortOrder));
+	
+
+		 Pageable pageable = PageRequest.of(page, size,
+		           UserSortBulder.build(sortField, sortOrder));
+
+		 Page<Account> accPage;
+
+		 if (status != null) {
+		     accPage = accountRepo.findByRoleAndStatus(Role.USER, status, pageable);
+		 } else {
+		     accPage = accountRepo.findByRole(Role.USER, pageable);
+		 }
+
+
+		    return AdminUserResponseDTO.fromPage(accPage);
+	
+	}
+
+	
+
 
 //	public List<AdminEmployeeResponseDTO> getAllEmployees() {
 //
@@ -300,4 +327,5 @@ public class adminServiceImp implements AdminService {
 		}
 	}
 
+	
 }

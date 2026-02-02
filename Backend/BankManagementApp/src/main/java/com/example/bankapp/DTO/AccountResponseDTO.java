@@ -1,5 +1,7 @@
 package com.example.bankapp.DTO;
 
+import com.example.bankapp.enums.AccountStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,7 @@ public class AccountResponseDTO {
     private String branchName;
   //  private String productCode;
     private String productType;
+    private AccountStatus status;
    // private String address;
 }
 

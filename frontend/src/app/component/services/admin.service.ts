@@ -13,6 +13,9 @@ export class AdminService {
     return this.http.get<any>('http://localhost:6011/bankapp/admin/employee/getAllEmployee', { params });
   }
   
+  getAllUser(params: any) {
+    return this.http.get<any>('http://localhost:6011/bankapp/admin/user/getAllUser', { params });
+  }
 
   updateEmployeeStatus(employeeId: number, payload: { status: string }) {
     return this.http.patch<GlobalAPIResponse<any>>(

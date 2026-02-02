@@ -18,8 +18,4 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> , JpaSpecifi
 
     long countByAccountStatus(AccountStatus status);
 	// findByAccountId(Long aacountID);
-
-
-
-
     }
