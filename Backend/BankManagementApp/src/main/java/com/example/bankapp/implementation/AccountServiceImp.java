@@ -381,7 +381,7 @@ public class AccountServiceImp implements AccountService {
 		response.setBalance(accountFound.getBalance());
 		response.setContact(accountFound.getContact());
 		response.setStatus(accountFound.getStatus());
-		
+
 		Branch branch = accountFound.getBranch();
 		response.setBranchCode(branch.getBranchCode());
 		response.setBranchName(branch.getBranchName());

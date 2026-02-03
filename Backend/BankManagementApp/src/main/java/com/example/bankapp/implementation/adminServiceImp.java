@@ -73,7 +73,7 @@ public class adminServiceImp implements AdminService {
 
 	}
 
-	// creating staff this method works due to  Persistence Context [hibernate session] only 
+	// creating staff this method works due to  Persistence Context [hibernate session] only
 	@Override
 	@Transactional
 	public void createEmployeeOrManager(CreateStaffDTO request) {
@@ -98,16 +98,16 @@ public class adminServiceImp implements AdminService {
 				.orElseThrow(() -> new CustomValidationException("Invalid Branch",
 						List.of(new FieldError("branchCode", "Branch not found or inactive"))));
 
-		Account account = new Account(); // transient not stored in db till now 
+		Account account = new Account(); // transient not stored in db till now
 		account.setAccountHolderName(request.getFullName());
 		account.setEmail(request.getEmail());
 		account.setPassword(passwordEncoder.encode(request.getPassword()));
 		account.setBranch(branch);
 		account.setRole(request.getRole());
 		account.setStatus(AccountStatus.ACTIVE);
-		
-		accountRepo.save(account); // still not saved  its kind off scheduled to be inserted 
-		
+
+		accountRepo.save(account); // still not saved  its kind off scheduled to be inserted
+
 		System.out.println(account);
 
 		Employee profile = new Employee();
@@ -164,7 +164,7 @@ public class adminServiceImp implements AdminService {
 	            .toList();
 	}
 
-	
+
 //	@Override
 //	public List<EmployeeListDTO> saveAllEmployees(List<CreateStaffDTO> staffList) {
 //
@@ -181,7 +181,7 @@ public class adminServiceImp implements AdminService {
 //			account.setBranch(branch);
 //			account.setRole(dto.getRole());
 //			account.setStatus(AccountStatus.ACTIVE);
-//			
+//
 //
 //			Employee profile = new Employee();
 //			profile.setAccount(account);
@@ -260,12 +260,12 @@ public class adminServiceImp implements AdminService {
 
 		return AdminEmployeeResponseDTO.fromPage(empPage);
 	}
-	
+
 	@Override
 	public AdminUserResponseDTO getUsers(int page, int size, String sortField, String sortOrder, AccountStatus status) {
-		
+
 	//	Pageable pageable = PageRequest.of(page, size, EmployeeSortBuilder.build(sortField, sortOrder));
-	
+
 
 		 Pageable pageable = PageRequest.of(page, size,
 		           UserSortBulder.build(sortField, sortOrder));
@@ -280,10 +280,10 @@ public class adminServiceImp implements AdminService {
 
 
 		    return AdminUserResponseDTO.fromPage(accPage);
-	
+
 	}
 
-	
+
 
 
 //	public List<AdminEmployeeResponseDTO> getAllEmployees() {
@@ -327,5 +327,5 @@ public class adminServiceImp implements AdminService {
 		}
 	}
 
-	
+
 }

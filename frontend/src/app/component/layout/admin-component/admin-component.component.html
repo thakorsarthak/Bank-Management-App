@@ -21,15 +21,9 @@
 
       <!-- for selecting employee or user -->
       <div class="mb-3">
-     <p-dropdown 
-    [options]="entityOptions" 
-    [(ngModel)]="selectedEntity" 
-    placeholder="Select Type"
-    optionLabel="label"
-    optionValue="value"
-    (onChange)="onEntityChange()"
-    styleClass="w-full">
-</p-dropdown>
+        <p-dropdown [options]="entityOptions" [(ngModel)]="selectedEntity" placeholder="Select Type" optionLabel="label"
+          optionValue="value" (onChange)="onEntityChange()" styleClass="w-full">
+        </p-dropdown>
 
       </div>
       <ng-template pTemplate="header">
@@ -38,9 +32,7 @@
           <div class="filter-title">
             <i class="pi pi-filter"></i>
             <span>
-              Filter {{ selectedEntity ?
-              (selectedEntity === 'EMPLOYEE' ? 'Employee' : 'USER')
-              : '' }}
+              Filter {{ selectedEntity ? (selectedEntity === 'EMPLOYEE' ? 'Employee' : 'USER') : '' }}
             </span>
           </div>
 
@@ -48,7 +40,7 @@
       </ng-template>
 
 
-      <div *ngIf="selectedEntity === 'EMPLOYEE'"  class="filters-grid">
+      <div *ngIf="selectedEntity === 'EMPLOYEE'|| selectedEntity === 'USER'" class="filters-grid">
 
         <!-- total employees/user overview -->
         <div class="summary-cards">
@@ -89,7 +81,7 @@
 
 
         <!-- Designation -->
-        <div class="filter-field" *ngIf="selectedEntity === 'EMPLOYEE'" >
+        <div class="filter-field" *ngIf="selectedEntity === 'EMPLOYEE'">
           <label>Designation</label>
           <p-dropdown [options]="designationOptions" [(ngModel)]="designation" (onChange)="applyEmployeeFilters()"
             placeholder="Select designation" appendTo="body">
@@ -103,6 +95,7 @@
             placeholder="Active / Inactive" appendTo="body">
           </p-dropdown>
         </div>
+
 
         <!-- Search -->
         <div class="filter-field">
@@ -139,12 +132,12 @@
     </p-card>
 
     <!-- Employees Table Card -->
-    <p-card *ngIf="selectedEntity === 'EMPLOYEE'" >
+    <p-card *ngIf="selectedEntity === 'EMPLOYEE' || selectedEntity === 'USER'">
       <ng-template pTemplate="header">
         <div class="table-header">
           <div class="table-title">
             <i class="pi pi-users"></i>
-            <span>Employees</span>
+            <span>{{ selectedEntity }}</span>
           </div>
 
           <div class="table-actions">
@@ -165,26 +158,30 @@
       [totalRecords]="totalRecords" 
       responsiveLayout="scroll"
       styleClass="p-datatable-striped modern-table"> -->
-      <p-table [value]="employees"
-       [paginator]="true" 
-       [lazy]="true"
-       [rows]="10" 
-       [rowsPerPageOptions]="[10,25,50]"
-       [totalRecords]="totalRecords" 
-       (onLazyLoad)="loadEntities($event)" 
-       responsiveLayout="scroll"
-       styleClass="p-datatable-striped modern-table">
+      <p-table [value]="selectedEntity === 'EMPLOYEE' ? employees : users" [paginator]="true" [lazy]="true" [rows]="10"
+        [rowsPerPageOptions]="[10,25,50]" [totalRecords]="totalRecords" (onLazyLoad)="loadEntities($event)"
+        responsiveLayout="scroll" styleClass="p-datatable-striped modern-table">
 
 
         <!-- TABLE HEADER -->
-        <ng-template pTemplate="header" >
+        <ng-template pTemplate="header">
           <tr>
-            <th pColumn="fullName">
-              <i class="pi pi-user"></i> Name
-              <p-sortIcon field="fullName"></p-sortIcon>
+            <th>
+              <i class="pi pi-user"></i>
+              {{ selectedEntity === 'EMPLOYEE' ? 'Name' : 'Account Holder' }}
             </th>
 
-            <th pColumn="email" >
+            <!-- <th pColumn="fullName">
+              <i class="pi pi-user"></i> Name
+              <p-sortIcon field="fullName"></p-sortIcon>
+            </th> -->
+
+            <!-- <th pColumn="holderName" *ngIf="selectedEntity === 'USER'">
+              <i class="pi pi-user"></i> Name
+              <p-sortIcon field="holderName"></p-sortIcon>
+            </th> -->
+
+            <th pColumn="email">
               <i class="pi pi-envelope"></i> Email
               <p-sortIcon field="email"></p-sortIcon>
             </th>
@@ -193,10 +190,14 @@
               <i class="pi pi-building"></i> Branch
             </th>
 
-            <th pColumn="designation" *ngIf="selectedEntity === 'EMPLOYEE'">
+            <!-- <th pColumn="designation" *ngIf="selectedEntity === 'EMPLOYEE'">
               <i class="pi pi-briefcase"></i> Designation
               <p-sortIcon field="designation"></p-sortIcon>
+            </th> -->
+            <th>
+              {{ selectedEntity === 'EMPLOYEE' ? 'Designation' : 'Account No.' }}
             </th>
+
 
             <th pSortableColumn="status">
               <i class="pi pi-flag"></i> Status
@@ -209,48 +210,63 @@
             </th>
 
             <th>
-              <i class="pi pi-cog" *ngIf="selectedEntity === 'EMPLOYEE'"></i> Actions
+              <i class="pi pi-cog"></i> Actions
             </th>
           </tr>
         </ng-template>
 
         <!-- TABLE BODY -->
-        <ng-template pTemplate="body" let-employee let-rowIndex="rowIndex">
+        <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
           <tr [class.highlight-row]="rowIndex % 2 === 0">
 
             <td>
-              <strong>{{ employee.fullName }}</strong>
+              {{ selectedEntity === 'EMPLOYEE' ? row.fullName : row.holderName }}
             </td>
 
-            <td>{{ employee.email }}</td>
+            <td>{{ row.email }}</td>
 
-            <td>{{ employee.branchCode }}</td>
+            <td> {{ selectedEntity === 'EMPLOYEE' ? row.branchCode : row.branch }}</td>
+
+            <!-- <td>
+              <p-tag [value]="row.designation | titlecase" severity="info">
+              </p-tag>
+            </td> -->
 
             <td>
-              <p-tag [value]="employee.designation | titlecase" severity="info">
+              <ng-container *ngIf="selectedEntity === 'EMPLOYEE'; else userField">
+                <p-tag [value]="row.designation | titlecase" severity="info"></p-tag>
+              </ng-container>
+
+              <ng-template #userField>
+                {{ row.accountNumber }}
+              </ng-template>
+            </td>
+
+
+            <td>
+              <p-tag [value]="row.status" [severity]="row.status === 'ACTIVE' ? 'success' : 'danger'">
               </p-tag>
             </td>
 
             <td>
-              <p-tag [value]="employee.status" [severity]="employee.status === 'ACTIVE' ? 'success' : 'danger'">
-              </p-tag>
+              {{ row.joiningDate | date:'dd/MM/yyyy' }}
             </td>
 
             <td>
-              {{ employee.joiningDate | date:'dd/MM/yyyy' }}
-            </td>
-
-            <td>
-              <p-button icon="pi pi-eye" severity="secondary" [text]="true" pTooltip="View details"
-                (click)="viewEmployee(employee)">
+              <p-button icon="pi pi-eye" severity="secondary" *ngIf="selectedEntity === 'EMPLOYEE'" [text]="true" pTooltip="View details"
+                (click)="viewEmployee(row)">
               </p-button>
 
-              <p-button icon="pi pi-ban" severity="danger" [text]="true" pTooltip="Disable employee"
-                *ngIf="employee.status === 'ACTIVE'" (onClick)="updateStatus(employee.employeeId, 'INACTIVE')">
+              <p-button icon="pi pi-eye" severity="secondary" *ngIf="selectedEntity === 'USER'" [text]="true" pTooltip="View details"
+                (click)="viewUser(row)">
+              </p-button>
+
+              <p-button icon="pi pi-ban" severity="danger" [text]="true" pTooltip="Disable employee" 
+                *ngIf="row.status === 'ACTIVE' && selectedEntity === 'EMPLOYEE'" (onClick)="updateStatus(row.employeeId, 'INACTIVE')">
               </p-button>
 
               <p-button icon="pi pi-check" severity="success" [text]="true" pTooltip="Enable employee"
-                *ngIf="employee.status !== 'ACTIVE'" (onClick)="updateStatus(employee.employeeId, 'ACTIVE')">
+                *ngIf="row.status !== 'ACTIVE' && selectedEntity === 'EMPLOYEE'" (onClick)="updateStatus(row.employeeId, 'ACTIVE')">
               </p-button>
             </td>
 
@@ -275,31 +291,31 @@
       <!-- Employee Details Dialog to updateEmployee -->
       <p-dialog header="Employee Details" [(visible)]="showEmployeeDialog" [modal]="true" [style]="{ width: '450px' }">
 
-        <form [formGroup]="employeeForm" class="edit-form">
+        <form [formGroup]="entityForm" class="edit-form">
 
           <div class="p-fluid">
 
             <div class="form-field">
               <label>Employee ID</label>
-              <input pInputText [value]="selectedEmployee?.employeeId" disabled />
+              <input pInputText [value]="selectedEmployee?.employeeId || selectedUser?.accountNumber" disabled />
             </div>
 
             <div class="form-field">
               <label style="padding-right: 10px;">Email</label>
-              <input pInputText [value]="selectedEmployee?.email" disabled />
+              <input pInputText [value]="selectedEmployee?.email || selectedUser?.email" disabled />
             </div>
 
             <div class="form-field">
               <label>Full Name</label>
-              <input pInputText [value]="selectedEmployee?.fullName" disabled />
+              <input pInputText [value]="selectedEmployee?.fullName || selectedUser?.holderName" disabled />
             </div>
 
-            <div class="form-field">
+            <div class="form-field" *ngIf="selectedEntity === 'USER'">
               <label>Branch Code</label>
-              <input pInputText formControlName="branchCode" />
+              <input pInputText [value]="selectedUser?.branch" formControlName="branchCode" />
             </div>
 
-            <div class="form-field">
+            <div class="form-field" *ngIf="selectedEntity === 'EMPLOYEE'">
               <label>Designation</label>
               <p-dropdown [options]="designationOptions" formControlName="designation" appendTo="body">
 
@@ -320,7 +336,10 @@
           <p-button label="Cancel" severity="secondary" (onClick)="closeDialog()">
           </p-button>
 
-          <p-button label="Update" severity="success" [disabled]="employeeForm.invalid" (onClick)="updateEmployee()">
+          <p-button label="Update" *ngIf="selectedEntity === 'EMPLOYEE'" severity="success" [disabled]="entityForm.invalid" (onClick)="updateEmployee()">
+          </p-button>
+
+          <p-button label="Update" *ngIf="selectedEntity === 'USER'" severity="success" [disabled]="entityForm.invalid" (onClick)="updateEmployee()">
           </p-button>
         </ng-template>
 

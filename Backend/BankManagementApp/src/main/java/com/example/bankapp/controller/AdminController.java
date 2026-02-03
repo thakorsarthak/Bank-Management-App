@@ -97,9 +97,9 @@ public class AdminController {
 	        @RequestParam(defaultValue = "createdAt") String sortField,
 	        @RequestParam(defaultValue = "ASC") String sortOrder,
 	        @RequestParam(required = false) AccountStatus status){
-		
+
 		AdminUserResponseDTO dto = adminService.getUsers(page, size, sortField, sortOrder, status);
-		
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		System.out.println(auth.getAuthorities());
@@ -109,7 +109,7 @@ public class AdminController {
 
 	    return ResponseEntity.ok(response) ;
 	}
-	
+
 //	@GetMapping("/employee/getAllStaff")
 //	// @PreAuthorize("hasRole('ADMIN')")
 //	public ResponseEntity<?> getAllStaff() {

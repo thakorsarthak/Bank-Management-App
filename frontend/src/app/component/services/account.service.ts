@@ -9,21 +9,21 @@ export class AccountService {
 constructor(private http: HttpClient) { }
 
   createAccount(obj:any):Observable<any[]>{
-      return this.http.post<any>("http://localhost:6011/bankapp/main/create",obj)
+      return this.http.post<any>("http://localhost:60000/bankapp/main/create",obj)
   }
   loginAccount(obj:any):Observable<any>{
-      return this.http.post<any>("http://localhost:6011/bankapp/main/login-account",obj)
+      return this.http.post<any>("http://localhost:60000/bankapp/main/login-account",obj)
   }
 
   sendOtp(obj:any):Observable<any[]>{
-      return this.http.post<any>("http://localhost:6011/bankapp/otp/send",obj)
+      return this.http.post<any>("http://localhost:60000/bankapp/otp/send",obj)
   }
 
   verifyOtp(obj:any):Observable<any[]>{
-      return this.http.post<any>("http://localhost:6011/bankapp/otp/verify",obj)
+      return this.http.post<any>("http://localhost:60000/bankapp/otp/verify",obj)
   }
    setPinWithOtp(obj:any):Observable<any[]>{
-      return this.http.put<any>("http://localhost:6011/bankapp/account/changePasswordWithOtp",obj)
+      return this.http.put<any>("http://localhost:60000/bankapp/account/changePasswordWithOtp",obj)
   }
  
 }

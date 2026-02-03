@@ -2,13 +2,13 @@ package com.example.bankapp.DTO;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.example.bankapp.entity.Account;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import org.springframework.data.domain.Page;
 
 @Data
 @AllArgsConstructor

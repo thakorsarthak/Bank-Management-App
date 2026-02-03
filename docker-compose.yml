@@ -12,8 +12,8 @@ services:
     image: rabbitmq:3.13-management
     container_name: rabbitmq
     ports:
-      - "6001:5672"     # AMQP
-      - "16001:15672"   # Management UI
+       - "15673:5672"      # AMQP
+       - "25673:15672"     # Management UI
     environment:
       RABBITMQ_DEFAULT_USER: bank_user
       RABBITMQ_DEFAULT_PASS: bank_pass

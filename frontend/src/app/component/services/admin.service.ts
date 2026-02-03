@@ -10,21 +10,21 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
   getEmployees(params: any) {
-    return this.http.get<any>('http://localhost:6011/bankapp/admin/employee/getAllEmployee', { params });
+    return this.http.get<any>('http://localhost:60000/bankapp/admin/employee/getAllEmployee', { params });
   }
   
   getAllUser(params: any) {
-    return this.http.get<any>('http://localhost:6011/bankapp/admin/user/getAllUser', { params });
+    return this.http.get<any>('http://localhost:60000/bankapp/admin/user/getAllUser', { params });
   }
 
   updateEmployeeStatus(employeeId: number, payload: { status: string }) {
     return this.http.patch<GlobalAPIResponse<any>>(
-      `http://localhost:6011/bankapp/admin/employee/${employeeId}/updateStatus`, payload);
+      `http://localhost:60000/bankapp/admin/employee/${employeeId}/updateStatus`, payload);
   }
 
   updateEmployee(employeeId: number, payload: any) {
     return this.http.patch<GlobalAPIResponse<any>>(
-      `http://localhost:6011/bankapp/admin/employee/${employeeId}/updateAllDetails`,
+      `http://localhost:60000/bankapp/admin/employee/${employeeId}/updateAllDetails`,
       payload
     );
   }

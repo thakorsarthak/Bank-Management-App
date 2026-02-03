@@ -1,8 +1,9 @@
 package com.example.bankapp.repository;
 
-import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -12,8 +13,6 @@ import org.springframework.stereotype.Repository;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Role;
-
-import org.springframework.data.domain.Page;
 
 @Repository
 public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecificationExecutor<Account> {
@@ -30,8 +29,8 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 	boolean existsByAadhaarNo(String aadharNo);
 
 	boolean existsByPanNo(String panNo);
-	
-	
+
+
 	Optional<Account> findByEmail(String email);
 
 	Optional<Account> findByContact(Long Contact);
@@ -41,9 +40,9 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 	//Optional<Account> findTopByOrderByAccountNumberDesc();
 
 	Optional<Account> findTopByOrderByIdDesc();
-	
+
 	Page<Account> findByRole(Role role, Pageable pageable);
-	
+
 	Page<Account> findByRoleAndStatus(Role role, AccountStatus status, Pageable pageable);
 
 

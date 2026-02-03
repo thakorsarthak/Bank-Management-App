@@ -17,6 +17,7 @@ import { Employee } from '../../Models/employee';
 import { LazyLoadEvent, MessageService } from 'primeng/api';
 import { AdminService } from '../../services/admin.service';
 import { Dialog } from "primeng/dialog";
+import { Account } from '../../Models/Account';
 
 @Component({
   selector: 'app-admin-component',
@@ -40,6 +41,7 @@ export class AdminComponentComponent implements OnInit {
 
   employees: Employee[] = [];
   users: any[] = [];
+  branchOptions: any[] = [];
   totalRecords = 0;
   loading = false;
   
@@ -56,7 +58,9 @@ export class AdminComponentComponent implements OnInit {
   showEmployeeDialog = false;
   selectedEmployee!: Employee;
 
-  employeeForm!: FormGroup;
+  selectedUser!: any;
+
+  entityForm!: FormGroup;
 
   constructor(
     private adminService: AdminService,
@@ -66,7 +70,7 @@ export class AdminComponentComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.employeeForm = this.fb.group({
+    this.entityForm = this.fb.group({
       fullName: ['', Validators.required],
       branchCode: ['', Validators.required],
       designation: ['', Validators.required],
@@ -85,7 +89,9 @@ export class AdminComponentComponent implements OnInit {
 
   statusOptions = [
     { label: 'Active', value: 'ACTIVE' },
-    { label: 'Inactive', value: 'INACTIVE' }
+    { label: 'Inactive', value: 'INACTIVE' },
+    { label: 'Suspended', value: 'SUSPENDED' },
+    { label: 'Pending KYC', value: 'PENDING_KYC' }
   ];
 
   dateSortOptions = [
@@ -99,12 +105,12 @@ export class AdminComponentComponent implements OnInit {
   ];
 
 
-  branchOptions: any[] = [];
+ 
 
   //  ENTITY CHANGE or choosing Employee/User //
 
   onEntityChange() {
-    this.clearFilters();
+    this.loadEntities(null);
     // if (this.selectedEntity === 'EMPLOYEE') {
     //   this.loadEmployees();
     // }
@@ -114,12 +120,13 @@ export class AdminComponentComponent implements OnInit {
     console.log('Selected Entity:', this.selectedEntity, event); 
     if (this.selectedEntity === 'EMPLOYEE') {
       this.loadEmployees(event);
-    } else if (this.selectedEntity === 'USER')  {
+    } else  {
       this.loadUsers(event);
     }
   }
 
   loadUsers(event?: any) {
+    console.log('Loading users with event:', event);
     // Implement user loading logic here  
     const first = event?.first ?? 0;
     const rows = event?.rows ?? 10;
@@ -238,7 +245,7 @@ export class AdminComponentComponent implements OnInit {
     this.dateSort = null;
     this.branch = null;
     // this.refeshEmployees();
-    this.loadEmployees({ first: 0, rows: 10 });
+    this.loadEntities({ first: 0, rows: 10 });
   }
 
   // for Refreshing employees table  //
@@ -247,13 +254,24 @@ export class AdminComponentComponent implements OnInit {
   //   this.loadEmployees({ first: 0, rows: 10 });
   // }
 
-  //  Viewing employee //
+
+//viewing USER details
+  viewUser(user: any): void {
+ this.selectedUser = user;
+
+    this.entityForm.patchValue({
+      status: user.status
+    });
+    this.showEmployeeDialog = true;
+  }
+
+  //  Viewing employee 
 
   viewEmployee(employee: Employee): void {
 
     this.selectedEmployee = employee;
 
-    this.employeeForm.patchValue({
+    this.entityForm.patchValue({
       fullName: employee.fullName,
       branchCode: employee.branchCode,
       designation: employee.designation,
@@ -264,6 +282,11 @@ export class AdminComponentComponent implements OnInit {
   }
 
   // for  UPDATE  //
+
+  updateUser(): void {
+
+
+  }
 
   updateEmployee(): void {
 
@@ -276,9 +299,9 @@ export class AdminComponentComponent implements OnInit {
       return;
     }
 
-    if (this.employeeForm.invalid) return;
+    if (this.entityForm.invalid) return;
 
-    const payload = this.employeeForm.value;
+    const payload = this.entityForm.value;
 
     this.adminService
       .updateEmployee(this.selectedEmployee.employeeId, payload)
@@ -305,7 +328,7 @@ export class AdminComponentComponent implements OnInit {
 
   closeDialog(): void {
     this.showEmployeeDialog = false;
-    this.employeeForm.reset();
+    this.entityForm.reset();
   }
 
   // for Updating  STATUS  //

@@ -20,7 +20,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -71,7 +70,7 @@ public class Account {
 	private Role role;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false) 
+	@Column(nullable = false)
 	private AccountStatus status;
 
 //	@Column(name = "branch_code")

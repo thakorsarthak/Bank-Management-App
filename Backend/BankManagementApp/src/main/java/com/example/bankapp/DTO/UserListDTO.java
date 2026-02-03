@@ -1,7 +1,6 @@
 package com.example.bankapp.DTO;
 
 import java.time.Instant;
-import java.time.LocalDate;
 
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.enums.AccountStatus;
@@ -34,17 +33,19 @@ public class UserListDTO {
 		dto.setHolderName(account.getAccountHolderName());
 		dto.setJoiningDate(account.getCreatedAt());
 		dto.setStatus(account.getStatus());
-		dto.setBranch(account.getBranch().getBranchName()); 
+		dto.setBranch(account.getBranch().getBranchName());
 		dto.setJoiningDate(account.getCreatedAt());
 		dto.setType(account.getAccountType());
-		
+
 		dto.setAccountNumber(mask(account.getAccountNumber()));
 
 		return dto;
 
 	}
 	private static String mask(String acc) {
-	    if (acc == null || acc.length() < 4) return acc;
+	    if (acc == null || acc.length() < 4) {
+			return acc;
+		}
 	    return "XXXXXX" + acc.substring(acc.length() - 4);
 	}
 

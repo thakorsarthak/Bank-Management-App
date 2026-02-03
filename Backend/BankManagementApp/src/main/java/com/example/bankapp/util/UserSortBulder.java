@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort;
 public class UserSortBulder {
 
 	private UserSortBulder() {
-		
+
 	}
 
 	private static final Map<String , String> FEIED_MAP = Map.of(
@@ -24,6 +24,6 @@ public class UserSortBulder {
 		return Sort.by(dir,mappedfield);
 	}
 
-	
-	
+
+
 }
