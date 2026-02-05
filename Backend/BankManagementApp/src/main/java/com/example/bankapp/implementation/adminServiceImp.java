@@ -18,6 +18,7 @@ import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.EmployeeListDTO;
+import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.Exception.FieldError;
@@ -210,7 +211,8 @@ public class adminServiceImp implements AdminService {
 	public void updateStatusEmployee(Long employeeId, AccountStatus accountStatus) {
 
 		Optional<Employee> emp = employeeRepo.findById(employeeId);
-
+		List<FieldError> errors = new ArrayList<>(); 
+		
 		Employee employee = emp.get();
 
 		// Account account = accountRepo.findById(id);
@@ -220,7 +222,11 @@ public class adminServiceImp implements AdminService {
 		}
 
 		Account acc = employee.getAccount();
-
+		
+		if(accountStatus == AccountStatus.PENDING_KYC || accountStatus == AccountStatus.REJECTED) {
+		
+			throw new  CustomValidationException("Can't change Employee to " + accountStatus);
+		}
 		acc.setStatus(accountStatus);
 	}
 
@@ -300,14 +306,22 @@ public class adminServiceImp implements AdminService {
 	@Transactional
 	public void updateEmployee(Long employeeId, UpdateEmployeeRequestDTO req) {
 
-		Optional<Employee> employee = employeeRepo.findByEmployeeId(employeeId);
+//		Optional<Employee> employee = employeeRepo.findByEmployeeId(employeeId);
+		
 
-		Employee emp = employee.get();
+//		Employee emp = employee.get();
+//
+//		System.out.println(emp);
+		
+		 Employee emp = employeeRepo.findByEmployeeId(employeeId)
+		            .orElseThrow(() -> new CustomValidationException("Employee not found"));
 
-		System.out.println(emp);
-
-		Account account = emp.getAccount();
-
+		    Account account = emp.getAccount();
+		
+		if(req.getStatus() == AccountStatus.PENDING_KYC || req.getStatus() == AccountStatus.REJECTED) {
+			throw new  CustomValidationException("Can't change status to " + req.getStatus());
+		}
+		
 		System.out.println(account);
 
 		if (req.getFullName() != null) {

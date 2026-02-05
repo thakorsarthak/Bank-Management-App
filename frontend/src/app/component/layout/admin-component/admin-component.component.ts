@@ -53,9 +53,9 @@ export class AdminComponentComponent implements OnInit {
   status: string | null = null;
   designation: string | null = null;
   dateSort: string | null = null;
-  branch: string | null = null;
+  //branch: string | null = null;
 
-  showEmployeeDialog = false;
+  showEntityDialog = false;
   selectedEmployee!: Employee;
 
   selectedUser!: any;
@@ -74,7 +74,8 @@ export class AdminComponentComponent implements OnInit {
       fullName: ['', Validators.required],
       branchCode: ['', Validators.required],
       designation: ['', Validators.required],
-      status: ['', Validators.required]
+      status: ['', Validators.required],
+      branchName: ['']
     });
   }
 
@@ -226,8 +227,8 @@ export class AdminComponentComponent implements OnInit {
       params.sortOrder = this.dateSort;
     }
 
-    if (this.branch)
-      params.branch = this.branch;
+    // if (this.branch)
+    //   params.branch = this.branch;
 
     this.adminService.getEmployees(params)
       .subscribe(res => {
@@ -243,7 +244,7 @@ export class AdminComponentComponent implements OnInit {
     this.status = null;
     this.designation = null;
     this.dateSort = null;
-    this.branch = null;
+   // this.branch = null;
     // this.refeshEmployees();
     this.loadEntities({ first: 0, rows: 10 });
   }
@@ -257,12 +258,14 @@ export class AdminComponentComponent implements OnInit {
 
 //viewing USER details
   viewUser(user: any): void {
- this.selectedUser = user;
+    console.log('Viewing user:', user);
+      this.selectedUser = user;
 
     this.entityForm.patchValue({
-      status: user.status
+      status: this.selectedUser.status,
+      branchName: this.selectedUser.branch
     });
-    this.showEmployeeDialog = true;
+    this.showEntityDialog = true;
   }
 
   //  Viewing employee 
@@ -278,7 +281,7 @@ export class AdminComponentComponent implements OnInit {
       status: employee.status
     });
 
-    this.showEmployeeDialog = true;
+    this.showEntityDialog = true;
   }
 
   // for  UPDATE  //
@@ -307,7 +310,7 @@ export class AdminComponentComponent implements OnInit {
       .updateEmployee(this.selectedEmployee.employeeId, payload)
       .subscribe({
         next: (res) => {
-          this.showEmployeeDialog = false;
+          this.showEntityDialog = false;
           this.loadEmployees();
 
           this.messageService.add({
@@ -327,7 +330,7 @@ export class AdminComponentComponent implements OnInit {
   }
 
   closeDialog(): void {
-    this.showEmployeeDialog = false;
+    this.showEntityDialog = false;
     this.entityForm.reset();
   }
 

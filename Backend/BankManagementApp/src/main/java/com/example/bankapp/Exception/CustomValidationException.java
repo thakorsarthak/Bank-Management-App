@@ -12,8 +12,14 @@ public class CustomValidationException extends RuntimeException{
 		this.errors = errors;
 	}
 
+	 public CustomValidationException(String message) {
+	        super(message);
+	        this.errors = null;
+	    }
+	
 	public List<FieldError> getErrors() {
         return errors;
-    }
+    }		
+
 }
 

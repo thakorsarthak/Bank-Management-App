@@ -112,12 +112,12 @@
         </div>
 
         <!-- Branch -->
-        <div class="filter-field">
+        <!-- <div class="filter-field">
           <label>Branch</label>
           <p-dropdown [options]="branchOptions" [(ngModel)]="branch" (onChange)="applyEmployeeFilters()"
             placeholder="Select branch" appendTo="body">
           </p-dropdown>
-        </div>
+        </div> -->
 
         <!-- Clear -->
         <div class="filter-field">
@@ -289,14 +289,14 @@
       </p-table>
 
       <!-- Employee Details Dialog to updateEmployee -->
-      <p-dialog header="Employee Details" [(visible)]="showEmployeeDialog" [modal]="true" [style]="{ width: '450px' }">
+      <p-dialog header="Employee Details" [(visible)]="showEntityDialog" [modal]="true" [style]="{ width: '450px' }">
 
         <form [formGroup]="entityForm" class="edit-form">
 
           <div class="p-fluid">
 
             <div class="form-field">
-              <label>Employee ID</label>
+              <label>{{selectedEntity}}ID</label>
               <input pInputText [value]="selectedEmployee?.employeeId || selectedUser?.accountNumber" disabled />
             </div>
 
@@ -311,14 +311,18 @@
             </div>
 
             <div class="form-field" *ngIf="selectedEntity === 'USER'">
+              <label>Branch Name</label>
+              <input pInputText [value]="selectedUser?.branch" formControlName="branchName" />
+            </div>
+
+             <div class="form-field" *ngIf="selectedEntity === 'EMPLOYEE'">
               <label>Branch Code</label>
-              <input pInputText [value]="selectedUser?.branch" formControlName="branchCode" />
+              <input pInputText [value]="selectedEmployee?.branchCode" formControlName="branchCode" />
             </div>
 
             <div class="form-field" *ngIf="selectedEntity === 'EMPLOYEE'">
               <label>Designation</label>
               <p-dropdown [options]="designationOptions" formControlName="designation" appendTo="body">
-
               </p-dropdown>
             </div>
 
@@ -339,7 +343,7 @@
           <p-button label="Update" *ngIf="selectedEntity === 'EMPLOYEE'" severity="success" [disabled]="entityForm.invalid" (onClick)="updateEmployee()">
           </p-button>
 
-          <p-button label="Update" *ngIf="selectedEntity === 'USER'" severity="success" [disabled]="entityForm.invalid" (onClick)="updateEmployee()">
+          <p-button label="Update" *ngIf="selectedEntity === 'USER'" severity="success" [disabled]="entityForm.invalid" (onClick)="updateUser()">
           </p-button>
         </ng-template>
 
