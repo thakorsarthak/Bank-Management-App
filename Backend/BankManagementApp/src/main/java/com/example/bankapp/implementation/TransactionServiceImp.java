@@ -247,7 +247,7 @@ public class TransactionServiceImp implements TransactionService {
 		transactionRepo.save(transactionForSender);
 		transactionRepo.save(transactionForReceiver);
 
-		// --- Sending Notifications ---
+		// Sending Notifications 
 		String time = transactionForSender.getTimestamp().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
 
 		TransactionResponseDTO dto = new TransactionResponseDTO();

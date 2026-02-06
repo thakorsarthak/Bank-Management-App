@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,12 +14,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.EmployeeListDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
+import com.example.bankapp.DTO.NotificationRequestDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.Exception.FieldError;
@@ -35,6 +38,8 @@ import com.example.bankapp.repository.BranchRepository;
 import com.example.bankapp.repository.EmployeeRepo;
 import com.example.bankapp.services.AdminService;
 import com.example.bankapp.services.AuditService;
+import com.example.bankapp.services.NotificationService;
+import com.example.bankapp.util.AccountStatusEmailTemplate;
 import com.example.bankapp.util.EmployeeSortBuilder;
 import com.example.bankapp.util.UserSortBulder;
 
@@ -56,6 +61,9 @@ public class adminServiceImp implements AdminService {
 	private final PasswordEncoder passwordEncoder;
 
 	private final BranchRepository branchRepo;
+	
+	
+	private final NotificationService notificationService;
 
 	// response on dashboard
 	@Override
@@ -304,13 +312,12 @@ public class adminServiceImp implements AdminService {
 	// updating
 	@Override
 	@Transactional
-	public void updateEmployee(Long employeeId, UpdateEmployeeRequestDTO req) {
+	public void updateEmployee(Long employeeId, AccountUpdateRequestDTO req) {
 
 //		Optional<Employee> employee = employeeRepo.findByEmployeeId(employeeId);
 		
 
 //		Employee emp = employee.get();
-//
 //		System.out.println(emp);
 		
 		 Employee emp = employeeRepo.findByEmployeeId(employeeId)
@@ -339,6 +346,38 @@ public class adminServiceImp implements AdminService {
 		if (req.getStatus() != null) {
 			account.setStatus(req.getStatus());
 		}
+	}
+
+	@Override
+	public void updateUser(Long userId, AccountUpdateRequestDTO req) {
+		
+		Account acc = accountRepo.findById(userId)
+				.orElseThrow(() -> new CustomValidationException("User not found"));
+		
+		if(req.getStatus() == AccountStatus.SUSPENDED) {
+			throw new  CustomValidationException("Can't change status to " + req.getStatus());
+		}
+		
+		if (req.getStatus() != null) {
+			acc.setStatus(req.getStatus());
+		}
+		
+		
+		NotificationRequestDTO userStatusNotification = new NotificationRequestDTO();
+		userStatusNotification.setEmail(acc.getEmail());
+		userStatusNotification.setPhone(String.valueOf(acc.getContact()));
+		userStatusNotification.setSubject(AccountStatusEmailTemplate.getSubject(req.getStatus()));
+		userStatusNotification.setMessage(
+				
+				 AccountStatusEmailTemplate.getBody(
+					        req.getStatus(),
+					        acc.getAccountHolderName(),   // or user.getFullName()
+					        "Secure Bank",
+					        "support@mybank.com"
+					    )
+				);
+		notificationService.sendTransactionNotification(userStatusNotification);
+		
 	}
 
 

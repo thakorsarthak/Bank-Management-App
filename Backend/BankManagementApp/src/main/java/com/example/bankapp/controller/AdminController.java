@@ -15,14 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
-import com.example.bankapp.DTO.UpdateDesignationRequest;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
-import com.example.bankapp.DTO.UpdateStatusRequest;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
 import com.example.bankapp.services.AdminService;
@@ -119,7 +118,7 @@ public class AdminController {
 
 	@PatchMapping("/employee/{employeeId}/updateStatus")
 	public ResponseEntity<?> updateAccountStatus(@PathVariable Long employeeId,
-			@RequestBody UpdateStatusRequest request) {
+			@RequestBody UpdateEmployeeRequestDTO request) {
 
 		 adminService.updateStatusEmployee(employeeId, request.getStatus());
 
@@ -128,7 +127,7 @@ public class AdminController {
 
 	@PatchMapping("/employee/{accountId}/designation")
 	public ResponseEntity<?> updateDesignation(@PathVariable Long accountId,
-			@RequestBody UpdateDesignationRequest request) {
+			@RequestBody UpdateEmployeeRequestDTO request) {
 		System.out.println("Inside update Designation");
 		adminService.updateDesignation(accountId, request.getDesignation());
 		return ResponseEntity.ok("Employee designation updated successfully");
@@ -136,12 +135,22 @@ public class AdminController {
 
 	@PatchMapping("/employee/{employeeId}/updateAllDetails")
 	public ResponseEntity<?> updateAllEmployee(@PathVariable Long employeeId,
-			@RequestBody UpdateEmployeeRequestDTO emp) {
+			@RequestBody AccountUpdateRequestDTO emp) {
 
 		System.out.println("In Update Whole Employee");
 		adminService.updateEmployee(employeeId, emp);
 
-		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true, emp));
+		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true));
+	}
+	
+	@PatchMapping("/user/{accountId}/updateUser")
+	public ResponseEntity<?> updateUserStatus(@PathVariable Long accountId,
+			@RequestBody AccountUpdateRequestDTO user) {
+
+
+		adminService.updateUser(accountId, user);
+
+		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("User updated sucessfuly !", true));
 	}
 
 

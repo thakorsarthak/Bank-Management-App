@@ -29,5 +29,12 @@ export class AdminService {
     );
   }
 
+   updateUser(accountId: number, payload: any) {
+    return this.http.patch<GlobalAPIResponse<any>>(
+      `http://localhost:60000/bankapp/admin/user/${accountId}/updateUser`,
+      payload
+    );
+  }
+
 
 }

@@ -2,6 +2,7 @@ package com.example.bankapp.services;
 
 import java.util.List;
 
+import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
@@ -37,7 +38,9 @@ public interface AdminService {
 
 	//public List<AdminEmployeeResponseDTO> getAllEmployees();
 
-	public void updateEmployee(Long employeeID , UpdateEmployeeRequestDTO employee);
+	public void updateEmployee(Long employeeID , AccountUpdateRequestDTO employee);
+	
+	public void updateUser(Long userId , AccountUpdateRequestDTO user);
 
 	List<EmployeeListDTO> saveAllEmployees(List<CreateStaffDTO> staffList);
 

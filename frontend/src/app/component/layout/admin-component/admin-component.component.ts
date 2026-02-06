@@ -41,7 +41,6 @@ export class AdminComponentComponent implements OnInit {
 
   employees: Employee[] = [];
   users: any[] = [];
-  branchOptions: any[] = [];
   totalRecords = 0;
   loading = false;
   
@@ -53,7 +52,7 @@ export class AdminComponentComponent implements OnInit {
   status: string | null = null;
   designation: string | null = null;
   dateSort: string | null = null;
-  //branch: string | null = null;
+  branch: string | null = null;
 
   showEntityDialog = false;
   selectedEmployee!: Employee;
@@ -87,6 +86,16 @@ export class AdminComponentComponent implements OnInit {
     { label: 'Loan Officer', value: 'LOAN_OFFICER' },
     { label: 'Support', value: 'SUPPORT' }
   ];
+
+  branchOptions = [
+
+     { label: 'Ahmedabad', value: '1' },
+    { label: 'Surat', value: '2' },
+    { label: 'Mumbai', value: '3' },
+    { label: 'Bangalore', value: '4' }
+
+
+  ] ;
 
   statusOptions = [
     { label: 'Active', value: 'ACTIVE' },
@@ -205,7 +214,33 @@ export class AdminComponentComponent implements OnInit {
   }
 
   //  filtering block or logics //
+  applyUserFilters() {
 
+    const params: any = {
+      page: 0,
+      size: 10
+    };
+
+    if (this.status)
+      params.status = this.status;
+
+    if (this.branchOptions)
+      params.sortField = this.branch;
+
+    if (this.dateSort) {
+      params.sortField = 'joiningDate';
+      params.sortOrder = this.dateSort;
+    }
+
+    // if (this.branch)
+    //   params.branch = this.branch;
+
+    this.adminService.getAllUser(params)
+      .subscribe(res => {
+        this.users = res.data.users;
+        this.totalRecords = res.data.totalRecords;
+      });
+  }
   applyEmployeeFilters() {
 
     const params: any = {
@@ -258,12 +293,11 @@ export class AdminComponentComponent implements OnInit {
 
 //viewing USER details
   viewUser(user: any): void {
-    console.log('Viewing user:', user);
       this.selectedUser = user;
 
     this.entityForm.patchValue({
       status: this.selectedUser.status,
-      branchName: this.selectedUser.branch
+      branchName: this.selectedUser.branch,
     });
     this.showEntityDialog = true;
   }
@@ -285,9 +319,46 @@ export class AdminComponentComponent implements OnInit {
   }
 
   // for  UPDATE  //
-
   updateUser(): void {
 
+    if (!this.selectedUser?.id) {
+
+      console.log('Selected User:', this.selectedUser);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'User id missing!'
+      });
+      return;
+    }
+
+    // if (this.entityForm.invalid) return;
+
+    const payload = {
+      status: this.entityForm.value.status,
+    };
+
+    this.adminService
+      .updateUser(this.selectedUser.id, payload)
+      .subscribe({
+        next: (res) => {
+          this.showEntityDialog = false;
+          this.loadUsers();
+
+          this.messageService.add({
+            severity: res.success ? 'success' : 'warn',
+            summary: res.success ? 'Success' : 'Warning',
+            detail: res.message
+          });
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: err.error?.message || 'Something went wrong'
+          });
+        }
+      });
 
   }
 

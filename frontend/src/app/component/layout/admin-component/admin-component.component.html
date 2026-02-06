@@ -91,22 +91,30 @@
         <!-- Status -->
         <div class="filter-field">
           <label>Status</label>
-          <p-dropdown [options]="statusOptions" [(ngModel)]="status" (onChange)="applyEmployeeFilters()"
+          <p-dropdown [options]="statusOptions" [(ngModel)]="status" (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
             placeholder="Active / Inactive" appendTo="body">
           </p-dropdown>
         </div>
 
 
-        <!-- Search -->
-        <div class="filter-field">
-          <label>Search Name</label>
-          <input pInputText [(ngModel)]="searchName" (input)="applyEmployeeFilters()" placeholder="Search by name">
+         <div class="filter-field">
+          <label>Branch</label>
+          <p-dropdown [options]="branchOptions" [(ngModel)]="branch" (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
+            placeholder="Select branch" appendTo="body">
+          </p-dropdown>
         </div>
+
+
+        <!-- Search -->
+        <!-- <div class="filter-field">
+          <label>Search Name</label>
+          <input pInputText [(ngModel)]="searchName" (input)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()" placeholder="Search by name">
+        </div> -->
 
         <!-- Sort -->
         <div class="filter-field">
           <label>Joining Date</label>
-          <p-dropdown [options]="dateSortOptions" [(ngModel)]="dateSort" (onChange)="applyEmployeeFilters()"
+          <p-dropdown [options]="dateSortOptions" [(ngModel)]="dateSort" (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
             placeholder="Sort by date" appendTo="body">
           </p-dropdown>
         </div>
@@ -289,15 +297,25 @@
       </p-table>
 
       <!-- Employee Details Dialog to updateEmployee -->
-      <p-dialog header="Employee Details" [(visible)]="showEntityDialog" [modal]="true" [style]="{ width: '450px' }">
+      <p-dialog header="{{selectedEntity === 'EMPLOYEE' ? 'Employee' : 'User'}} Details" [(visible)]="showEntityDialog" [modal]="true" [style]="{ width: '450px' }">
 
         <form [formGroup]="entityForm" class="edit-form">
 
           <div class="p-fluid">
 
-            <div class="form-field">
-              <label>{{selectedEntity}}ID</label>
-              <input pInputText [value]="selectedEmployee?.employeeId || selectedUser?.accountNumber" disabled />
+            <div class="form-field" *ngIf="selectedEntity === 'EMPLOYEE'">
+              <label>Employee ID</label>
+              <input pInputText [value]="selectedEmployee?.employeeId" disabled />
+            </div>
+
+             <div class="form-field" *ngIf="selectedEntity === 'USER'">
+              <label>User ID</label>
+              <input pInputText [value]="selectedUser?.id" disabled />
+            </div>
+
+             <div class="form-field" *ngIf ="selectedEntity === 'USER'">
+              <label>Account Number</label>
+              <input pInputText [value]="selectedUser?.accountNumber" disabled />
             </div>
 
             <div class="form-field">
@@ -312,12 +330,12 @@
 
             <div class="form-field" *ngIf="selectedEntity === 'USER'">
               <label>Branch Name</label>
-              <input pInputText [value]="selectedUser?.branch" formControlName="branchName" />
+              <input pInputText [value]="selectedUser?.branch"  disabled/>
             </div>
 
              <div class="form-field" *ngIf="selectedEntity === 'EMPLOYEE'">
               <label>Branch Code</label>
-              <input pInputText [value]="selectedEmployee?.branchCode" formControlName="branchCode" />
+              <input pInputText [value]="selectedEmployee?.branchCode" disabled />
             </div>
 
             <div class="form-field" *ngIf="selectedEntity === 'EMPLOYEE'">
@@ -343,7 +361,7 @@
           <p-button label="Update" *ngIf="selectedEntity === 'EMPLOYEE'" severity="success" [disabled]="entityForm.invalid" (onClick)="updateEmployee()">
           </p-button>
 
-          <p-button label="Update" *ngIf="selectedEntity === 'USER'" severity="success" [disabled]="entityForm.invalid" (onClick)="updateUser()">
+          <p-button label="Update" *ngIf="selectedEntity === 'USER'" severity="success"   (onClick)="updateUser()">
           </p-button>
         </ng-template>
 
