@@ -25,7 +25,7 @@ import com.example.bankapp.DTO.NotificationRequestDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.Exception.FieldError;
-import com.example.bankapp.Specification.EmployeeSpecification;
+import com.example.bankapp.Specification.AccountSpecification;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Branch;
 import com.example.bankapp.entity.Employee;
@@ -259,16 +259,19 @@ public class adminServiceImp implements AdminService {
 	// paginated response
 
 	@Override
-	public AdminEmployeeResponseDTO getEmployees(int page, int size, String sortField, String sortOrder,
-			AccountStatus status, Designation designation) {
+	public AdminEmployeeResponseDTO getEmployees(int page, int size, Long branchId, String sortField, String sortOrder,
+			AccountStatus status, Designation designation ) {
 
 		Pageable pageable = PageRequest.of(page, size, EmployeeSortBuilder.build(sortField, sortOrder));
 
 		Specification<Employee> specification = Specification.where(null);
 
-		specification = specification.and(EmployeeSpecification.hasAccountStatus(status));
+		specification = specification.and(AccountSpecification.hasAccountStatus(status));
 
-		specification = specification.and(EmployeeSpecification.hasDesignation(designation));
+		specification = specification.and(AccountSpecification.hasDesignation(designation));
+		
+		specification = specification.and(AccountSpecification.hasbranch(branchId));
+		
 
 		Page<Employee> empPage = employeeRepo.findAll(specification, pageable);
 
@@ -276,23 +279,35 @@ public class adminServiceImp implements AdminService {
 	}
 
 	@Override
-	public AdminUserResponseDTO getUsers(int page, int size, String sortField, String sortOrder, AccountStatus status) {
-
-	//	Pageable pageable = PageRequest.of(page, size, EmployeeSortBuilder.build(sortField, sortOrder));
-
+	public AdminUserResponseDTO getUsers(int page, int size, Long branchId ,String sortField, String sortOrder, AccountStatus status) {
 
 		 Pageable pageable = PageRequest.of(page, size,
 		           UserSortBulder.build(sortField, sortOrder));
+		 
+//		 Page<Account> accPage ;
+//
+//		 if (status != null) {
+//		     accPage = accountRepo.findByRoleAndStatus(Role.USER, status, pageable);
+//		 } 
+//		 if (branchId != null) {
+//			 accPage = accountRepo.findByBranchId(branchId,pageable);
+//			 accPage = accountRepo.findByRoleAndBranchId(Role.USER,branchId,pageable);
+//			 accPage = accountRepo.findByRoleAndStatusAndBranchId(Role.USER, status,branchId, pageable);
+//		 }else {
+//		     accPage = accountRepo.findByRole(Role.USER, pageable);
+//		 }
+//			Specification<Account> specification = Specification.where(null);
+//		 
+//		 specification = specification.and(AccountSpecification.hasbranchUser(branchId));
+		 
+		 Specification<Account> spec =
+		            Specification.where(AccountSpecification.hasRole(Role.USER))
+		                    .and(AccountSpecification.hasbranchUser(branchId))
+		                    .and(AccountSpecification.hasUserStatus(status));
 
-		 Page<Account> accPage;
-
-		 if (status != null) {
-		     accPage = accountRepo.findByRoleAndStatus(Role.USER, status, pageable);
-		 } else {
-		     accPage = accountRepo.findByRole(Role.USER, pageable);
-		 }
-
-
+		    Page<Account> accPage = accountRepo.findAll(spec, pageable);
+		
+		 
 		    return AdminUserResponseDTO.fromPage(accPage);
 
 	}

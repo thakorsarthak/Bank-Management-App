@@ -53,6 +53,11 @@ export class AdminComponentComponent implements OnInit {
   designation: string | null = null;
   dateSort: string | null = null;
   branch: string | null = null;
+  selectedBranch: number | null = null;
+  branchSortOrder: 'ASC' | 'DESC' | null = null;
+  selectedBranchId: number | null = null;
+
+
 
   showEntityDialog = false;
   selectedEmployee!: Employee;
@@ -87,15 +92,14 @@ export class AdminComponentComponent implements OnInit {
     { label: 'Support', value: 'SUPPORT' }
   ];
 
-  branchOptions = [
+branchOptions = [
+  { label: 'All Branches', value: null },
+  { label: 'Ahmedabad', value: 1 },
+  { label: 'Surat', value: 2 },
+  { label: 'Mumbai', value: 3 },
+  { label: 'Bangalore', value: 4 }
+];
 
-     { label: 'Ahmedabad', value: '1' },
-    { label: 'Surat', value: '2' },
-    { label: 'Mumbai', value: '3' },
-    { label: 'Bangalore', value: '4' }
-
-
-  ] ;
 
   statusOptions = [
     { label: 'Active', value: 'ACTIVE' },
@@ -121,6 +125,7 @@ export class AdminComponentComponent implements OnInit {
 
   onEntityChange() {
     this.loadEntities(null);
+    this.clearFilters();
     // if (this.selectedEntity === 'EMPLOYEE') {
     //   this.loadEmployees();
     // }
@@ -135,9 +140,11 @@ export class AdminComponentComponent implements OnInit {
     }
   }
 
+
+     // Implement user loading logic here 
   loadUsers(event?: any) {
     console.log('Loading users with event:', event);
-    // Implement user loading logic here  
+  
     const first = event?.first ?? 0;
     const rows = event?.rows ?? 10;
 
@@ -177,7 +184,6 @@ export class AdminComponentComponent implements OnInit {
 
     //only if employee entity is selected by admin
 
-
     this.loading = true;
 
     const first = event?.first ?? 0;
@@ -200,6 +206,9 @@ export class AdminComponentComponent implements OnInit {
     };
 
     if (this.status) params.status = this.status;
+    if (this.selectedBranchId != null) {
+          params.branchId = this.selectedBranchId;
+        }
 
     this.adminService.getEmployees(params).subscribe({
       next: (res) => {
@@ -224,8 +233,13 @@ export class AdminComponentComponent implements OnInit {
     if (this.status)
       params.status = this.status;
 
-    if (this.branchOptions)
-      params.sortField = this.branch;
+    if(this.selectedBranchId != null){
+      params.branchId = this.selectedBranchId;
+    }
+
+    if (this.branch) 
+     // params.sortField = 'branch';
+      params.branchId = this.branch;
 
     if (this.dateSort) {
       params.sortField = 'joiningDate';
@@ -254,6 +268,14 @@ export class AdminComponentComponent implements OnInit {
     if (this.status)
       params.status = this.status;
 
+    if (this.selectedBranchId != null) 
+       params.branchId = this.selectedBranchId;
+        
+
+    if (this.branch) 
+     // params.sortField = 'branch';
+      params.branchId = this.branch;
+        
     if (this.searchName)
       params.search = this.searchName;
 
@@ -282,6 +304,9 @@ export class AdminComponentComponent implements OnInit {
    // this.branch = null;
     // this.refeshEmployees();
     this.loadEntities({ first: 0, rows: 10 });
+    this.selectedBranchId = null;
+    this.selectedBranch = null;
+    this.branch = null;
   }
 
   // for Refreshing employees table  //

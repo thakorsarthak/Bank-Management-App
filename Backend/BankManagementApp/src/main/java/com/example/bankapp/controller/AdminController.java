@@ -71,11 +71,12 @@ public class AdminController {
 	public ResponseEntity<GlobalAPIResponseDTO> getEmployees(
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size,
+	        @RequestParam(required = false)Long branchId,
 	        @RequestParam(defaultValue = "joiningDate") String sortField,
 	        @RequestParam(defaultValue = "ASC") String sortOrder,
 	        @RequestParam(required = false) AccountStatus status,
 	        @RequestParam(required = false) Designation designation){
-		AdminEmployeeResponseDTO dto =  adminService.getEmployees(page, size, sortField, sortOrder, status , designation);
+		AdminEmployeeResponseDTO dto =  adminService.getEmployees(page, size,branchId, sortField, sortOrder, status , designation);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -93,11 +94,12 @@ public class AdminController {
 	public ResponseEntity<GlobalAPIResponseDTO> getUsers(
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size,
+	        @RequestParam(required = false)Long branchId,
 	        @RequestParam(defaultValue = "createdAt") String sortField,
 	        @RequestParam(defaultValue = "ASC") String sortOrder,
 	        @RequestParam(required = false) AccountStatus status){
 
-		AdminUserResponseDTO dto = adminService.getUsers(page, size, sortField, sortOrder, status);
+		AdminUserResponseDTO dto = adminService.getUsers(page, size,branchId, sortField, sortOrder, status);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

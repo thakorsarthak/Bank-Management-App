@@ -25,12 +25,13 @@ public interface AdminService {
 
 	public void updateDesignation(Long accountId, Designation designation);
 
-	public AdminUserResponseDTO getUsers(int page, int size, String sortField, String sortOrder,
+	public AdminUserResponseDTO getUsers(int page, int size, Long branchId, String sortField, String sortOrder,
 			AccountStatus status);
 
 	public AdminEmployeeResponseDTO getEmployees(
             int page,
             int size,
+            Long branchId,
             String sortField,
             String sortOrder,
             AccountStatus status,
@@ -43,8 +44,6 @@ public interface AdminService {
 	public void updateUser(Long userId , AccountUpdateRequestDTO user);
 
 	List<EmployeeListDTO> saveAllEmployees(List<CreateStaffDTO> staffList);
-
-
 
 
 }

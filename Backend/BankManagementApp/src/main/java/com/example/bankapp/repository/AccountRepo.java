@@ -43,10 +43,16 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 	Optional<Account> findTopByOrderByIdDesc();
 
 	Page<Account> findByRole(Role role, Pageable pageable);
+	
+	Page<Account> findByBranchId(Long branchId, Pageable pageable);
 
 	Page<Account> findByRoleAndStatus(Role role, AccountStatus status, Pageable pageable);
-
-
+	
+	Page<Account> findByRoleAndBranchId(Role role, Long branchId, Pageable pageable);
+	
+	Page<Account> findByRoleAndStatusAndBranchId(Role user, AccountStatus status,Long branchId, Pageable pageable);
+	
+	
 	//Was Created to use in Login but not using it now
 	@Query("SELECT a FROM Account a WHERE " +
 		       "a.email = :id OR " +
@@ -54,5 +60,9 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 		       "a.aadhaarNo = :id OR " +
 		       "a.panNo = :id")
 	Optional<Account> findByIdentifier(@Param("id") String identifier);
+
+	
+
+
 
 }
