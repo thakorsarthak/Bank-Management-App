@@ -91,6 +91,7 @@ public class CustomAcountDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return account.getStatus()== AccountStatus.ACTIVE || account.getStatus()== AccountStatus.PENDING_KYC  ;
+        return account.getStatus()== AccountStatus.ACTIVE || account.getStatus()== AccountStatus.PENDING_KYC;
+        
     }
 }

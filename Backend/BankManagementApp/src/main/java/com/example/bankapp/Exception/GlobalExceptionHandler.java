@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
 
 //		ApiError error = new ApiError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), ex.getErrors());
 //		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-		
+
 
 	    if (ex.getErrors() != null) {
 	        return ResponseEntity.badRequest()
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
 //        return ResponseEntity.badRequest()
 //                .body(new GlobalAPIResponseDTO<>(ex.getMessage(), false));
 //    }
-	
+
 //	@ExceptionHandler(InvalidStatusChange.class)
 //	public ResponseEntity<GlobalAPIResponseDTO<?>> handleInvalidStatus (InvalidStatusChange ex){
 //		return ResponseEntity.badRequest()

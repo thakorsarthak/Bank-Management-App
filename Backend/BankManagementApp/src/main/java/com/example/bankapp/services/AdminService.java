@@ -8,7 +8,6 @@ import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.EmployeeListDTO;
-import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
@@ -40,7 +39,7 @@ public interface AdminService {
 	//public List<AdminEmployeeResponseDTO> getAllEmployees();
 
 	public void updateEmployee(Long employeeID , AccountUpdateRequestDTO employee);
-	
+
 	public void updateUser(Long userId , AccountUpdateRequestDTO user);
 
 	List<EmployeeListDTO> saveAllEmployees(List<CreateStaffDTO> staffList);

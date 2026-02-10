@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +19,7 @@ import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.EmployeeListDTO;
-import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.NotificationRequestDTO;
-import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.Specification.AccountSpecification;
@@ -61,8 +58,8 @@ public class adminServiceImp implements AdminService {
 	private final PasswordEncoder passwordEncoder;
 
 	private final BranchRepository branchRepo;
-	
-	
+
+
 	private final NotificationService notificationService;
 
 	// response on dashboard
@@ -219,8 +216,8 @@ public class adminServiceImp implements AdminService {
 	public void updateStatusEmployee(Long employeeId, AccountStatus accountStatus) {
 
 		Optional<Employee> emp = employeeRepo.findById(employeeId);
-		List<FieldError> errors = new ArrayList<>(); 
-		
+		List<FieldError> errors = new ArrayList<>();
+
 		Employee employee = emp.get();
 
 		// Account account = accountRepo.findById(id);
@@ -230,9 +227,9 @@ public class adminServiceImp implements AdminService {
 		}
 
 		Account acc = employee.getAccount();
-		
+
 		if(accountStatus == AccountStatus.PENDING_KYC || accountStatus == AccountStatus.REJECTED) {
-		
+
 			throw new  CustomValidationException("Can't change Employee to " + accountStatus);
 		}
 		acc.setStatus(accountStatus);
@@ -269,9 +266,9 @@ public class adminServiceImp implements AdminService {
 		specification = specification.and(AccountSpecification.hasAccountStatus(status));
 
 		specification = specification.and(AccountSpecification.hasDesignation(designation));
-		
+
 		specification = specification.and(AccountSpecification.hasbranch(branchId));
-		
+
 
 		Page<Employee> empPage = employeeRepo.findAll(specification, pageable);
 
@@ -283,12 +280,12 @@ public class adminServiceImp implements AdminService {
 
 		 Pageable pageable = PageRequest.of(page, size,
 		           UserSortBulder.build(sortField, sortOrder));
-		 
+
 //		 Page<Account> accPage ;
 //
 //		 if (status != null) {
 //		     accPage = accountRepo.findByRoleAndStatus(Role.USER, status, pageable);
-//		 } 
+//		 }
 //		 if (branchId != null) {
 //			 accPage = accountRepo.findByBranchId(branchId,pageable);
 //			 accPage = accountRepo.findByRoleAndBranchId(Role.USER,branchId,pageable);
@@ -297,17 +294,17 @@ public class adminServiceImp implements AdminService {
 //		     accPage = accountRepo.findByRole(Role.USER, pageable);
 //		 }
 //			Specification<Account> specification = Specification.where(null);
-//		 
+//
 //		 specification = specification.and(AccountSpecification.hasbranchUser(branchId));
-		 
+
 		 Specification<Account> spec =
 		            Specification.where(AccountSpecification.hasRole(Role.USER))
 		                    .and(AccountSpecification.hasbranchUser(branchId))
 		                    .and(AccountSpecification.hasUserStatus(status));
 
 		    Page<Account> accPage = accountRepo.findAll(spec, pageable);
-		
-		 
+
+
 		    return AdminUserResponseDTO.fromPage(accPage);
 
 	}
@@ -330,20 +327,20 @@ public class adminServiceImp implements AdminService {
 	public void updateEmployee(Long employeeId, AccountUpdateRequestDTO req) {
 
 //		Optional<Employee> employee = employeeRepo.findByEmployeeId(employeeId);
-		
+
 
 //		Employee emp = employee.get();
 //		System.out.println(emp);
-		
+
 		 Employee emp = employeeRepo.findByEmployeeId(employeeId)
 		            .orElseThrow(() -> new CustomValidationException("Employee not found"));
 
 		    Account account = emp.getAccount();
-		
+
 		if(req.getStatus() == AccountStatus.PENDING_KYC || req.getStatus() == AccountStatus.REJECTED) {
 			throw new  CustomValidationException("Can't change status to " + req.getStatus());
 		}
-		
+
 		System.out.println(account);
 
 		if (req.getFullName() != null) {
@@ -365,25 +362,25 @@ public class adminServiceImp implements AdminService {
 
 	@Override
 	public void updateUser(Long userId, AccountUpdateRequestDTO req) {
-		
+
 		Account acc = accountRepo.findById(userId)
 				.orElseThrow(() -> new CustomValidationException("User not found"));
-		
+
 		if(req.getStatus() == AccountStatus.SUSPENDED) {
 			throw new  CustomValidationException("Can't change status to " + req.getStatus());
 		}
-		
+
 		if (req.getStatus() != null) {
 			acc.setStatus(req.getStatus());
 		}
-		
-		
+
+
 		NotificationRequestDTO userStatusNotification = new NotificationRequestDTO();
 		userStatusNotification.setEmail(acc.getEmail());
 		userStatusNotification.setPhone(String.valueOf(acc.getContact()));
 		userStatusNotification.setSubject(AccountStatusEmailTemplate.getSubject(req.getStatus()));
 		userStatusNotification.setMessage(
-				
+
 				 AccountStatusEmailTemplate.getBody(
 					        req.getStatus(),
 					        acc.getAccountHolderName(),   // or user.getFullName()
@@ -392,7 +389,7 @@ public class adminServiceImp implements AdminService {
 					    )
 				);
 		notificationService.sendTransactionNotification(userStatusNotification);
-		
+
 	}
 
 

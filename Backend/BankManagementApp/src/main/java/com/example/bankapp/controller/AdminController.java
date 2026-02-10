@@ -144,7 +144,7 @@ public class AdminController {
 
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true));
 	}
-	
+
 	@PatchMapping("/user/{accountId}/updateUser")
 	public ResponseEntity<?> updateUserStatus(@PathVariable Long accountId,
 			@RequestBody AccountUpdateRequestDTO user) {

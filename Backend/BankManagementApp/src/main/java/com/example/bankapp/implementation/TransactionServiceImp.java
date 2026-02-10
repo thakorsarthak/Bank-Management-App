@@ -28,6 +28,7 @@ import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Transaction;
+import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.TransactionStatus;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.TransactionRepo;
@@ -149,6 +150,15 @@ public class TransactionServiceImp implements TransactionService {
 
 		Account fromAccount = accountRepo.findByAccountNumber(fromAccountNumber)
 				.orElseThrow(() -> new RuntimeException("Sender  does not Exist"));
+		
+		if(fromAccount.getStatus().equals(AccountStatus.PENDING_KYC)){
+			saveFailedTransaction(fromAccount, null, request, TransactionStatus.FAILED,
+					"KYC Pending", request.getToAccountNumber());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new GlobalAPIResponseDTO<>("KYC Pending", false));
+		}
+
+		
 
 //		Account toAccount = accountRepo.findByAccountNumber(request.getToAccountNumber())
 //				.orElseThrow(() -> new RuntimeException("Receiver Account does not Exist"));
@@ -247,7 +257,7 @@ public class TransactionServiceImp implements TransactionService {
 		transactionRepo.save(transactionForSender);
 		transactionRepo.save(transactionForReceiver);
 
-		// Sending Notifications 
+		// Sending Notifications
 		String time = transactionForSender.getTimestamp().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
 
 		TransactionResponseDTO dto = new TransactionResponseDTO();

@@ -9,7 +9,9 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './component/services/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideHttpClient( withInterceptors([authInterceptor])) ,provideZoneChangeDetection({ eventCoalescing: true }), provideAnimationsAsync(),
+  providers: [provideHttpClient( withInterceptors([authInterceptor])) 
+  ,provideZoneChangeDetection({ eventCoalescing: true }), 
+  provideAnimationsAsync(),
         providePrimeNG({
             theme: { preset: Aura, options: {
     darkModeSelector: '.my-app-dark'

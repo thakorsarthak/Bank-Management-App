@@ -16,10 +16,10 @@ public class CustomValidationException extends RuntimeException{
 	        super(message);
 	        this.errors = null;
 	    }
-	
+
 	public List<FieldError> getErrors() {
         return errors;
-    }		
+    }
 
 }
 

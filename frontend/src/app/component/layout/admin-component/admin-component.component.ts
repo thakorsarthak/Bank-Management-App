@@ -96,12 +96,13 @@ branchOptions = [
   { label: 'All Branches', value: null },
   { label: 'Ahmedabad', value: 1 },
   { label: 'Surat', value: 2 },
-  { label: 'Mumbai', value: 3 },
+  { label: 'Mumbai', value: 3 },  
   { label: 'Bangalore', value: 4 }
 ];
 
 
   statusOptions = [
+    { label: 'All Statuses', value: null },
     { label: 'Active', value: 'ACTIVE' },
     { label: 'Inactive', value: 'INACTIVE' },
     { label: 'Suspended', value: 'SUSPENDED' },

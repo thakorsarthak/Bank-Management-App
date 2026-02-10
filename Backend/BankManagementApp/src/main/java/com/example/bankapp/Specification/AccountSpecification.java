@@ -28,7 +28,7 @@ public class AccountSpecification {
 
 		};
 	}
-	
+
 	public static Specification<Employee> hasDesignation(Designation designation) {
 
 	    return (root, query, cb) ->
@@ -42,7 +42,7 @@ public class AccountSpecification {
 	    	designation == null ? null : cb.equal(root.get("designation"), designation);
 
 	}
-	
+
 	public static Specification<Employee> hasbranch(Long branchId){
 
 		return (root, query , cb) -> {
@@ -58,7 +58,7 @@ public class AccountSpecification {
 
 		};
 	}
-	
+
 	public static Specification<Account> hasUserStatus(AccountStatus status){
 
 		return (root, query , cb) -> {
@@ -71,12 +71,12 @@ public class AccountSpecification {
 		};
 	}
 
-	
+
 	 public static Specification<Account> hasRole(Role role) {
 	        return (root, query, cb) ->
 	                cb.equal(root.get("role"), role);
 	    }
-	
+
 	public static Specification<Account> hasbranchUser(Long branchId){
 
 		return (root, query , cb) -> {
