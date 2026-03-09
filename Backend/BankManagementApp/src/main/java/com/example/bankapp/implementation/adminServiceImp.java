@@ -383,7 +383,7 @@ public class adminServiceImp implements AdminService {
 
 				 AccountStatusEmailTemplate.getBody(
 					        req.getStatus(),
-					        acc.getAccountHolderName(),   // or user.getFullName()
+					        acc.getAccountHolderName(),
 					        "Secure Bank",
 					        "support@mybank.com"
 					    )

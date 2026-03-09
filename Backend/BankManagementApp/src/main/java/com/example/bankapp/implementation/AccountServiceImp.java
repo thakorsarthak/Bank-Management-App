@@ -102,6 +102,7 @@ public class AccountServiceImp implements AccountService {
 
 		if (repo.existsByEmail(accountdto.getEmail())) {
 			errors.add(new FieldError("email", "Acccount with this Email is already Exist pls login"));
+			throw new RuntimeException("Email already Exist");
 		}
 
 		if (repo.existsByContact(accountdto.getContact())) {
@@ -143,7 +144,6 @@ public class AccountServiceImp implements AccountService {
 	            "Invalid Branch",
 	            List.of(new FieldError("branchCode", "Branch not found or inactive"))
 	        ));
-
 
 
 
