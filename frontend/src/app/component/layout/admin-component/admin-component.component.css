@@ -338,6 +338,15 @@
   display: flex;
   flex-direction: column;
 }
+:host ::ng-deep .p-dropdown-panel {
+  max-height: 200px !important;
+  overflow-y: auto !important;
+}
+
+:host ::ng-deep .p-dropdown-items-wrapper {
+  max-height: 200px !important;
+  overflow-y: auto !important;
+}
 
 .form-field label {
   font-weight: 550;

@@ -102,7 +102,6 @@ branchOptions = [
 
 
   statusOptions = [
-    { label: 'All Statuses', value: null },
     { label: 'Active', value: 'ACTIVE' },
     { label: 'Inactive', value: 'INACTIVE' },
     { label: 'Suspended', value: 'SUSPENDED' },
