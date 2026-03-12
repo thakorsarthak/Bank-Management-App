@@ -13,6 +13,7 @@ import { PrivateMainComponent } from '../layouts/private-main/private-main.compo
 import { authGuardGuard } from './guards/auth-guard.guard';
 import { roleGuard } from './guards/role.guard';
 import { AdminComponentComponent } from '../features/Admin/admin-component/admin-component.component';
+import { AdminUserDetailComponent } from '../features/Admin/admin-user-detail/admin-user-detail.component';
 
 
 
@@ -65,6 +66,12 @@ const routes: Routes = [
       {
         path: 'adminDashboard',
         component: AdminComponentComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+        {
+        path: 'adminUserDetails',
+        component: AdminUserDetailComponent,
         canActivate: [roleGuard],
         data: { roles: ['ADMIN'] }
       }

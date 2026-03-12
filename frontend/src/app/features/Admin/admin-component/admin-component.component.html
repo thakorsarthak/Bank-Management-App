@@ -358,6 +358,8 @@
           <p-button label="Cancel" severity="secondary" (onClick)="closeDialog()">
           </p-button>
 
+          <p-button label="View More"  *ngIf="selectedEntity === 'USER'" [raised]="true" severity="info" />
+
           <p-button label="Update" *ngIf="selectedEntity === 'EMPLOYEE'" severity="success" [disabled]="entityForm.invalid" (onClick)="updateEmployee()">
           </p-button>
 

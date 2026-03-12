@@ -64,6 +64,7 @@ export class AdminComponentComponent implements OnInit {
   selectedEmployee!: Employee;
 
   selectedUser!: any;
+  selectedUserId!: number;
 
   entityForm!: FormGroup;
 
@@ -321,12 +322,15 @@ branchOptions = [
   viewUser(user: any): void {
       this.selectedUser = user;
 
+  this.selectedUserId = user.id;
+
     this.entityForm.patchValue({
       status: this.selectedUser.status,
       branchName: this.selectedUser.branch,
     });
     this.showEntityDialog = true;
   }
+
 
   //  Viewing employee 
 
