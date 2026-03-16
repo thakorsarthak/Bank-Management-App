@@ -38,18 +38,35 @@ public class securityConfig {
 
 				.csrf(customizer -> customizer.disable())
 				.authorizeHttpRequests(request -> request
-						.requestMatchers("/account/**",
-								"/transaction/**",
-								"/main/**",
-								"/otp/**",
+						// Swagger UI - public
+						.requestMatchers(
 								"/webjars/**",
 								"/swagger-ui/**",
 								"/swagger-ui.html",
 								"/v3/api-docs/**",
 								"/swagger-resources/**")
 						.permitAll()
+ 
+						// Public auth endpoints
+						.requestMatchers(
+								"/main/create",
+								"/main/login-account")
+						.permitAll()
+ 
+						// Public OTP endpoints (used before login for password/pin reset)
+						.requestMatchers(
+								"/otp/send",
+								"/otp/verify")
+						.permitAll()
+						.requestMatchers(
+								"/account/changePinWithOtp",
+								"/account/changePasswordWithOtp")
+						.permitAll()
+ 
+						// Admin-only endpoints
 						.requestMatchers("/admin/**")
-			            .hasRole("ADMIN")
+						.hasRole("ADMIN")
+						
 						.anyRequest().authenticated())
 				// .formLogin(Customizer.withDefaults())
 			//	.httpBasic(Customizer.withDefaults())

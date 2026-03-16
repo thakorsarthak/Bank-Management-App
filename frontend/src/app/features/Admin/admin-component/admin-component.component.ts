@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
@@ -44,7 +44,7 @@ export class AdminComponentComponent implements OnInit {
   users: any[] = [];
   totalRecords = 0;
   loading = false;
-  
+  router: Router = new Router();
 
   // FILTER MODEL
   selectedEntity!: string;
@@ -331,6 +331,9 @@ branchOptions = [
     this.showEntityDialog = true;
   }
 
+  viewMoreUser() {
+  this.router.navigate(['/privateMain/adminUserDetails', this.selectedUser.id]);
+}
 
   //  Viewing employee 
 

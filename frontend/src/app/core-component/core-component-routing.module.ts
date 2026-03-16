@@ -70,7 +70,7 @@ const routes: Routes = [
         data: { roles: ['ADMIN'] }
       },
         {
-        path: 'adminUserDetails',
+        path: 'adminUserDetails/:id',
         component: AdminUserDetailComponent,
         canActivate: [roleGuard],
         data: { roles: ['ADMIN'] }

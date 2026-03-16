@@ -2,7 +2,11 @@ package com.example.bankapp.entity;
 
 import java.time.LocalDateTime;
 
+import com.example.bankapp.enums.AuditStatus;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,18 +22,24 @@ public class AuditLog {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
+	private Long auditId; 
 
-	private String action;
+	private String performedBy; // employee or admin or user
+	
+	private Long performerId; 
+	
+	private String action; // update user , view user, changed status 
 
-	private String performedBy;
+	private String targetType; // user or employee
 
-	private String targetType;
+	private Long targetId;     // id      
 
-	private Long targetId;          // employeeId
+    private String oldValue;  
+    
+    private String newValue;	
+    
+    @Enumerated(EnumType.STRING)
+    private AuditStatus status;   
 
-    private String oldValue;
-    private String newValue;
-
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt;	
 }

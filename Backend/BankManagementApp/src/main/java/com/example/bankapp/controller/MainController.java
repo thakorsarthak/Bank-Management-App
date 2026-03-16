@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,7 +64,7 @@ public class MainController {
 //		return ResponseEntity.ok(accountDetailByAccountNo);
 //	}
 //
-
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/getallaccount")
 	public List<Account> getAllAccount() {
 		List<Account> listOfAccount = accountService.getAllAccountDetails();

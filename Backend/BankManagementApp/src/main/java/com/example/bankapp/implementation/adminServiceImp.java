@@ -58,6 +58,8 @@ public class adminServiceImp implements AdminService {
 	private final PasswordEncoder passwordEncoder;
 
 	private final BranchRepository branchRepo;
+	
+	private final AuditService auditLogService;
 
 
 	private final NotificationService notificationService;
@@ -233,6 +235,9 @@ public class adminServiceImp implements AdminService {
 			throw new  CustomValidationException("Can't change Employee to " + accountStatus);
 		}
 		acc.setStatus(accountStatus);
+		
+		
+		
 	}
 
 	// changing designation from admin dashboard

@@ -1,1 +1,235 @@
-<p>admin-user-detail works!</p>
+<div class="account">
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1 class="page-title">Account Dashboard</h1>
+      <p class="page-subtitle">Manage your banking experience</p>
+    </div>
+    <div class="hero-decoration">
+      <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-container">
+    <!-- Account Information Card -->
+    <div class="account-card-wrapper">
+      <div class="account-card glass-card">
+        <div class="card-header">
+          <div class="header-content">
+            <div class="header-icon">
+              <i class="pi pi-user"></i>
+            </div>
+            <div class="header-text">
+              <h2>Account Overview</h2>
+              <span class="header-subtitle">Your account information at a glance</span>
+            </div>
+          </div>
+          <div class="status-badge active">
+            <i class="pi pi-check-circle"></i>
+            <span>Active</span>
+          </div>
+        </div>
+
+        <div class="account-grid">
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="pi pi-user-plus"></i>
+            </div>
+            <div class="detail-content">
+              <span class="label">Account Holder</span>
+              <span class="value">{{ account?.accountHolderName }}</span>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="pi pi-envelope"></i>
+            </div>
+            <div class="detail-content">
+              <span class="label">Email Address</span>
+              <span class="value">{{ account?.email }}</span>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="pi pi-phone"></i>
+            </div>
+            <div class="detail-content">
+              <span class="label">Phone Number</span>
+              <span class="value">{{ account?.contact }}</span>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="pi pi-id-card"></i>
+            </div>
+            <div class="detail-content">
+              <span class="label">Account Number</span>
+              <span class="value">{{ account?.accountNumber }}</span>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="pi pi-tag"></i>
+            </div>
+            <div class="detail-content">
+              <span class="label">Account Type</span>
+              <span class="value">{{ account?.productType }}</span>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="pi pi-building"></i>
+            </div>
+            <div class="detail-content">
+              <span class="label">Branch</span>
+              <span class="value">{{ account?.branchName }}</span>
+            </div>
+          </div>
+
+           <div class="detail-card">
+            <div class="detail-icon">
+              <i class="pi pi-code"></i>
+            </div>
+            <div class="detail-content">
+              <span class="label">Branch Code</span>
+              <span class="value">{{ account?.branchCode }}</span>
+            </div>
+          </div>
+          
+
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="pi pi-code"></i>
+            </div>
+            <div class="detail-content">
+              <span class="label">IFSC Code</span>
+              <span class="value">{{ account?.ifscCode }}</span>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="pi pi-code"></i>
+            </div>
+            <div class="detail-content">
+              <span class="label">Account Status</span>
+              <span class="value">{{ account?.status }}</span>
+            </div>
+          </div>
+
+          <div class="detail-card balance-card">
+            <div class="detail-icon balance-icon">
+              <i class="pi pi-wallet"></i>
+            </div>
+            <div class="detail-content">
+              <span class="label">Current Balance</span>
+              <span class="value balance-value">₹{{ account?.balance }}</span>
+            </div>
+            <div class="balance-indicator">
+              <div class="indicator-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction Overview -->
+    <div class="transactions-section">
+      <div class="section-header">
+        <h3 class="section-title">Transaction Overview</h3>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card total-card">
+          <div class="card-background">
+            <div class="bg-pattern"></div>
+          </div>
+          <div class="summary-content">
+            <div class="summary-header">
+              <div class="summary-icon-container">
+                <i class="pi pi-chart-bar"></i>
+              </div>
+              <div class="summary-badge">
+                <span>Total</span>
+              </div>
+            </div>
+            <div class="summary-body">
+              <h3>Total Transactions</h3>
+              <div class="summary-number">{{ totalTransactions }}</div>
+              <span class="summary-subtitle">All time records</span>
+            </div>
+            <div class="summary-footer">
+              <div class="trend-indicator">
+                <i class="pi pi-arrow-up"></i>
+                <span>View all</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-card credit-card">
+          <div class="card-background">
+            <div class="bg-pattern"></div>
+          </div>
+          <div class="summary-content">
+            <div class="summary-header">
+              <div class="summary-icon-container">
+                <i class="pi pi-plus-circle"></i>
+              </div>
+              <div class="summary-badge credit">
+                <span>Credit</span>
+              </div>
+            </div>
+            <div class="summary-body">
+              <h3>Credit Transactions</h3>
+              <div class="summary-number">{{ creditTransactions }}</div>
+              <span class="summary-subtitle">Money received</span>
+            </div>
+            <div class="summary-footer">
+              <div class="trend-indicator positive">
+                <i class="pi pi-arrow-up"></i>
+                <span>+5.2%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-card debit-card">
+          <div class="card-background">
+            <div class="bg-pattern"></div>
+          </div>
+          <div class="summary-content">
+            <div class="summary-header">
+              <div class="summary-icon-container">
+                <i class="pi pi-minus-circle"></i>
+              </div>
+              <div class="summary-badge debit">
+                <span>Debit</span>
+              </div>
+            </div>
+            <div class="summary-body">
+              <h3>Debit Transactions</h3>
+              <div class="summary-number">{{ debitTransactions }}</div>
+              <span class="summary-subtitle">Money spent</span>
+            </div>
+            <div class="summary-footer">
+              <div class="trend-indicator negative">
+                <i class="pi pi-arrow-down"></i>
+                <span>-2.1%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
