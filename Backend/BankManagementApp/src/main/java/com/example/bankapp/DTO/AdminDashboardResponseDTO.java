@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class AdminDashboardResponseDTO {
 
 	 private Stats employees;
-	    private Stats users;
+	 private Stats users;
 
 	    @Data
 	    @AllArgsConstructor

@@ -1,10 +1,7 @@
 package com.example.bankapp.DTO;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-
-import com.example.bankapp.entity.Account;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,15 +11,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminUserResponseDTO {
-
-	private List<UserListDTO> users;
-	private long totalRecords;
-
-	public  static AdminUserResponseDTO fromPage(Page<Account> page) {
-
-		List<UserListDTO> list = page.getContent().stream().map(UserListDTO::from).toList();
-
-		return new AdminUserResponseDTO(list, page.getTotalElements());
-	}
+	private Long id;
+    private String accountNumber;
+    private String fullName;
+    private String email;
+    private String contact;
+    private String branch;
+    private String status;
+    private Double balance;
+    private String panNumber;
+    private String aadhaarNumber;
+    private LocalDate createdAt;
 
 }

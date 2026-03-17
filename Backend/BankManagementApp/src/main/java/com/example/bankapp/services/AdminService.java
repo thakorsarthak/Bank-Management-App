@@ -6,6 +6,7 @@ import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
+import com.example.bankapp.DTO.AdminUserTableResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.EmployeeListDTO;
 import com.example.bankapp.entity.Employee;
@@ -24,7 +25,7 @@ public interface AdminService {
 
 	public void updateDesignation(Long accountId, Designation designation);
 
-	public AdminUserResponseDTO getUsers(int page, int size, Long branchId, String sortField, String sortOrder,
+	public AdminUserTableResponseDTO getUsers(int page, int size, Long branchId, String sortField, String sortOrder,
 			AccountStatus status);
 
 	public AdminEmployeeResponseDTO getEmployees(
@@ -37,6 +38,8 @@ public interface AdminService {
             Designation designation);
 
 	//public List<AdminEmployeeResponseDTO> getAllEmployees();
+	
+	public AdminUserResponseDTO getUserDetails(Long accountId);
 
 	public void updateEmployee(Long employeeID , AccountUpdateRequestDTO employee);
 

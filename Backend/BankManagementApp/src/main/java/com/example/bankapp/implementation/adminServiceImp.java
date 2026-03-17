@@ -21,6 +21,7 @@ import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
+import com.example.bankapp.DTO.AdminUserTableResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.EmployeeListDTO;
 import com.example.bankapp.DTO.NotificationRequestDTO;
@@ -304,7 +305,7 @@ public class adminServiceImp implements AdminService {
 	}
 
 	@Override
-	public AdminUserResponseDTO getUsers(int page, int size, Long branchId ,String sortField, String sortOrder, AccountStatus status) {
+	public AdminUserTableResponseDTO getUsers(int page, int size, Long branchId ,String sortField, String sortOrder, AccountStatus status) {
 
 		 Pageable pageable = PageRequest.of(page, size,
 		           UserSortBulder.build(sortField, sortOrder));
@@ -333,10 +334,21 @@ public class adminServiceImp implements AdminService {
 		    Page<Account> accPage = accountRepo.findAll(spec, pageable);
 
 
-		    return AdminUserResponseDTO.fromPage(accPage);
+		    return AdminUserTableResponseDTO.fromPage(accPage);
 
 	}
 
+	@Override
+	public AdminUserResponseDTO getUserDetails(Long accountId) {
+		
+		Account account = accountRepo.findById(accountId)
+				.orElseThrow(( )-> new RuntimeException("User not found"));
+		
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 
 
 
@@ -449,6 +461,8 @@ public class adminServiceImp implements AdminService {
 		 auditLogService.log(AuditAction.USER_STATUS_UPDATED, userId,"USER", oldValues, newValues);
 
 	}
+
+	
 
 
 }

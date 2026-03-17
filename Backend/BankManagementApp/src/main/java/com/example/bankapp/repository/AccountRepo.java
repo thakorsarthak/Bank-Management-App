@@ -19,6 +19,8 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 
 	@Override
 	long count();
+	
+	Account findbyAccountId(Long accountId);
 
 	long countByStatus(AccountStatus status);
 

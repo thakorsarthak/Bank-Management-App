@@ -19,6 +19,7 @@ import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
+import com.example.bankapp.DTO.AdminUserTableResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
@@ -99,13 +100,13 @@ public class AdminController {
 	        @RequestParam(defaultValue = "ASC") String sortOrder,
 	        @RequestParam(required = false) AccountStatus status){
 
-		AdminUserResponseDTO dto = adminService.getUsers(page, size,branchId, sortField, sortOrder, status);
+		AdminUserTableResponseDTO dto = adminService.getUsers(page, size,branchId, sortField, sortOrder, status);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		System.out.println(auth.getAuthorities());
 
-		GlobalAPIResponseDTO<AdminUserResponseDTO> response =
+		GlobalAPIResponseDTO<AdminUserTableResponseDTO> response =
 				new	GlobalAPIResponseDTO<>("user fetched Successfully", true , dto);
 
 	    return ResponseEntity.ok(response) ;
@@ -144,6 +145,14 @@ public class AdminController {
 		adminService.updateEmployee(employeeId, emp);
 
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true));
+	}
+	
+	@PatchMapping("/user/{accountId}/viewUpdateUser")
+	public ResponseEntity<?> viewUpdateUser(@PathVariable Long accountId , @RequestBody AdminUserResponseDTO user){
+		
+		
+		
+		return null;
 	}
 
 	@PatchMapping("/user/{accountId}/updateUser")
