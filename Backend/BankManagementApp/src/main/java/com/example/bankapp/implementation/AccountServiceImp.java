@@ -237,7 +237,7 @@ public class AccountServiceImp implements AccountService {
 			// Step 3: Generate JWT token
 
 		    Role role = acc.getRole();
-			String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber() , role.name());
+			String token = jService.generateToken(acc.getEmail(),acc.getId(), acc.getAccountNumber() , role.name());
 			System.out.println("Token [From verify]: " + token);
 
 			String redisKey = "session:" + acc.getEmail();
@@ -402,6 +402,7 @@ public class AccountServiceImp implements AccountService {
 		return allaccount;
 	}
 
+	// this is old postman api
 	@Override
 	public String changePinWithOldPin(ChangePinRequestDTO changePin) {
 
@@ -414,12 +415,12 @@ public class AccountServiceImp implements AccountService {
 
 		Account account = byId.get();
 
-		if (!account.getPin().equals(changePin.getOldPin())) {
+		if (!passwordEncoder.matches(changePin.getOldPin(), account.getPin())){
 
 			throw new RuntimeException("Old PIN is Incorect");
 		}
 
-		if (!changePin.getNewPin().equals(changePin.getConfirsmPin())) {
+		if (!passwordEncoder.matches(changePin.getNewPin(),changePin.getConfirsmPin())) {
 
 			throw new RuntimeException("PIN and confirm PIN must be similar");
 		}

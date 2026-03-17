@@ -2,9 +2,13 @@ package com.example.bankapp.implementation;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +31,7 @@ import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Branch;
 import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
+import com.example.bankapp.enums.AuditAction;
 import com.example.bankapp.enums.Designation;
 import com.example.bankapp.enums.Role;
 import com.example.bankapp.repository.AccountRepo;
@@ -35,10 +40,12 @@ import com.example.bankapp.repository.BranchRepository;
 import com.example.bankapp.repository.EmployeeRepo;
 import com.example.bankapp.services.AdminService;
 import com.example.bankapp.services.AuditService;
+import com.example.bankapp.services.JWTservices;
 import com.example.bankapp.services.NotificationService;
 import com.example.bankapp.util.AccountStatusEmailTemplate;
 import com.example.bankapp.util.EmployeeSortBuilder;
 import com.example.bankapp.util.UserSortBulder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -60,7 +67,8 @@ public class adminServiceImp implements AdminService {
 	private final BranchRepository branchRepo;
 	
 	private final AuditService auditLogService;
-
+	
+	private final JWTservices jService;
 
 	private final NotificationService notificationService;
 
@@ -217,18 +225,23 @@ public class adminServiceImp implements AdminService {
 	@Transactional
 	public void updateStatusEmployee(Long employeeId, AccountStatus accountStatus) {
 
-		Optional<Employee> emp = employeeRepo.findById(employeeId);
+		Employee emp = employeeRepo.findById(employeeId)
+				.orElseThrow(() -> new RuntimeException("Employee not found"));
+		 
+		
 		List<FieldError> errors = new ArrayList<>();
 
-		Employee employee = emp.get();
+		//Employee employee = emp.get();
 
 		// Account account = accountRepo.findById(id);
-		if (emp.isEmpty()) {
+//		if (emp.isEmpty()) {
+//
+//			throw new RuntimeException("Account not found");
+//		}
 
-			throw new RuntimeException("Account not found");
-		}
+		Account acc = emp.getAccount();
 
-		Account acc = employee.getAccount();
+		AccountStatus oldStatus = acc.getStatus(); 
 
 		if(accountStatus == AccountStatus.PENDING_KYC || accountStatus == AccountStatus.REJECTED) {
 
@@ -236,7 +249,17 @@ public class adminServiceImp implements AdminService {
 		}
 		acc.setStatus(accountStatus);
 		
+		//auditLogService.log(AuditAction.EMPLOYEE_STATUS_UPDATED, null, employeeId, null, null, null);
 		
+		auditLogService.log(
+			    AuditAction.EMPLOYEE_STATUS_UPDATED,  
+			    acc.getId(),
+			    "EMPLOYEE",
+			    oldStatus.name(),
+			    accountStatus.name()
+			);
+		
+		accountRepo.save(acc);
 		
 	}
 
@@ -347,22 +370,45 @@ public class adminServiceImp implements AdminService {
 		}
 
 		System.out.println(account);
+		
+		Map<String, Object> oldValues = new LinkedHashMap<>();
+		Map<String, Object> newValues = new LinkedHashMap<>();
+	
 
-		if (req.getFullName() != null) {
+		if (req.getFullName() != null && !req.getFullName().equals(emp.getFullName())) {
+			oldValues.put("fullName", emp.getFullName());
+			newValues.put("fullName", req.getFullName());
 			emp.setFullName(req.getFullName());
 		}
 
-		if (req.getBranchCode() != null) {
+		if (req.getBranchCode() != null && !req.getBranchCode().equals(emp.getBranchCode())) {
+			oldValues.put("branchCode", emp.getBranchCode());
+			newValues.put("branchCode", req.getBranchCode());
 			emp.setBranchCode(req.getBranchCode());
 		}
 
-		if (req.getDesignation() != null) {
+		if (req.getDesignation() != null && !req.getDesignation().equals(emp.getDesignation()) ) {
+			oldValues.put("designation", emp.getDesignation());
+			newValues.put("designation", req.getDesignation());
 			emp.setDesignation(req.getDesignation());
 		}
 
-		if (req.getStatus() != null) {
+		if (req.getStatus() != null && !req.getStatus().equals(account.getStatus())) {
+			oldValues.put("status", account.getStatus());
+			newValues.put("status", req.getStatus());
 			account.setStatus(req.getStatus());
 		}
+		
+		
+		if(!oldValues.isEmpty()) {
+			auditLogService.log(
+					AuditAction.EMPLOYEE_UPDATED,
+					employeeId , 
+					"EMPLOYEE",
+					oldValues,
+					newValues);
+		}
+		
 	}
 
 	@Override
@@ -370,12 +416,17 @@ public class adminServiceImp implements AdminService {
 
 		Account acc = accountRepo.findById(userId)
 				.orElseThrow(() -> new CustomValidationException("User not found"));
+		
+		Map<String, Object> oldValues = new LinkedHashMap<>();
+		Map<String, Object> newValues = new LinkedHashMap<>();
 
-		if(req.getStatus() == AccountStatus.SUSPENDED) {
-			throw new  CustomValidationException("Can't change status to " + req.getStatus());
+		if(req.getStatus() == AccountStatus.SUSPENDED ) {
+			throw new  CustomValidationException("Can't change status to " + req.getStatus() + "Its only for Staff");
 		}
 
-		if (req.getStatus() != null) {
+		if (req.getStatus() != null && !req.getStatus().equals(acc.getStatus())) {
+			oldValues.put("status", acc.getStatus());
+			newValues.put("status", req.getStatus());
 			acc.setStatus(req.getStatus());
 		}
 
@@ -394,6 +445,8 @@ public class adminServiceImp implements AdminService {
 					    )
 				);
 		notificationService.sendTransactionNotification(userStatusNotification);
+		
+		 auditLogService.log(AuditAction.USER_STATUS_UPDATED, userId,"USER", oldValues, newValues);
 
 	}
 

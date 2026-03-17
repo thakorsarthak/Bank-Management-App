@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.NotificationRequestDTO;
@@ -144,6 +145,7 @@ public class TransactionServiceImp implements TransactionService {
 
 
 	@Override
+	@Transactional
 	public ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request) {
 
 		Optional<Account> toOptionalAcc = accountRepo.findByAccountNumber(request.getToAccountNumber());

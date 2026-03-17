@@ -54,6 +54,11 @@ public class CustomAcountDetails implements UserDetails {
     }
 
     // Extra getters for other fields (not required by Spring, but handy in app)
+    
+    public Long getId() {
+        return account.getId();
+    }
+    
     public String getAccountNumber() {
         return account.getAccountNumber();
     }

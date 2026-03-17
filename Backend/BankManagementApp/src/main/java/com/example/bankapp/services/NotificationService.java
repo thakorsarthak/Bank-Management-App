@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import com.example.bankapp.DTO.NotificationRequestDTO;
@@ -25,6 +27,8 @@ public class NotificationService {
 	@Value("${twilio.phone.number}")
 	private String twilioPhone;
 
+	
+	@Async
 	public void sendTransactionNotification(NotificationRequestDTO notification) {
 
 		if (notification.getEmail() != null && !notification.getEmail().isBlank()) {

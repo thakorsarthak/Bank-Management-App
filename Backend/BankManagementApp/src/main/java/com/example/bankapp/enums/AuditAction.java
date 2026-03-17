@@ -1,0 +1,15 @@
+package com.example.bankapp.enums;
+
+public enum AuditAction {
+	USER_CREATED,
+    USER_UPDATED,
+    USER_STATUS_UPDATED,
+    PASSWORD_RESET,
+    PIN_RESET,
+    ACCOUNT_BLOCKED,
+    ACCOUNT_UNBLOCKED,
+    EMPLOYEE_UPDATED,
+    EMPLOYEE_STATUS_UPDATED,
+    LOGIN_SUCCESS,
+    LOGIN_FAILED
+}
