@@ -147,12 +147,10 @@ public class AdminController {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true));
 	}
 	
-	@PatchMapping("/user/{accountId}/viewUpdateUser")
+	@PatchMapping("/user/{accountId}/viewUser")
 	public ResponseEntity<?> viewUpdateUser(@PathVariable Long accountId , @RequestBody AdminUserResponseDTO user){
 		
-		
-		
-		return null;
+		return ResponseEntity.ok(adminService.getUserDetails(accountId));
 	}
 
 	@PatchMapping("/user/{accountId}/updateUser")
