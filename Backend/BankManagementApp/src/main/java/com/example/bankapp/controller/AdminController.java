@@ -128,7 +128,7 @@ public class AdminController {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true));
 	}
 
-	//old one swagger 
+	//old one swagger
 	@PatchMapping("/employee/{accountId}/designation")
 	public ResponseEntity<?> updateDesignation(@PathVariable Long accountId,
 			@RequestBody UpdateEmployeeRequestDTO request) {
@@ -146,10 +146,10 @@ public class AdminController {
 
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true));
 	}
-	
+
 	@PatchMapping("/user/{accountId}/viewUser")
 	public ResponseEntity<?> viewUpdateUser(@PathVariable Long accountId , @RequestBody AdminUserResponseDTO user){
-		
+
 		return ResponseEntity.ok(adminService.getUserDetails(accountId));
 	}
 

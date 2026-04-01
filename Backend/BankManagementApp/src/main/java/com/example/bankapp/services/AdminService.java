@@ -38,7 +38,7 @@ public interface AdminService {
             Designation designation);
 
 	//public List<AdminEmployeeResponseDTO> getAllEmployees();
-	
+
 	public AdminUserResponseDTO getUserDetails(Long accountId);
 
 	public void updateEmployee(Long employeeID , AccountUpdateRequestDTO employee);

@@ -52,8 +52,8 @@ public class GlobalExceptionHandler {
 		ApiError error = new ApiError(500, "Internal server error", null);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 	}
-	
-	
+
+
 
 //	@ExceptionHandler(CustomValidationException.class)
 //    public ResponseEntity<GlobalAPIResponseDTO<?>> handleValidation(CustomValidationException ex) {

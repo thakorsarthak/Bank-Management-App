@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.bankapp.services.CustomAcountDetailService;
+import com.example.bankapp.services.CustomAccountDetailService;
 import com.example.bankapp.services.JWTservices;
 
 import jakarta.servlet.FilterChain;
@@ -91,7 +91,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
-			UserDetails userDetails = context.getBean(CustomAcountDetailService.class).loadUserByUsername(userName);
+			UserDetails userDetails = context.getBean(CustomAccountDetailService.class).loadUserByUsername(userName);
 
 			if (!jwtService.validateToken(token, userDetails)) {
 

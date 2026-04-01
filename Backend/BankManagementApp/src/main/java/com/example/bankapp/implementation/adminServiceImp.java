@@ -2,13 +2,11 @@ package com.example.bankapp.implementation;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,14 +44,13 @@ import com.example.bankapp.services.NotificationService;
 import com.example.bankapp.util.AccountStatusEmailTemplate;
 import com.example.bankapp.util.EmployeeSortBuilder;
 import com.example.bankapp.util.UserSortBulder;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class adminServiceImp implements AdminService {
+public class AdminServiceImp implements AdminService {
 
 	private final AccountRepo accountRepo;
 
@@ -66,9 +63,9 @@ public class adminServiceImp implements AdminService {
 	private final PasswordEncoder passwordEncoder;
 
 	private final BranchRepository branchRepo;
-	
+
 	private final AuditService auditLogService;
-	
+
 	private final JWTservices jService;
 
 	private final NotificationService notificationService;
@@ -228,8 +225,8 @@ public class adminServiceImp implements AdminService {
 
 		Employee emp = employeeRepo.findById(employeeId)
 				.orElseThrow(() -> new RuntimeException("Employee not found"));
-		 
-		
+
+
 		List<FieldError> errors = new ArrayList<>();
 
 		//Employee employee = emp.get();
@@ -242,26 +239,26 @@ public class adminServiceImp implements AdminService {
 
 		Account acc = emp.getAccount();
 
-		AccountStatus oldStatus = acc.getStatus(); 
+		AccountStatus oldStatus = acc.getStatus();
 
 		if(accountStatus == AccountStatus.PENDING_KYC || accountStatus == AccountStatus.REJECTED) {
 
 			throw new  CustomValidationException("Can't change Employee to " + accountStatus);
 		}
 		acc.setStatus(accountStatus);
-		
+
 		//auditLogService.log(AuditAction.EMPLOYEE_STATUS_UPDATED, null, employeeId, null, null, null);
-		
+
 		auditLogService.log(
-			    AuditAction.EMPLOYEE_STATUS_UPDATED,  
+			    AuditAction.EMPLOYEE_STATUS_UPDATED,
 			    acc.getId(),
 			    "EMPLOYEE",
 			    oldStatus.name(),
 			    accountStatus.name()
 			);
-		
+
 		accountRepo.save(acc);
-		
+
 	}
 
 	// changing designation from admin dashboard
@@ -340,15 +337,15 @@ public class adminServiceImp implements AdminService {
 
 	@Override
 	public AdminUserResponseDTO getUserDetails(Long accountId) {
-		
+
 		Account account = accountRepo.findById(accountId)
 				.orElseThrow(( )-> new RuntimeException("User not found"));
-		
+
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
+
+
 
 
 
@@ -382,10 +379,10 @@ public class adminServiceImp implements AdminService {
 		}
 
 		System.out.println(account);
-		
+
 		Map<String, Object> oldValues = new LinkedHashMap<>();
 		Map<String, Object> newValues = new LinkedHashMap<>();
-	
+
 
 		if (req.getFullName() != null && !req.getFullName().equals(emp.getFullName())) {
 			oldValues.put("fullName", emp.getFullName());
@@ -410,17 +407,17 @@ public class adminServiceImp implements AdminService {
 			newValues.put("status", req.getStatus());
 			account.setStatus(req.getStatus());
 		}
-		
-		
+
+
 		if(!oldValues.isEmpty()) {
 			auditLogService.log(
 					AuditAction.EMPLOYEE_UPDATED,
-					employeeId , 
+					employeeId ,
 					"EMPLOYEE",
 					oldValues,
 					newValues);
 		}
-		
+
 	}
 
 	@Override
@@ -428,7 +425,7 @@ public class adminServiceImp implements AdminService {
 
 		Account acc = accountRepo.findById(userId)
 				.orElseThrow(() -> new CustomValidationException("User not found"));
-		
+
 		Map<String, Object> oldValues = new LinkedHashMap<>();
 		Map<String, Object> newValues = new LinkedHashMap<>();
 
@@ -457,12 +454,12 @@ public class adminServiceImp implements AdminService {
 					    )
 				);
 		notificationService.sendTransactionNotification(userStatusNotification);
-		
+
 		 auditLogService.log(AuditAction.USER_STATUS_UPDATED, userId,"USER", oldValues, newValues);
 
 	}
 
-	
+
 
 
 }

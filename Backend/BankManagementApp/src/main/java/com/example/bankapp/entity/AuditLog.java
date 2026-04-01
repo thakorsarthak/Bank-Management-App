@@ -13,8 +13,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,30 +34,30 @@ public class AuditLog {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long auditId; 
+	private Long auditId;
 
 	private String performedBy; // employee or admin or user
-	
-	private Long performerId; 
-	
+
+	private Long performerId;
+
 	@Enumerated(EnumType.STRING)
 	private Role roleType;
-	
+
 	@Enumerated(EnumType.STRING)
-	private AuditAction action; // update user , view user, changed status 
+	private AuditAction action; // update user , view user, changed status
 
 	private String targetType; // user or employee
 
-	private Long targetId;     // id      
+	private Long targetId;     // id
 
 	@Column(columnDefinition = "JSON")
-    private String oldValue;  
-    
+    private String oldValue;
+
 	@Column(columnDefinition = "JSON")
-    private String newValue;	
-    
+    private String newValue;
+
     @Enumerated(EnumType.STRING)
-    private AuditStatus status;   
+    private AuditStatus status;
 
-    private LocalDateTime createdAt;	
+    private LocalDateTime createdAt;
 }

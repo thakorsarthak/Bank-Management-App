@@ -21,6 +21,8 @@ public class OTPConsumer {
 		this.smsService = smsService;
 	}
 
+
+	
 	// This listens to otp_queue
 	@RabbitListener(queues = RabbitMQConstants.OTP_QUEUE)
 	public void handleOtp(NotificationEvent event) {
@@ -40,7 +42,9 @@ public class OTPConsumer {
 
 	        } catch (Exception ex) {
 	            System.out.println("Error sending OTP: " + ex.getMessage());
-	            throw ex; // sending to DLQ automatically
+	            ex.printStackTrace();
+
+	            //throw ex; // sending to DLQ automatically
 	        }
 	}
 

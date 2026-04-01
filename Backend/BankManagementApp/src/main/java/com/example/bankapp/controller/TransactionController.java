@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/transaction")
-public class TransactionContoller {
+public class TransactionController {
 
 	@Autowired
 	TransactionService transactionService;

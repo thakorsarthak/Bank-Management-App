@@ -10,12 +10,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.enums.AccountStatus;
 
-public class CustomAcountDetails implements UserDetails {
+public class CustomAccountDetails implements UserDetails {
 
     private final Account account;
     private final String identifier; // the value user logged in with
 
-    public CustomAcountDetails(Account account, String identifier) {
+    public CustomAccountDetails(Account account, String identifier) {
         this.account = account;
         this.identifier = identifier;
     }
@@ -54,11 +54,11 @@ public class CustomAcountDetails implements UserDetails {
     }
 
     // Extra getters for other fields (not required by Spring, but handy in app)
-    
+
     public Long getId() {
         return account.getId();
     }
-    
+
     public String getAccountNumber() {
         return account.getAccountNumber();
     }
@@ -97,6 +97,6 @@ public class CustomAcountDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return account.getStatus()== AccountStatus.ACTIVE || account.getStatus()== AccountStatus.PENDING_KYC;
-        
+
     }
 }

@@ -152,7 +152,7 @@ public class TransactionServiceImp implements TransactionService {
 
 		Account fromAccount = accountRepo.findByAccountNumber(fromAccountNumber)
 				.orElseThrow(() -> new RuntimeException("Sender  does not Exist"));
-		
+
 		if(fromAccount.getStatus().equals(AccountStatus.PENDING_KYC)){
 			saveFailedTransaction(fromAccount, null, request, TransactionStatus.FAILED,
 					"KYC Pending", request.getToAccountNumber());
@@ -160,7 +160,7 @@ public class TransactionServiceImp implements TransactionService {
 					.body(new GlobalAPIResponseDTO<>("KYC Pending", false));
 		}
 
-		
+
 
 //		Account toAccount = accountRepo.findByAccountNumber(request.getToAccountNumber())
 //				.orElseThrow(() -> new RuntimeException("Receiver Account does not Exist"));

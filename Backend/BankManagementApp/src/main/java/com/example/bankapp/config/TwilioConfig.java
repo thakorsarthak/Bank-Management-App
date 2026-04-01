@@ -18,5 +18,9 @@ public class TwilioConfig {
     @PostConstruct
     public void init() {
         Twilio.init(sid, token);
+        System.out.println("Twilio SID loaded: " + sid.substring(0, 6) + "...");
+        System.out.println("Twilio token loaded: " + token.substring(0, 6) + "...");
     }
+    
+    
 }
