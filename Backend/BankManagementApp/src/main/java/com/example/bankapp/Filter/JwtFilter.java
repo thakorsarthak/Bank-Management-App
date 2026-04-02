@@ -2,6 +2,8 @@ package com.example.bankapp.Filter;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,6 +33,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
+	
+	private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -45,8 +49,10 @@ public class JwtFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 			return;
 		}
-
-		System.out.println(">> 	JwtFilter triggered for path: " + requestURI);
+		
+		log.debug("JwtFilter triggered for path: {}", requestURI);
+		
+		//System.out.println(">> 	JwtFilter triggered for path: " + requestURI);
 
 		String authHeader = request.getHeader("Authorization");
 
@@ -106,9 +112,17 @@ public class JwtFilter extends OncePerRequestFilter {
 			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+			//log.info("Token + Redis authenticated successfully");
 
 			System.out.println("Token + Redis is authenticated Successfully(JWT filter)");
 		}
+
+		
+		
+		
+		
+
 
 //		// Skip JWT + Redis validation for public endpoints
 //		if (requestURI.contains("/bankapp/main/login-account") || requestURI.contains("/bankapp/main/create")

@@ -21,7 +21,7 @@ import com.example.bankapp.Filter.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
-public class securityConfig {
+public class SecurityConfig {
 
 	@Autowired
 	private UserDetailsService userDetailsService;

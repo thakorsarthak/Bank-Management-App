@@ -12,6 +12,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,14 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class JWTservices {
-
+	
+	@Value("${jwt.secret}")
+	private String secretKey;
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
 
-	private String secretKey = "";
+	//private String secretKey = "";
 
 	public String extractTokenFromRequest(HttpServletRequest request) {
 	    String authHeader = request.getHeader("Authorization");
@@ -43,23 +46,23 @@ public class JWTservices {
 	    return null;
 	}
 
-	public JWTservices() {
-
-		try {
-			KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-
-			SecretKey sk = keyGen.generateKey();
-		    System.out.println("JWT Service initialized with key: " + sk);
-
-			secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
-		    System.out.println("JWT Service initialized with key: " + secretKey);
-
-
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public JWTservices() {
+//
+//		try {
+//			KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
+//
+//			SecretKey sk = keyGen.generateKey();
+//		    System.out.println("JWT Service initialized with key: " + sk);
+//
+//			secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
+//		    System.out.println("JWT Service initialized with key: " + secretKey);
+//
+//
+//		} catch (NoSuchAlgorithmException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 
 	public String generateToken(String email , Long id, String accountNumber , String role) {
