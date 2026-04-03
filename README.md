@@ -62,6 +62,22 @@ Redis session management, and role-based access control.
 
 ---
 
+---
+
+## 📸 Screenshots
+
+### API Documentation (Swagger UI)
+![Swagger Overview](docs/screenshots/swagger-overview.png)
+
+### Transaction Transfer Endpoint
+![Transfer API](docs/screenshots/swagger-transfer.png)
+
+### RabbitMQ Queues (OTP Queue + Dead Letter Queue)
+![RabbitMQ](docs/screenshots/rabbitmq-queues.png)
+
+### Redis Session Management
+![Redis](docs/screenshots/redis-session.png)
+
 ## 🚀 Running Locally
 
 ### Prerequisites
