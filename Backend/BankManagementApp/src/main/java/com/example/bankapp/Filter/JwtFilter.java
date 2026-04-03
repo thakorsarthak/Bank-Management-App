@@ -50,9 +50,9 @@ public class JwtFilter extends OncePerRequestFilter {
 			return;
 		}
 		
-		log.debug("JwtFilter triggered for path: {}", requestURI);
+		//log.debug("JwtFilter triggered for path: {}", requestURI);
 		
-		//System.out.println(">> 	JwtFilter triggered for path: " + requestURI);
+		System.out.println(">> 	JwtFilter triggered for path: " + requestURI);
 
 		String authHeader = request.getHeader("Authorization");
 
@@ -119,9 +119,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 
 		
-		
-		
-		
+	
 
 
 //		// Skip JWT + Redis validation for public endpoints
