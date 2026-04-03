@@ -71,7 +71,7 @@ public class JWTservices {
 		claims.put("accountNumber", accountNumber);
 		claims.put("role", role);
 
-		System.out.println("Role from JWTservice" + role);
+		System.out.println("Role from JWTservice: " + role);
 
 		String token = Jwts.builder()
 				.claims(claims)
@@ -84,10 +84,13 @@ public class JWTservices {
 		// return Jwts.builder() .claims() .add(claims) .subject(null);
 		// return "token";
 
-	 redisTemplate.opsForValue().set("session:" + accountNumber , token, 10 , TimeUnit.MINUTES );
+	// redisTemplate.opsForValue().set("session: " + accountNumber , token, 10 , TimeUnit.MINUTES );
+	
 
 	 return token;
 	}
+	
+	
 
 
 	private SecretKey getKey() {

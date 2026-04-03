@@ -241,9 +241,13 @@ public class AccountServiceImp implements AccountService {
 			System.out.println("Token [From verify]: " + token);
 
 			String redisKey = "session:" + acc.getEmail();
+			
+			System.out.println("Saving Redis Key: " + redisKey);
+			System.out.println("Saving Token: " + token);
 
-			// Step 4: Store token in Redis with TTL = 60 minutes
-			redisTemplate.opsForValue().set("session:" + acc.getEmail(), token, 60, TimeUnit.MINUTES);
+			// Step 4: Store token in Redis with TTL = 10 minutes 
+			//the ["session:"] should be same at all place where we need redis token in filter too 
+			redisTemplate.opsForValue().set("session:" + acc.getEmail(), token, 10, TimeUnit.MINUTES);
 
 			System.out.println("Redis saved token for " + redisKey);
 			// Step 5: Return token

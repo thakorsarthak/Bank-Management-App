@@ -81,10 +81,14 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 
 		// 3 for Redis session now
-
 		String redisKey = "session:" + email;
 
 		String storedToken = redisTemplate.opsForValue().get(redisKey);
+		
+//		System.out.println("Extracted Email: " + email);
+//		System.out.println("Redis Key Used: " + redisKey);
+//		System.out.println("Token From Request: " + token);
+//		System.out.println("Token From Redis: " + storedToken);
 
 		if (storedToken == null || !storedToken.equals(token)) {
 
