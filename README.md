@@ -1,49 +1,92 @@
-Bank Management System[Ongoing]
+# 🏦 Banking Management System
 
-This is a full-stack Bank Management System built with Spring Boot (Java) for the backend and Angular for the frontend. The project includes core banking features
-such as account creation, login with JWT, OTP verification,secure PIN reset, money transfer, transaction history as per user's choiced date,user's session management, Auto Session
-ending and restricted multiple login.
+A production-style banking backend built with Java 21 & Spring Boot 3 — 
+featuring microservices-ready architecture, event-driven notifications, 
+Redis session management, and role-based access control.
 
-Technologies Used
+---
 
-Backend
-- Java 17
-- Spring Boot
-- Spring Security (User Authentication)
-- Spring Data JPA 
-- MySQL
-- Twilio (for SMS OTP - simulated)
-- JavaMailSender (for Email OTP)
-- Redis (For session Mangement)
-- RabbitMQ (For Messaging)
+## 🏗️ Architecture
 
-Frontend
-- Angular 19
-- Angular Forms and Reactive Forms
-- Angular Routing
-- PrimeNG (UI Components)
+![Architecture](docs/architecture.png)
 
-Features
+---
 
-- Create a bank account
-- Login with JWT token
-- Send OTP via email and phone for PIN reset
-- Change PIN after OTP verification
-- Transfer money between accounts
-- View account details
-- View transaction history with before/after balances
+## ✅ Key Features
 
-Project Structure
+**Authentication & Security**
+- Multi-identifier login (email / phone / account number)
+- JWT authentication with Redis session store
+- BCrypt password + transaction PIN hashing
+- Role-based access: USER / EMPLOYEE / ADMIN
 
-Backend (Spring Boot)
-- `controller` - API endpoints
-- `service` and `serviceImpl` - Business logic
-- `model` - Entity and DTO classes
-- `repository` - Database operations
-- `security` - JWT and Spring Security config
+**Transaction Engine**
+- Fund transfers with atomic balance updates (`@Transactional`)
+- Deposit / withdrawal with full audit trail
+- Transaction history with pagination, sorting & date filtering
+- Excel export of transaction history (Apache POI)
 
-Frontend (Angular)
-- `pages/` - UI pages like login, dashboard, transfer, etc.
-- `services/` - API calls
-- `public-layout/` and `private-layout/` - Layouts for routing
-  
+**Event-Driven Notifications**
+- RabbitMQ with Topic Exchange for OTP & transaction alerts
+- Dead Letter Queue (DLQ) for failed message retry
+- Async email (JavaMail) + SMS (Twilio) notifications
+
+**Admin Dashboard**
+- Employee & user management with paginated, filterable tables
+- Dynamic JPA Specifications for multi-criteria filtering
+- Audit logging with old/new value JSON diffs
+- Bulk employee creation
+
+**Infrastructure**
+- Redis for session management and response caching
+- Docker Compose for Redis & RabbitMQ
+- Swagger / OpenAPI with JWT bearer auth configured
+- Custom GlobalExceptionHandler with structured error responses
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Language | Java 21 |
+| Framework | Spring Boot 3.4 |
+| Security | Spring Security + JWT + Redis |
+| Database | MySQL 8 + Spring Data JPA |
+| Messaging | RabbitMQ (Topic Exchange + DLQ) |
+| Caching | Redis |
+| Notifications | JavaMail + Twilio SMS |
+| Export | Apache POI (Excel) |
+| API Docs | Swagger / SpringDoc OpenAPI |
+| DevOps | Docker Compose |
+
+---
+
+## 🚀 Running Locally
+
+### Prerequisites
+- Java 21+, Maven, MySQL 8+
+- Docker (for Redis & RabbitMQ)
+
+### Steps
+```bash
+# 1. Start infrastructure
+docker-compose up -d
+
+# 2. Configure secrets
+cp src/main/resources/application-secret.properties.example \
+   src/main/resources/application-secret.properties
+# Fill in: DB password, JWT secret, Gmail, Twilio credentials
+
+# 3. Run the app
+mvn spring-boot:run
+```
+
+Swagger UI: `http://localhost:60000/bankapp/swagger-ui.html`
+
+---
+
+## 📐 Default Admin Credentials
+Email: `admin@gmail.com`
+Password: `Admin@1234`
+*(Change immediately in production)*
