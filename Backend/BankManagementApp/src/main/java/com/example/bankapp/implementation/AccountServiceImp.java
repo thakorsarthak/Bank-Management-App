@@ -200,7 +200,7 @@ public class AccountServiceImp implements AccountService {
 
 	}
 
-	// Identifier for Login through email, AccointNumber and Contact
+	//Getting  Identifier for Login through email, AccointNumber and Contact
 	@Override
 	public Optional<Account> findByIdentifier(String identifier) {
 		identifier = identifier.trim();
@@ -260,49 +260,7 @@ public class AccountServiceImp implements AccountService {
 		}
 	}
 
-	// Login Service
-//	@Override
-//	public String verify(AccountLoginDTO account) {
-//
-//		try {
-//			Authentication authentication = authManage.authenticate(
-//					new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword()));
-//
-//			if (!authentication.isAuthenticated()) {
-//	            return "Failed";
-//	        }
-//
-//			if (authentication.isAuthenticated()) {
-//
-//				Optional<Account> optionAcc = repo.findByIdentifier(account.getIdentifier());
-//
-//				if (optionAcc.isPresent()) {
-//
-//					Account acc = optionAcc.get();
-//					String token = jService.generateToken(acc.getEmail(), acc.getAccountNumber());
-//
-//					System.out.println("Token [From verify]: " + token);
-//
-//					String accountNum = acc.getAccountNumber();
-//					// TTL should match to token's
-//					redisTemplate.opsForValue().set("session:" + accountNum, token, 60, TimeUnit.MINUTES);
-//
-//					return token;
-//				} else {
-//					System.out.println("Account not found in database after authentication.");
-//					return "failed";
-//				}
-//			}
-//
-//			return "Failed"; // Should never reach here normally
-//
-//		} catch (AuthenticationException ex) {
-//			// log the error
-//			System.err.println(account.getIdentifier());
-//			System.out.println("Authentication failed: " + ex.getMessage());
-//			return "Failed";
-//		}
-//	}
+
 
 	@Override
 	public ResponseEntity<?> getAccountHolderName(String accountNumber) {
@@ -317,6 +275,8 @@ public class AccountServiceImp implements AccountService {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Sucsess", true, name));
 	}
 
+	
+	//old method extracting  holder name from token from token
 //	@Override
 //	public ResponseEntity<?> getAccountHolderN(HttpServletRequest request) {
 //
@@ -333,34 +293,7 @@ public class AccountServiceImp implements AccountService {
 //		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Success", true, name));
 //	}
 
-//	@Override
-//	public AccountResponseDTO getAccountDetailByAccountNo(String accountNumber) {
-//
-//		Optional<Account> account = repo.findByAccountNumber(accountNumber);
-//
-//		if (account.isEmpty()) {
-//			throw new RuntimeException("Account doesn't Exist");
-//		}
-//
-//		Account accountFound = account.get();
-//
-//		AccountResponseDTO response = new AccountResponseDTO();
-//
-//		response.setAccountHolderName(accountFound.getAccountHolderName());
-//		response.setAccountNumber(accountFound.getAccountNumber());
-//		response.setEmail(accountFound.getEmail());
-//		response.setBalance(accountFound.getBalance());
-//		response.setContact(accountFound.getContact());
-//
-//		response.setBranchCode(accountFound.getBranchCode());
-//		response.setBranchName(Branch.getNameByCode(accountFound.getBranchCode()));
-//
-//		response.setProductCode(accountFound.getProductCode());
-//		response.setProductType(ProductType.getNameByCode(accountFound.getProductCode()));
 
-//		return response;
-//
-//	}
 
 	@Override
 	public AccountResponseDTO getAccountDetailByAccountNo(HttpServletRequest request) {
