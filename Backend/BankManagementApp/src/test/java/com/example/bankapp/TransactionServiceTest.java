@@ -48,7 +48,7 @@ class TransactionServiceTest {
     @InjectMocks
     private TransactionServiceImp transactionService;
 
-    // ─── Helper ───────────────────────────────────────────
+    // ─── Helper so no need to create demo account again and again ───────────────────────────────────────────
     private Account buildAccount(String accNo, double balance, AccountStatus status) {
         Account account = new Account();
         account.setAccountNumber(accNo);
