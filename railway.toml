@@ -2,6 +2,10 @@
 builder = "NIXPACKS"
 buildCommand = "cd Backend/BankManagementApp && mvn clean package -DskipTests"
 
+
+[[deploy.envs]]
+rootDirectory = "Backend/BankManagementApp"
+
 [deploy]
 startCommand = "java -jar Backend/BankManagementApp/target/BankManagementApp-0.0.1-SNAPSHOT.jar"
 healthcheckPath = "/bankapp/swagger-ui.html"
