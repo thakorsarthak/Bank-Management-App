@@ -1,8 +1,9 @@
 [build]
 builder = "NIXPACKS"
+buildCommand = "cd Backend/BankManagementApp && mvn clean package -DskipTests"
 
 [deploy]
-startCommand = "java -jar target/BankManagementApp-0.0.1-SNAPSHOT.jar"
+startCommand = "java -jar Backend/target/BankManagementApp-0.0.1-SNAPSHOT.jar"
 healthcheckPath = "/bankapp/swagger-ui.html"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
