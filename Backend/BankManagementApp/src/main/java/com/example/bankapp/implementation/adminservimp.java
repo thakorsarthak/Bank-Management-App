@@ -50,7 +50,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class adminServiceImp implements AdminService {
+public class AdminServiceImp implements AdminService {
 
 	private final AccountRepo accountRepo;
 
