@@ -1,7 +1,6 @@
 [build]
 builder = "NIXPACKS"
 buildCommand = "cd Backend/BankManagementApp && mvn clean package -DskipTests"
-nixPkgs = ["jdk21", "maven"]
 
 [deploy]
 startCommand = "java -jar Backend/BankManagementApp/target/BankManagementApp-0.0.1-SNAPSHOT.jar"
