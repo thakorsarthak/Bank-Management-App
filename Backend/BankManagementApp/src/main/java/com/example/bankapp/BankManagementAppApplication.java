@@ -15,21 +15,8 @@ import jakarta.annotation.PostConstruct;
 @EnableAsync
 public class BankManagementAppApplication {
 	
-	 @Autowired
-	private RedisTemplate<String, Object> redisTemplate;
-	
 	public static void main(String[] args) {
 		SpringApplication.run(BankManagementAppApplication.class, args);
 	}
-	
-
-    @PostConstruct
-    public void testRedis() {
-        try {
-            redisTemplate.opsForValue().set("test", "working");
-            System.out.println("✅ Redis connected successfully");
-        } catch (Exception e) {
-            System.out.println("❌ Redis connection failed: " + e.getMessage());
-        }
-    }
+   
 }
