@@ -22,7 +22,7 @@ public class CorsConfig {
                         .allowedOrigins(
                         "http://localhost:60001", // Angular dev server
                         "http://localhost:4200",
-                        "${FRONTEND_URL:https://bank-management-eight.vercel.app/}" 
+                        "https://bank-management-eight.vercel.app/" 
                         )
                         .allowedMethods("GET", "POST","PATCH", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("Authorization", "Content-Type", "Accept")
