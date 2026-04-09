@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GlobalAPIResponse } from '../models/global-api-response.model';
 import { Transaction } from '../models/transaction.model';
-import { environment } from '../../../environment/environment';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({

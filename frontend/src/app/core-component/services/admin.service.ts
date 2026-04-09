@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GlobalAPIResponse } from '../models/global-api-response.model';
-import { environment } from '../../../environment/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
