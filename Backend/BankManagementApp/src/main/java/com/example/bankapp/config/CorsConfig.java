@@ -19,7 +19,11 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // Apply to all endpoints
-                        .allowedOrigins("http://localhost:60001") // Angular dev server
+                        .allowedOrigins(
+                        "http://localhost:60001", // Angular dev server
+                        "http://localhost:4200",
+                        "${FRONTEND_URL:https://bank-management-eight.vercel.app}" 
+                        )
                         .allowedMethods("GET", "POST","PATCH", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("Authorization", "Content-Type", "Accept")
                         .allowCredentials(true);
