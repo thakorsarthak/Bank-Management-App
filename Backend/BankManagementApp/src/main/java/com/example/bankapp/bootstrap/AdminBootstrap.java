@@ -35,7 +35,7 @@ public class AdminBootstrap {
 				admin.setRole(Role.ADMIN);
 				admin.setStatus(AccountStatus.ACTIVE);
 				admin.setBalance(0.0);
-				Branch branch = branchRepository.findByBranchCodeAndActiveTrue("1001").get();
+				Branch branch = branchRepository.findByBranchCodeAndActiveTrue("1001").orElseThrow(() -> new RuntimeException("Branch not found during admin bootstrap. Check branch_code config."));
 
 				admin.setBranch(branch);
 
