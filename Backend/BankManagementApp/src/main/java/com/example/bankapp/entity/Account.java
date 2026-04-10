@@ -57,7 +57,7 @@ public class Account {
 	private String pin;
 
 	@Column(unique = true)
-	private Long contact;
+	private String contact;
 
 	@Column(name = "pan_number", length = 20)
 	private String panNo;

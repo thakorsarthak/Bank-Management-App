@@ -33,7 +33,8 @@ public class AccountSignUpDTO {
 	private String confirmPin;
 
 	@Column(nullable = false, unique = true)
-	private Long contact;
+	@Pattern(regexp = "^[0-9]{10}$", message = "Number must be 10 digits")
+	private String contact;
 
 	@Column(nullable = false, length = 20 , unique = true)
 	@NotBlank(message = "PAN is required")

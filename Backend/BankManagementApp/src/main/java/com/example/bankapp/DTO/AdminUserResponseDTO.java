@@ -1,6 +1,11 @@
 package com.example.bankapp.DTO;
 
+import java.time.Instant;
 import java.time.LocalDate;
+
+
+import com.example.bankapp.enums.AccountStatus;
+import com.example.bankapp.enums.AccountType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,16 +15,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminUserResponseDTO {
-	private Long id;
     private String accountNumber;
-    private String fullName;
+    private String accountHolderName;
     private String email;
     private String contact;
-    private String branch;
-    private String status;
     private Double balance;
     private String panNumber;
     private String aadhaarNumber;
-    private LocalDate createdAt;
-
+    private Instant createdAt;
+    private String branchCode;
+    private String ifscCode;
+    private String branchName;
+    private AccountStatus status;
+    private String productType;
 }

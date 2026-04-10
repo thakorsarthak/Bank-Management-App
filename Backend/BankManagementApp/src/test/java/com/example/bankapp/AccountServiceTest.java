@@ -61,7 +61,7 @@ class AccountServiceTest {
     void shouldThrowExceptionWhenEmailAlreadyExists() {
         AccountSignUpDTO dto = new AccountSignUpDTO();
         dto.setEmail("test@example.com");
-        dto.setContact(9876543210L);
+        dto.setContact("7899758769L");
         dto.setAadhaarNo("123456789012");
         dto.setPanNo("ABCDE1234F");
         dto.setPin("1234");

@@ -32,9 +32,17 @@ export class AdminService {
     );
   }
 
+
    updateUser(accountId: number, payload: any) {
     return this.http.patch<GlobalAPIResponse<any>>(
       `${this.apiUrl}/admin/user/${accountId}/updateUser`,
+      payload
+    );
+  }
+
+  viewUser(accountId: number , payload: any) {
+    return this.http.patch<GlobalAPIResponse<any>>(
+      `${this.apiUrl}/admin/user/${accountId}/viewUser`,
       payload
     );
   }

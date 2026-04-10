@@ -30,6 +30,7 @@ import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Branch;
 import com.example.bankapp.entity.Employee;
 import com.example.bankapp.enums.AccountStatus;
+import com.example.bankapp.enums.AccountType;
 import com.example.bankapp.enums.AuditAction;
 import com.example.bankapp.enums.Designation;
 import com.example.bankapp.enums.Role;
@@ -43,6 +44,7 @@ import com.example.bankapp.services.JWTservices;
 import com.example.bankapp.services.NotificationService;
 import com.example.bankapp.util.AccountStatusEmailTemplate;
 import com.example.bankapp.util.EmployeeSortBuilder;
+import com.example.bankapp.util.MaskUtil;
 import com.example.bankapp.util.UserSortBulder;
 
 import lombok.RequiredArgsConstructor;
@@ -336,13 +338,38 @@ public class AdminServiceImp implements AdminService {
 	}
 
 	@Override
-	public AdminUserResponseDTO getUserDetails(Long accountId) {
+	public  AdminUserResponseDTO getUserDetails(Long accountId) {
 
-		Account account = accountRepo.findById(accountId)
+		Account accountFound = accountRepo.findById(accountId)
 				.orElseThrow(( )-> new RuntimeException("User not found"));
-
+		
+		
+		
+	 AdminUserResponseDTO response = new AdminUserResponseDTO();
+	 
+	 	response.setAccountNumber(accountFound.getAccountNumber());
+	 	response.setAccountHolderName(accountFound.getAccountHolderName());
+		response.setEmail(accountFound.getEmail());
+		response.setBalance(accountFound.getBalance());
+		response.setAadhaarNumber(MaskUtil.maskAadhaar(accountFound.getAadhaarNo()));
+		response.setStatus(accountFound.getStatus());
+		response.setCreatedAt(accountFound.getCreatedAt());
+		response.setContact(MaskUtil.maskContact(accountFound.getContact()));
+		response.setPanNumber(MaskUtil.maskPan(accountFound.getPanNo()));
+		
+		Branch branch = accountFound.getBranch();
+		response.setBranchCode(branch.getBranchCode());
+		response.setBranchName(branch.getBranchName());
+		response.setIfscCode(branch.getIfscCode());
+	
+		response.setStatus(accountFound.getStatus());
+		response.setProductType(accountFound.getAccountType().name());
+		
+		
+		System.out.println("(From Admin)User Details fetched succesfully :" + response);
+		
 		// TODO Auto-generated method stub
-		return null;
+		return response;
 	}
 
 

@@ -19,30 +19,35 @@ totalTransactions = 0;
 
   constructor(
   private route: ActivatedRoute,
-  private userService: AdminService,
-  private transactionService: TransactionService
+  private adminservice: AdminService,
+  private transactionService: TransactionService,
 ) {}
 
   ngOnInit() {
-
     console.log('AdminUserDetailComponent initialized');
     this.accountId = this.route.snapshot.paramMap.get('id');
-     this.transactionService.getAccountHolderDetails().subscribe(data => {
-      this.account = data;
+    console.log('Extracted accountId:', this.accountId);
+     this.adminservice.viewUser(Number(this.accountId), {}).subscribe({
+       next: (data) => {
+        this.account = data;
     
-     this.transactionService.getTransactionHistory().subscribe({
-        next: (res) => {
-          const transactions = res.data; // assuming GlobalAPIResponse<Transaction[]>
+        this.transactionService.getTransactionHistory().subscribe({
+          next: (res) => {
+            const transactions = res.data; // assuming GlobalAPIResponse<Transaction[]>
 
-          this.totalTransactions = transactions.length;
-          this.creditTransactions = transactions.filter(t => t.direction === 'CREDIT').length;
-          this.debitTransactions = transactions.filter(t => t.direction === 'DEBIT').length;
-        },
-        error: (err) => {
-          console.error('Failed to fetch transactions:', err);
-        }
-      });
-       });
+            this.totalTransactions = transactions.length;
+            this.creditTransactions = transactions.filter(t => t.direction === 'CREDIT').length;
+            this.debitTransactions = transactions.filter(t => t.direction === 'DEBIT').length;
+          },
+          error: (err) => {
+            console.error('Failed to fetch transactions:', err);
+          }
+        });
+       },
+       error: (err) => {
+         console.error('Failed to fetch user:', err);
+       }
+     });
 
   }
 

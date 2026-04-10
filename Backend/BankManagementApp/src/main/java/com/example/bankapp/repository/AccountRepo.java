@@ -20,24 +20,21 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 	@Override
 	long count();
 
-	//Account findbyAccountId(Long accountId);
-
 	long countByStatus(AccountStatus status);
 
 	boolean existsByEmail(String email);
 
-	boolean existsByContact(Long contact);
+	boolean existsByContact(String contact);
 
 	boolean existsByAadhaarNo(String aadharNo);
 
 	boolean existsByPanNo(String panNo);
 
-	@Override
 	Optional<Account>findById(Long id);
 
 	Optional<Account> findByEmail(String email);
 
-	Optional<Account> findByContact(Long Contact);
+	Optional<Account> findByContact(String Contact);
 
 	Optional<Account> findByAccountNumber(String accountNumber);
 
@@ -59,10 +56,12 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 	//Was Created to use in Login but not using it now
 	@Query("SELECT a FROM Account a WHERE " +
 		       "a.email = :id OR " +
-		       "CAST(a.contact AS string) = :id OR " +
+		       "a.contact = :id OR " +
 		       "a.aadhaarNo = :id OR " +
 		       "a.panNo = :id")
 	Optional<Account> findByIdentifier(@Param("id") String identifier);
+
+	
 
 
 

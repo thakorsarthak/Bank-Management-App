@@ -20,7 +20,7 @@ public class AccountUpdateRequestDTO {
 	private String email;
 	private String accountType;
 	private Double balance;
-	private Long contact;
+	private String contact;
 	private String panNo;
 	private String aadharNo;
 	private Designation designation;

@@ -17,7 +17,7 @@ public class UserListDTO {
 
 	private Long id;
 	private String holderName;
-	private Long contact;
+	private String contact;
 	private String email;
 	private AccountStatus status;
 	private String branch;

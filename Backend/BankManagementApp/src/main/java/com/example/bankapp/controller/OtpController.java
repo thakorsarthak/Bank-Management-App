@@ -47,9 +47,7 @@ public class OtpController {
 					numericPhone = numericPhone.substring(2);
 				}
 
-				Long contact = Long.parseLong(numericPhone);
-
-				accountExists = accountRepo.existsByContact(contact);
+				accountExists = accountRepo.existsByContact(numericPhone);
 			} catch (NumberFormatException e) {
 				return ResponseEntity.badRequest()
 						.body(new GlobalAPIResponseDTO<>("Invalid phone number format",false));
@@ -85,8 +83,8 @@ public class OtpController {
                 if (numericPhone.length() > 10 && numericPhone.startsWith("91")) {
                     numericPhone = numericPhone.substring(2);
                 }
-				Long contact = Long.parseLong(numericPhone);
-				accountExists = accountRepo.existsByContact(contact);
+				
+				accountExists = accountRepo.existsByContact(numericPhone);
 			} catch (NumberFormatException e) {
 				return ResponseEntity.badRequest()
 						.body(new GlobalAPIResponseDTO<>("Invalid phone number format" , false));

@@ -208,7 +208,7 @@ public class AccountServiceImp implements AccountService {
 		if (identifier.contains("@")) {
 			return repo.findByEmail(identifier.toLowerCase());
 		} else if (identifier.matches("\\d{10}")) {
-			return repo.findByContact(Long.parseLong(identifier));
+			return repo.findByContact(identifier);
 		} else {
 			return repo.findByAccountNumber(identifier);
 		}
@@ -388,10 +388,9 @@ public class AccountServiceImp implements AccountService {
 				phoneNo = phoneNo.substring(2);
 			}
 			// System.out.println(phoneNo);
-			Long phoneNumber = Long.parseLong(phoneNo);
 			// System.out.println(phoneNumber);
 
-			account = repo.findByContact(phoneNumber)
+			account = repo.findByContact(phoneNo)
 					.orElseThrow(() -> new RuntimeException("No account found with this Contact No"));
 		}
 
@@ -423,10 +422,10 @@ public class AccountServiceImp implements AccountService {
 				phoneNo = phoneNo.substring(2);
 			}
 			// System.out.println(phoneNo);
-			Long phoneNumber = Long.parseLong(phoneNo);
+		
 			// System.out.println(phoneNumber);
 
-			account = repo.findByContact(phoneNumber)
+			account = repo.findByContact(phoneNo)
 					.orElseThrow(() -> new RuntimeException("No account found with this Contact No"));
 		}
 
