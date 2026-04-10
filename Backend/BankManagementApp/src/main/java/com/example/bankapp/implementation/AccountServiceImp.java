@@ -402,7 +402,6 @@ public class AccountServiceImp implements AccountService {
 		account.setPin(passwordEncoder.encode(resetPin.getNewPin()));
 		repo.save(account);
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("PIN updated successfully", true));
-
 	}
 
 	@Override
@@ -437,7 +436,8 @@ public class AccountServiceImp implements AccountService {
 
 		account.setPassword(passwordEncoder.encode(resestPassword.getNewPassword()));
 		repo.save(account);
-		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("PIN updated successfully", true));
+		System.out.println("Password changed succesfully");
+		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Password updated successfully", true));
 
 	}
 

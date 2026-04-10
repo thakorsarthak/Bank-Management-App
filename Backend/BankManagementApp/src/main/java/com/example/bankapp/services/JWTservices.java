@@ -102,7 +102,6 @@ public class JWTservices {
 		return extractClaims(token, Claims::getSubject);
 	}
 
-
 	public String extractAccountNumber(String token) {
 	    return extractClaims(token, claims -> claims.get("accountNumber").toString());
 	}
@@ -127,7 +126,7 @@ public class JWTservices {
 
 	public boolean validateToken(String token, UserDetails userDetails) {
 		final String userName = extractUserName(token);
-		System.out.println("From from jwtservice: "+userName);
+		System.out.println("From jwtservice: "+userName);
 		return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
 

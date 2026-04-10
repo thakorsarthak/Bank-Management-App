@@ -30,5 +30,9 @@ constructor(private http: HttpClient) { }
    setPinWithOtp(obj:any):Observable<any[]>{
       return this.http.put<any>(`${this.apiUrl}/account/changePasswordWithOtp`,obj)
   }
+
+  logoutAccount():Observable<any>{
+      return this.http.post<any>(`${this.apiUrl}/account/logout`,{})
+  }
  
 }

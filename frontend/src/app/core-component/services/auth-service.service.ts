@@ -2,15 +2,17 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthServiceService {
+
   private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
   public isLoggedIn$ = this.loggedInSubject.asObservable();
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private accountService: AccountService) { }
 
   private hasToken(): boolean {
     return !!localStorage.getItem('token');

@@ -12,6 +12,7 @@ import { PasswordModule } from 'primeng/password';
 import { AvatarModule } from 'primeng/avatar';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { AuthServiceService } from '../../../core-component/services/auth-service.service';
+import { AccountService } from '../../../core-component/services/account.service';
 
 @Component({
   selector: 'app-private-header',
@@ -32,7 +33,7 @@ export class PrivateHeaderComponent {
   remainingTime: string = '';
   private timerInterval: any;
 
-  constructor(private authService: AuthServiceService, private router: Router) { }
+  constructor(private authService: AuthServiceService, private router: Router, private accountService: AccountService) { }
 
 
 
@@ -129,8 +130,15 @@ export class PrivateHeaderComponent {
   }
 
   onLogout() {
-    // Clear user session and token here
+     this.accountService.logoutAccount().subscribe({
+      next: () => {
+        console.log('Logout successful');},
+      error: (err) => {
+        console.error('Logout failed', err);
+      }
+    });
 
+    // Clear user session and token here
     this.authService.logout();
 
     console.log('User logged out');

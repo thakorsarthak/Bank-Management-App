@@ -69,11 +69,13 @@ public class AccountController {
 
 	@PostMapping("/logout")
 	public ResponseEntity<?> logout(HttpServletRequest request) {
+		
 		String token = jwtService.extractTokenFromRequest(request);
-		String accountNumber = jwtService.extractAccountNumber(token);
-
-		redisTemplate.delete("session:" + accountNumber);
-
+		String userName = jwtService.extractUserName(token);
+		//cause we extracting email as userName
+		System.out.println("-----> Inside logout");
+		redisTemplate.delete("session:" + userName);
+		System.err.println("---->Token deleted from Redis");
 		return ResponseEntity.ok("Logged out successfully");
 	}
 

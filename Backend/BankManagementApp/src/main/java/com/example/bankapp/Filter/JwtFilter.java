@@ -78,7 +78,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		} catch (Exception e) {
 
 			unauthorized(response, "Invalid Token");
-			return;
+			return ;
 			// TODO: handle exception
 		}
 
