@@ -83,7 +83,7 @@ public class OtpController {
                 if (numericPhone.length() > 10 && numericPhone.startsWith("91")) {
                     numericPhone = numericPhone.substring(2);
                 }
-				
+
 				accountExists = accountRepo.existsByContact(numericPhone);
 			} catch (NumberFormatException e) {
 				return ResponseEntity.badRequest()

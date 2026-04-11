@@ -1,11 +1,8 @@
 package com.example.bankapp.DTO;
 
 import java.time.Instant;
-import java.time.LocalDate;
-
 
 import com.example.bankapp.enums.AccountStatus;
-import com.example.bankapp.enums.AccountType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,33 +1,32 @@
 package com.example.bankapp;
 
-import com.example.bankapp.DTO.AccountLoginDTO;
-import com.example.bankapp.DTO.AccountSignUpDTO;
-import com.example.bankapp.Exception.CustomValidationException;
-import com.example.bankapp.entity.Account;
-import com.example.bankapp.entity.Branch;
-import com.example.bankapp.enums.AccountStatus;
-import com.example.bankapp.enums.Role;
-import com.example.bankapp.implementation.AccountServiceImp;
-import com.example.bankapp.repository.AccountRepo;
-import com.example.bankapp.repository.BranchRepository;
-import com.example.bankapp.repository.TransactionRepo;
-import com.example.bankapp.services.JWTservices;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import com.example.bankapp.DTO.AccountLoginDTO;
+import com.example.bankapp.DTO.AccountSignUpDTO;
+import com.example.bankapp.entity.Account;
+import com.example.bankapp.implementation.AccountServiceImp;
+import com.example.bankapp.repository.AccountRepo;
+import com.example.bankapp.repository.BranchRepository;
+import com.example.bankapp.repository.TransactionRepo;
+import com.example.bankapp.services.JWTservices;
 
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest {

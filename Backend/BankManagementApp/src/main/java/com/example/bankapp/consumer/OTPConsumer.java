@@ -22,7 +22,7 @@ public class OTPConsumer {
 	}
 
 
-	
+
 	// This listens to otp_queue
 	@RabbitListener(queues = RabbitMQConstants.OTP_QUEUE)
 	public void handleOtp(NotificationEvent event) {

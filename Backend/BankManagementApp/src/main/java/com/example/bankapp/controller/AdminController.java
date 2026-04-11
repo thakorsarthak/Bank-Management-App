@@ -152,6 +152,9 @@ public class AdminController {
 
 		return ResponseEntity.ok(adminService.getUserDetails(accountId));
 	}
+	
+	
+	@GetMapping("/user/")
 
 	@PatchMapping("/user/{accountId}/updateUser")
 	public ResponseEntity<?> updateUserStatus(@PathVariable Long accountId,

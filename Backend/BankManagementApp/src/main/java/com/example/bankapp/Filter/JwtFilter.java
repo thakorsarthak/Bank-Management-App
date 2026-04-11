@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
-	
+
 	private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
 
 	@Override
@@ -49,12 +49,12 @@ public class JwtFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 			return;
 		}
-		
+
 		//log.debug("JwtFilter triggered for path: {}", requestURI);
-		
+
 		System.out.println(">> 	JwtFilter triggered for path: " + requestURI);
-		
-		
+
+
 
 		String authHeader = request.getHeader("Authorization");
 
@@ -86,12 +86,12 @@ public class JwtFilter extends OncePerRequestFilter {
 		String redisKey = "session:" + email;
 
 		String storedToken = redisTemplate.opsForValue().get(redisKey);
-		
+
 //		System.out.println("Extracted Email: " + email);
 //		System.out.println("Redis Key Used: " + redisKey);
 //		System.out.println("Token From Request: " + token);
 //		System.out.println("Token From Redis: " + storedToken);
-		
+
 		try {
 		    redisTemplate.opsForValue().set(redisKey, token);
 		    log.info("Redis save SUCCESS for key: {}", redisKey);
@@ -106,9 +106,9 @@ public class JwtFilter extends OncePerRequestFilter {
 			unauthorized(response, "Invalid Token or Redis Session Expired(JWT filter)");
 			return;
 		}
-		
-		
-		
+
+
+
 
 		// for Authentication Context
 
@@ -129,14 +129,14 @@ public class JwtFilter extends OncePerRequestFilter {
 			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			
+
 			//log.info("Token + Redis authenticated successfully");
 
 			System.out.println("Token + Redis is authenticated Successfully(JWT filter)");
 		}
 
-		
-	
+
+
 
 
 //		// Skip JWT + Redis validation for public endpoints

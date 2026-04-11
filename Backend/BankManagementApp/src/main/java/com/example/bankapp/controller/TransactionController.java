@@ -52,7 +52,8 @@ public class TransactionController {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Transaction history fetched Successfuly", true, history));
 	}
 
-	@PutMapping("/tranfer")
+
+	@PutMapping("/transfer")
 	public ResponseEntity<?> tranferAmount(@RequestBody @Valid TransferRequestDTO dto, HttpServletRequest httpRequest) {
 
 		String token = jwtService.extractTokenFromRequest(httpRequest);

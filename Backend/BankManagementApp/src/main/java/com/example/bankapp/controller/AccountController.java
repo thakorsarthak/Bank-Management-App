@@ -69,7 +69,7 @@ public class AccountController {
 
 	@PostMapping("/logout")
 	public ResponseEntity<?> logout(HttpServletRequest request) {
-		
+
 		String token = jwtService.extractTokenFromRequest(request);
 		String userName = jwtService.extractUserName(token);
 		//cause we extracting email as userName

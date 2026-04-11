@@ -18,8 +18,7 @@ package com.example.bankapp.Exception;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,7 +29,6 @@ import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
 	// Handles validation errors (like @NotBlank, @Size)
 	@ExceptionHandler(CustomValidationException.class)
 	public ResponseEntity<GlobalAPIResponseDTO<List<FieldError>>> handleCustomValidation(CustomValidationException ex) {
@@ -38,26 +36,33 @@ public class GlobalExceptionHandler {
 //		ApiError error = new ApiError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), ex.getErrors());
 //		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 
+		if (ex.getErrors() != null) {
+			return ResponseEntity.badRequest().body(new GlobalAPIResponseDTO<>(ex.getMessage(), false, ex.getErrors()));
+		}
 
-	    if (ex.getErrors() != null) {
-	        return ResponseEntity.badRequest()
-	                .body(new GlobalAPIResponseDTO<>(ex.getMessage(), false, ex.getErrors()));
-	    }
-
-	    return ResponseEntity.badRequest()
-	            .body(new GlobalAPIResponseDTO<>(ex.getMessage(), false));
+		return ResponseEntity.badRequest().body(new GlobalAPIResponseDTO<>(ex.getMessage(), false));
 
 	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiError> handleGlobal(Exception ex) {
 
-		ApiError error = new ApiError(500, "Internal server error", null);
+		ex.printStackTrace();
+
+		ApiError error = new ApiError(500, "Something went wrong. Please try again.Internal server error", null);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 
 	}
 
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<ApiError> handleDB(DataIntegrityViolationException ex) {
+		return ResponseEntity.badRequest().body(new ApiError(400, "Database error: invalid operation", null));
+	}
 
+	@ExceptionHandler(NullPointerException.class)
+	public ResponseEntity<ApiError> handleNull(NullPointerException ex) {
+		return ResponseEntity.badRequest().body(new ApiError(400, "Invalid data sent", null));
+	}
 
 //	@ExceptionHandler(CustomValidationException.class)
 //    public ResponseEntity<GlobalAPIResponseDTO<?>> handleValidation(CustomValidationException ex) {

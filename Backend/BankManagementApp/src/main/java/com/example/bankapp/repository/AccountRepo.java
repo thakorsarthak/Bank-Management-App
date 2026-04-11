@@ -30,6 +30,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 
 	boolean existsByPanNo(String panNo);
 
+	@Override
 	Optional<Account>findById(Long id);
 
 	Optional<Account> findByEmail(String email);
@@ -61,7 +62,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 		       "a.panNo = :id")
 	Optional<Account> findByIdentifier(@Param("id") String identifier);
 
-	
+
 
 
 

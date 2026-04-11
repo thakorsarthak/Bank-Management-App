@@ -1,14 +1,10 @@
 package com.example.bankapp.services;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class JWTservices {
-	
+
 	@Value("${jwt.secret}")
 	private String secretKey;
 
@@ -85,12 +81,12 @@ public class JWTservices {
 		// return "token";
 
 	// redisTemplate.opsForValue().set("session: " + accountNumber , token, 10 , TimeUnit.MINUTES );
-	
+
 
 	 return token;
 	}
-	
-	
+
+
 
 
 	private SecretKey getKey() {

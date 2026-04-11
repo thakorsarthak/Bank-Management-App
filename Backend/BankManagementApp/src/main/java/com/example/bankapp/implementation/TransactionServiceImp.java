@@ -149,6 +149,8 @@ public class TransactionServiceImp implements TransactionService {
 	public ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request) {
 
 		Optional<Account> toOptionalAcc = accountRepo.findByAccountNumber(request.getToAccountNumber());
+		
+		Account toAcc = toOptionalAcc.get();
 
 		Account fromAccount = accountRepo.findByAccountNumber(fromAccountNumber)
 				.orElseThrow(() -> new RuntimeException("Sender  does not Exist"));
@@ -159,10 +161,8 @@ public class TransactionServiceImp implements TransactionService {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new GlobalAPIResponseDTO<>("KYC Pending", false));
 		}
-
-
-
-//		Account toAccount = accountRepo.findByAccountNumber(request.getToAccountNumber())
+		
+		//		Account toAccount = accountRepo.findByAccountNumber(request.getToAccountNumber())
 //				.orElseThrow(() -> new RuntimeException("Receiver Account does not Exist"));
 
 		if (toOptionalAcc.isEmpty()) {

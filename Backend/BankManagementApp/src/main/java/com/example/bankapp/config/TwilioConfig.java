@@ -21,6 +21,6 @@ public class TwilioConfig {
         System.out.println("Twilio SID loaded: " + sid.substring(0, 6) + "...");
         System.out.println("Twilio token loaded: " + token.substring(0, 6) + "...");
     }
-    
-    
+
+
 }

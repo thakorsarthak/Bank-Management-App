@@ -1,6 +1,21 @@
 package com.example.bankapp;
 
-import com.example.bankapp.services.JWTservices;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+
+import java.util.Base64;
+import java.util.concurrent.TimeUnit;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,15 +25,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import java.util.Base64;
-import java.util.concurrent.TimeUnit;
-
-
-import static org.mockito.Mockito.lenient;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import com.example.bankapp.services.JWTservices;
 
 @ExtendWith(MockitoExtension.class)
 class JwtServiceTest {
@@ -56,7 +63,7 @@ class JwtServiceTest {
         redisField.setAccessible(true);
         redisField.set(jwtServices, mockRedis);
     }
-    
+
     @Test
     void shouldGenerateNonNullToken() {
         String token = jwtServices

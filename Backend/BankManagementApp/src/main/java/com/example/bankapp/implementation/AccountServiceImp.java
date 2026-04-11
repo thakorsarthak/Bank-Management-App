@@ -241,12 +241,12 @@ public class AccountServiceImp implements AccountService {
 			System.out.println("Token [From verify]: " + token);
 
 			String redisKey = "session:" + acc.getEmail();
-			
+
 			System.out.println("Saving Redis Key: " + redisKey);
 			System.out.println("Saving Token: " + token);
 
-			// Step 4: Store token in Redis with TTL = 10 minutes 
-			//the ["session:"] should be same at all place where we need redis token in filter too 
+			// Step 4: Store token in Redis with TTL = 10 minutes
+			//the ["session:"] should be same at all place where we need redis token in filter too
 			redisTemplate.opsForValue().set("session:" + acc.getEmail(), token, 10, TimeUnit.MINUTES);
 
 			System.out.println("Redis saved token for " + redisKey);
@@ -275,7 +275,7 @@ public class AccountServiceImp implements AccountService {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Sucsess", true, name));
 	}
 
-	
+
 	//old method extracting  holder name from token from token
 //	@Override
 //	public ResponseEntity<?> getAccountHolderN(HttpServletRequest request) {
@@ -422,7 +422,7 @@ public class AccountServiceImp implements AccountService {
 				phoneNo = phoneNo.substring(2);
 			}
 			// System.out.println(phoneNo);
-		
+
 			// System.out.println(phoneNumber);
 
 			account = repo.findByContact(phoneNo)
