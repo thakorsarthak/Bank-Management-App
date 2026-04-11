@@ -13,9 +13,11 @@ export class AdminUserDetailComponent {
 
  accountId: string | null = null;
  account : any;
-totalTransactions = 0;
+  totalTransactions = 0;
   creditTransactions = 0;
   debitTransactions = 0;
+  failedTransactions = 0;
+  successTransactions = 0;
 
   constructor(
   private route: ActivatedRoute,
@@ -31,13 +33,18 @@ totalTransactions = 0;
        next: (data) => {
         this.account = data;
     
-        this.transactionService.getTransactionHistory().subscribe({
-          next: (res) => {
-            const transactions = res.data; // assuming GlobalAPIResponse<Transaction[]>
+        this.adminservice.getTransOveriewCard(Number(this.accountId), {}  ).subscribe({
+           next: (data : any) => {
+           
+             
+            //  this.totalTransactions = data.successTransaction;
+              this.totalTransactions = data.total;
+              this.creditTransactions = data.credited;
+              this.debitTransactions = data.debited;
+              this.failedTransactions = data.failed;
+              this.successTransactions = data.success;
 
-            this.totalTransactions = transactions.length;
-            this.creditTransactions = transactions.filter(t => t.direction === 'CREDIT').length;
-            this.debitTransactions = transactions.filter(t => t.direction === 'DEBIT').length;
+            
           },
           error: (err) => {
             console.error('Failed to fetch transactions:', err);

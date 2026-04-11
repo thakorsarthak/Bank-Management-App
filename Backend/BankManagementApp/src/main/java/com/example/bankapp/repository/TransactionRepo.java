@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Transaction;
+import com.example.bankapp.enums.TransactionStatus;
 
 import io.lettuce.core.dynamic.annotation.Param;
 
@@ -26,18 +27,19 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 
 	 Page<Transaction> findByAccount_AccountNumber(String accountNumber, Pageable pageable);
 
-	List<Transaction> findByAccountAndDirection(Account acc, String direction);
+//	List<Transaction> findByAccountAndDirection(Account acc, String direction);
 
+	 
+	 Long countByAccount_AccountNumberAndStatus(String accountNumber, TransactionStatus status);
 
 	Long countByAccount_AccountNumber(String accountNumber);
 
 	Long countByAccount_AccountNumberAndDirection(String accountNumber , String direction);
 
-
 	@Query("SELECT t FROM Transaction t " +
 			"WHERE t.account.accountNumber = :accountNumber " +
 			"AND t.timestamp >= :startDate " +
-		       "AND t.timestamp < :endDate " +
+		    "AND t.timestamp < :endDate " +
 			"ORDER BY t.timestamp DESC")
 	List<Transaction>findByAccountAndDateRange(
 			@Param("accountNumber") String accountNumber,

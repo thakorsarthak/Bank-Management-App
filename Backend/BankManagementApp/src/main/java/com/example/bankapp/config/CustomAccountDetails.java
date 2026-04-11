@@ -67,8 +67,8 @@ public class CustomAccountDetails implements UserDetails {
         return account.getEmail();
     }
 
-    public String getAadhaarNo() {
-        return account.getAadhaarNo();
+    public String getaadharNo() {
+        return account.getAadharNo();
     }
 
     public String getPanNo() {

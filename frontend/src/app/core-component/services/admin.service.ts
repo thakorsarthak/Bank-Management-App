@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GlobalAPIResponse } from '../models/global-api-response.model';
 import { environment } from '../../../environments/environment';
+import { Observable } from 'rxjs';
+import { Transaction } from '../models/transaction.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +30,12 @@ export class AdminService {
   updateEmployee(employeeId: number, payload: any) {
     return this.http.patch<GlobalAPIResponse<any>>(
       `${this.apiUrl}/admin/employee/${employeeId}/updateAllDetails`,
+      payload
+    );
+  }
+   getTransOveriewCard(accountId: number, payload: any) {
+    return this.http.get<GlobalAPIResponse<any>>(
+      `${this.apiUrl}/admin/user/${accountId}/transactionHistoryCard`,
       payload
     );
   }

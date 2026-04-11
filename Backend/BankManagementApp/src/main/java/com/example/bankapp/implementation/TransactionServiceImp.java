@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.bankapp.DTO.AdminUserTransactionCardResponseDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.NotificationRequestDTO;
 import com.example.bankapp.DTO.TransactionHistoryResponseDTO;
@@ -40,7 +41,7 @@ import com.example.bankapp.services.TransactionService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
-public class TransactionServiceImp implements TransactionService {
+public  class TransactionServiceImp implements TransactionService {
 
 	@Autowired
 	AccountRepo accountRepo;
@@ -77,9 +78,9 @@ public class TransactionServiceImp implements TransactionService {
 		List<Transaction> transactions = transactionRepo.findByAccount_AccountNumberOrderByTimestampDesc(accountNumber);
 
 		return transactions.stream().map(TransactionResponseDTO::from).collect(Collectors.toList());
-
 	}
-
+	
+	
 	private void saveFailedTransaction(Account from, Account to, TransferRequestDTO request, TransactionStatus status,
 			String reason, String counterPartyName) {
 		Transaction failedTransaction = new Transaction();
@@ -95,6 +96,29 @@ public class TransactionServiceImp implements TransactionService {
 		failedTransaction.setCounterPartyName(counterPartyName);
 
 		transactionRepo.save(failedTransaction);
+	}
+	
+	
+	@Override
+	public AdminUserTransactionCardResponseDTO cardHistory(String accountNumber) {
+		
+		Long total = transactionRepo.countByAccount_AccountNumber(accountNumber);
+		Long debitCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "DEBIT");
+		Long creditCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "CREDIT");
+		
+		Long successCount = transactionRepo
+			    .countByAccount_AccountNumberAndStatus(accountNumber, TransactionStatus.COMPLETED);
+
+			Long failedCount = transactionRepo
+			    .countByAccount_AccountNumberAndStatus(accountNumber, TransactionStatus.FAILED);
+
+			//Long pendingCount = transactionRepo.countByAccount_AccountNumberAndStatus(accountNumber, TransactionStatus.COMPLETED);
+
+		System.out.println("Total debit counts: "+debitCount);
+		System.out.println("Total credit counts: "+creditCount);
+		
+		AdminUserTransactionCardResponseDTO response = new AdminUserTransactionCardResponseDTO(total , creditCount, debitCount,failedCount, successCount );
+		return response;
 	}
 
 //	@Override
@@ -135,7 +159,7 @@ public class TransactionServiceImp implements TransactionService {
 		return new TransactionHistoryResponseDTO(dtos, total, debitCount, creditCount, transactionsPage.getNumber(),
 				transactionsPage.getTotalPages());
 	}
-
+	
 	@Override
 	public List<Transaction> getTransactionByDateRange(String accountNumber, LocalDate fromDate, LocalDate toDate) {
 		LocalDateTime startDateTime = fromDate.atStartOfDay();

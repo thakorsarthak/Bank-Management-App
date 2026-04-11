@@ -1,6 +1,7 @@
 package com.example.bankapp.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,12 +21,17 @@ import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
 import com.example.bankapp.DTO.AdminUserTableResponseDTO;
+import com.example.bankapp.DTO.AdminUserTransactionCardResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
+import com.example.bankapp.DTO.TransactionResponseDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
+import com.example.bankapp.entity.Account;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
+import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.services.AdminService;
+import com.example.bankapp.services.TransactionService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +43,10 @@ import lombok.RequiredArgsConstructor;
 public class AdminController {
 
 	private final AdminService adminService;
+	
+	private final AccountRepo accountrepo;
+	
+	private final TransactionService tService;
 
 	@PostMapping("/employee/addStaff")
 	// @PreAuthorize("hasRole('ADMIN')") // Only admin can call
@@ -154,7 +164,20 @@ public class AdminController {
 	}
 	
 	
-	@GetMapping("/user/")
+	@GetMapping("/user/{accountId}/transactionHistoryCard")
+	public ResponseEntity<?> userTransactionCard(@PathVariable Long accountId){
+		
+		Optional<Account> accountOp = accountrepo.findById(accountId);
+		
+		Account acc = accountOp.get();
+		
+	   //	AdminUserTransactionCardResponseDTO res =  tService.cardHistory(acc.getAccountNumber());
+		
+		return ResponseEntity.ok(tService.cardHistory(acc.getAccountNumber()));
+		
+		//return ResponseEntity.ok(null);
+	}
+	
 
 	@PatchMapping("/user/{accountId}/updateUser")
 	public ResponseEntity<?> updateUserStatus(@PathVariable Long accountId,

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.bankapp.DTO.AdminUserTransactionCardResponseDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.TransactionHistoryResponseDTO;
 import com.example.bankapp.DTO.TransactionReqDTO;
@@ -47,7 +48,7 @@ public class TransactionController {
 
 	@GetMapping("/history")
 	public ResponseEntity<?> transactionHistoryByAccNum(HttpServletRequest request) {
-
+		
 		List<TransactionResponseDTO> history = transactionService.getTransactionHistoryByAccountNum(request);
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Transaction history fetched Successfuly", true, history));
 	}
@@ -94,8 +95,8 @@ public class TransactionController {
 	            new GlobalAPIResponseDTO<>("Transactions fetched successfully", true, dtoPage);
 
 	    return ResponseEntity.ok(response);
-	}
-
+	}	
+	
 	@GetMapping("/downloadTransactionHistory")
 	public void downloadTransHistoryExcel(@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate fromDate,
 			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate toDate, HttpServletRequest httpRequest,

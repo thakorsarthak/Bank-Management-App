@@ -62,8 +62,8 @@ public class Account {
 	@Column(name = "pan_number", length = 20)
 	private String panNo;
 
-	@Column(name = "aadhaar_number", length = 12)
-	private String aadhaarNo;
+	@Column(name = "aadhar_number", length = 12)
+	private String aadharNo;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)

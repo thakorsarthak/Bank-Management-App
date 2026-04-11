@@ -42,9 +42,9 @@ public class AccountSignUpDTO {
 	private String panNo;
 
 	@Column(nullable = false, unique = true)
-	@NotBlank(message = "Aadhaar number is required")
-	@Pattern(regexp = "^[0-9]{12}$", message = "Aadhaar must be 12 digits")
-	private String aadhaarNo;
+	@NotBlank(message = "aadhar number is required")
+	@Pattern(regexp = "^[0-9]{12}$", message = "aadhar must be 12 digits")
+	private String aadharNo;
 
 	@Column(nullable = false, length = 4)
 	private String branchCode;

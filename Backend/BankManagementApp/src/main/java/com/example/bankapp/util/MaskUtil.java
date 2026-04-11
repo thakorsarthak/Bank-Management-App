@@ -16,11 +16,11 @@ public class MaskUtil {
         return pan.substring(0, 2) + "XXXXX" + pan.substring(pan.length() - 2);
     }
 
-    public static String maskAadhaar(String aadhaar) {
-        if (aadhaar == null || aadhaar.length() < 4) {
-			return aadhaar;
+    public static String maskaadhar(String aadhar) {
+        if (aadhar == null || aadhar.length() < 4) {
+			return aadhar;
 		}
-        return "XXXX-XXXX-" + aadhaar.substring(aadhaar.length() - 4);
+        return "XXXX-XXXX-" + aadhar.substring(aadhar.length() - 4);
     }
 
     public static String maskContact(String Contact) {

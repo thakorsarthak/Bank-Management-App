@@ -109,8 +109,8 @@ public class AccountServiceImp implements AccountService {
 			errors.add(new FieldError("contact", "Acccount with this Contact is already Exist pls login"));
 		}
 
-		if (repo.existsByAadhaarNo(accountdto.getAadhaarNo())) {
-			errors.add(new FieldError("aadhaarNo", "Acccount with this Aadhaar is already Exist pls login"));
+		if (repo.existsByaadharNo(accountdto.getAadharNo())) {
+			errors.add(new FieldError("aadharNo", "Acccount with this aadhar is already Exist pls login"));
 		}
 
 		if (repo.existsByPanNo(accountdto.getPanNo())) {
@@ -157,7 +157,7 @@ public class AccountServiceImp implements AccountService {
 		account.setAccountHolderName(accountdto.getAccountHolderName());
 		account.setContact(accountdto.getContact());
 		account.setEmail(accountdto.getEmail());
-		account.setAadhaarNo(accountdto.getAadhaarNo());
+		account.setAadharNo(accountdto.getAadharNo());
 		account.setPanNo(accountdto.getPanNo());
 
 		// account.setBalance(accountdto.getBalance());

@@ -1,7 +1,7 @@
 package com.example.bankapp.enums;
 
 public enum DocumentType {
-	AADHAAR,
+	aadhar,
     PAN,
     PASSPORT,
     VOTER_ID

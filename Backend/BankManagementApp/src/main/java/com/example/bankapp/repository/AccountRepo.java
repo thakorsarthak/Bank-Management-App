@@ -26,7 +26,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 
 	boolean existsByContact(String contact);
 
-	boolean existsByAadhaarNo(String aadharNo);
+	boolean existsByaadharNo(String aadharNo);
 
 	boolean existsByPanNo(String panNo);
 
@@ -58,7 +58,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 	@Query("SELECT a FROM Account a WHERE " +
 		       "a.email = :id OR " +
 		       "a.contact = :id OR " +
-		       "a.aadhaarNo = :id OR " +
+		       "a.aadharNo = :id OR " +
 		       "a.panNo = :id")
 	Optional<Account> findByIdentifier(@Param("id") String identifier);
 

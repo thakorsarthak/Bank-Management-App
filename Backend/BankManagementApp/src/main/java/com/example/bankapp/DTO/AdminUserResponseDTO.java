@@ -18,7 +18,7 @@ public class AdminUserResponseDTO {
     private String contact;
     private Double balance;
     private String panNumber;
-    private String aadhaarNumber;
+    private String aadharNumber;
     private Instant createdAt;
     private String branchCode;
     private String ifscCode;

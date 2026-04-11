@@ -61,7 +61,7 @@ class AccountServiceTest {
         AccountSignUpDTO dto = new AccountSignUpDTO();
         dto.setEmail("test@example.com");
         dto.setContact("7899758769L");
-        dto.setAadhaarNo("123456789012");
+        dto.setAadharNo("123456789012");
         dto.setPanNo("ABCDE1234F");
         dto.setPin("1234");
         dto.setConfirmPin("1234");

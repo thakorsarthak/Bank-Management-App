@@ -350,7 +350,7 @@ public class AdminServiceImp implements AdminService {
 	 	response.setAccountHolderName(accountFound.getAccountHolderName());
 		response.setEmail(accountFound.getEmail());
 		response.setBalance(accountFound.getBalance());
-		response.setAadhaarNumber(MaskUtil.maskAadhaar(accountFound.getAadhaarNo()));
+		response.setAadharNumber(MaskUtil.maskaadhar(accountFound.getAadharNo()));
 		response.setStatus(accountFound.getStatus());
 		response.setCreatedAt(accountFound.getCreatedAt());
 		response.setContact(MaskUtil.maskContact(accountFound.getContact()));
