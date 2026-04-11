@@ -26,7 +26,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 
 	boolean existsByContact(String contact);
 
-	boolean existsByaadharNo(String aadharNo);
+	boolean existsByAadharNo(String aadharNo);
 
 	boolean existsByPanNo(String panNo);
 

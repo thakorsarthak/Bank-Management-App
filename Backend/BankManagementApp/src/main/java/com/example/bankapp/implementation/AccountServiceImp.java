@@ -109,7 +109,7 @@ public class AccountServiceImp implements AccountService {
 			errors.add(new FieldError("contact", "Acccount with this Contact is already Exist pls login"));
 		}
 
-		if (repo.existsByaadharNo(accountdto.getAadharNo())) {
+		if (repo.existsByAadharNo(accountdto.getAadharNo())) {
 			errors.add(new FieldError("aadharNo", "Acccount with this aadhar is already Exist pls login"));
 		}
 

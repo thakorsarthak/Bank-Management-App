@@ -48,11 +48,20 @@ public class TransactionController {
 
 	@GetMapping("/history")
 	public ResponseEntity<?> transactionHistoryByAccNum(HttpServletRequest request) {
-		
+
 		List<TransactionResponseDTO> history = transactionService.getTransactionHistoryByAccountNum(request);
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Transaction history fetched Successfuly", true, history));
 	}
 
+	@GetMapping("/cardHistory")
+	public ResponseEntity<?> transactionCardHistoryByAccNum(HttpServletRequest request) {
+
+		String token = jwtService.extractTokenFromRequest(request);
+		String accountNo = jwtService.extractAccountNumber(token);
+
+		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Transaction history fetched Successfuly", true,
+				transactionService.cardHistory(accountNo)));
+	}
 
 	@PutMapping("/transfer")
 	public ResponseEntity<?> tranferAmount(@RequestBody @Valid TransferRequestDTO dto, HttpServletRequest httpRequest) {
@@ -78,25 +87,23 @@ public class TransactionController {
 //	    return ResponseEntity.ok(response);
 //	}
 
-
 	@GetMapping("/transactionHistory")
 	public ResponseEntity<GlobalAPIResponseDTO> Pagenation(HttpServletRequest request,
-			@RequestParam(defaultValue = "0") int page,
-	        @RequestParam(defaultValue = "10") int size,
-	        @RequestParam(defaultValue = "timestamp") String sortByTime,
-	        @RequestParam(defaultValue = "desc") String sortByDirection) {
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+			@RequestParam(defaultValue = "timestamp") String sortByTime,
+			@RequestParam(defaultValue = "desc") String sortByDirection) {
 		String token = jwtService.extractTokenFromRequest(request);
 		String accountNumber = jwtService.extractAccountNumber(token);
 
-		 TransactionHistoryResponseDTO dtoPage =
-	          transactionService.getTransactions(accountNumber, page, size,sortByTime,sortByDirection);
+		TransactionHistoryResponseDTO dtoPage = transactionService.getTransactions(accountNumber, page, size,
+				sortByTime, sortByDirection);
 
-	    GlobalAPIResponseDTO<TransactionHistoryResponseDTO> response =
-	            new GlobalAPIResponseDTO<>("Transactions fetched successfully", true, dtoPage);
+		GlobalAPIResponseDTO<TransactionHistoryResponseDTO> response = new GlobalAPIResponseDTO<>(
+				"Transactions fetched successfully", true, dtoPage);
 
-	    return ResponseEntity.ok(response);
-	}	
-	
+		return ResponseEntity.ok(response);
+	}
+
 	@GetMapping("/downloadTransactionHistory")
 	public void downloadTransHistoryExcel(@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate fromDate,
 			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate toDate, HttpServletRequest httpRequest,

@@ -229,6 +229,60 @@
             </div>
           </div>
         </div>
+                <div class="summary-card debit-card">
+          <div class="card-background">
+            <div class="bg-pattern"></div>
+          </div>
+          <div class="summary-content">
+            <div class="summary-header">
+              <div class="summary-icon-container">
+                <i class="pi pi-minus-circle"></i>
+              </div>
+              <div class="summary-badge debit">
+                <span>Failed</span>
+              </div>
+            </div>
+            <div class="summary-body">
+              <h3>Failed Transactions</h3>
+              <div class="summary-number">{{ failedTransactions }}</div>
+              <span class="summary-subtitle">Money spent</span>
+            </div>
+            <div class="summary-footer">
+              <div class="trend-indicator negative">
+                <i class="pi pi-arrow-down"></i>
+                <span>-2.1%</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="summary-card credit-card">
+          <div class="card-background">
+            <div class="bg-pattern"></div>
+          </div>
+          <div class="summary-content">
+            <div class="summary-header">
+              <div class="summary-icon-container">
+                <i class="pi pi-plus-circle"></i>
+              </div>
+              <div class="summary-badge credit">
+                <span>Successful</span>
+              </div>
+            </div>
+            <div class="summary-body">
+              <h3>Successful Transactions</h3>
+              <div class="summary-number">{{ successTransactions }}</div>
+              <span class="summary-subtitle">Money received</span>
+            </div>
+            <div class="summary-footer">
+              <div class="trend-indicator positive">
+                <i class="pi pi-arrow-up"></i>
+                <span>+5.2%</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

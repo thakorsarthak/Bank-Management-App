@@ -30,6 +30,12 @@ constructor(private http: HttpClient) {}
     return this.http.get<GlobalAPIResponse<Transaction[]>>(`${this.apiUrl}/transaction/history`);
   }
 
+   getTransactionCardHistory( ): Observable<GlobalAPIResponse<Transaction[]>> {
+    return this.http.get<GlobalAPIResponse<Transaction[]>>(`${this.apiUrl}/transaction/cardHistory`);
+  }
+
+   
+
   getTransactionExcelHistoryByDate(fromDate: string, toDate: string ) {
   return this.http.get(`${this.apiUrl}/transaction/downloadTransactionHistory?fromDate=${fromDate}&toDate=${toDate}`, {
     responseType: 'blob' // Important for file download

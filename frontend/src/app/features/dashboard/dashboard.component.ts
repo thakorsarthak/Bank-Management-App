@@ -27,6 +27,8 @@ export class DashboardComponent implements OnInit {
   totalTransactions = 0;
   creditTransactions = 0;
   debitTransactions = 0;
+  successTransactions = 0;
+  failedTransactions = 0;
 
   constructor(
     private authservice: AuthServiceService,
@@ -38,13 +40,13 @@ export class DashboardComponent implements OnInit {
     console.log('dashboard component');
     this.transactionService.getAccountHolderDetails().subscribe(data => {
       this.account = data;
-      this.transactionService.getTransactionHistory().subscribe({
-        next: (res) => {
-          const transactions = res.data; // assuming GlobalAPIResponse<Transaction[]>
-
-          this.totalTransactions = transactions.length;
-          this.creditTransactions = transactions.filter(t => t.direction === 'CREDIT').length;
-          this.debitTransactions = transactions.filter(t => t.direction === 'DEBIT').length;
+      this.transactionService.getTransactionCardHistory().subscribe({
+        next: (res : any) => {
+          this.totalTransactions = res.data.total;
+          this.creditTransactions = res.data.credited;
+          this.debitTransactions = res.data.debited;
+          this.successTransactions = res.data.success;
+          this.failedTransactions = res.data.failed;
         },
         error: (err) => {
           console.error('Failed to fetch transactions:', err);
