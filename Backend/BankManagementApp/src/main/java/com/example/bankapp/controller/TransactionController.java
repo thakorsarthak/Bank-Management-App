@@ -46,12 +46,6 @@ public class TransactionController {
 //		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Transaction history fetched Successfuly", true, history));
 //	}
 
-	@GetMapping("/history")
-	public ResponseEntity<?> transactionHistoryByAccNum(HttpServletRequest request) {
-
-		List<TransactionResponseDTO> history = transactionService.getTransactionHistoryByAccountNum(request);
-		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Transaction history fetched Successfuly", true, history));
-	}
 
 	@GetMapping("/cardHistory")
 	public ResponseEntity<?> transactionCardHistoryByAccNum(HttpServletRequest request) {

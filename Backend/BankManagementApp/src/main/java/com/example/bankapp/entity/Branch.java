@@ -51,7 +51,7 @@ public class Branch {
     private String city;
     private String state;
 
-    // timestamps (recommended)
+    // timestamps 
     @CreationTimestamp
     private LocalDateTime createdAt;
 

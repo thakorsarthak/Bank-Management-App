@@ -60,25 +60,6 @@ public  class TransactionServiceImp implements TransactionService {
 
 	@Autowired
 	private NotificationService notificationService;
-
-//	@Override
-//	public List<TransactionResponseDTO> getTransactionHistoryByAccountNum(String accountNumber) {
-//
-//		List<Transaction> transactions = transactionRepo.findByAccount_AccountNumberOrderByTimestampDesc(accountNumber);
-//
-//		return transactions.stream().map(TransactionResponseDTO::from).collect(Collectors.toList());
-//	}
-
-	@Override
-	public List<TransactionResponseDTO> getTransactionHistoryByAccountNum(HttpServletRequest request) {
-
-		String token = jService.extractTokenFromRequest(request);
-		String accountNumber = jService.extractAccountNumber(token);
-
-		List<Transaction> transactions = transactionRepo.findByAccount_AccountNumberOrderByTimestampDesc(accountNumber);
-
-		return transactions.stream().map(TransactionResponseDTO::from).collect(Collectors.toList());
-	}
 	
 	
 	private void saveFailedTransaction(Account from, Account to, TransferRequestDTO request, TransactionStatus status,

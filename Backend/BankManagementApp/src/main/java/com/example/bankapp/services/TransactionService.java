@@ -17,9 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public interface TransactionService {
 
 
-	// List<TransactionResponseDTO> getTransactionHistoryByAccountNum(String accountNumber);
-
-	 List<TransactionResponseDTO> getTransactionHistoryByAccountNum(HttpServletRequest request);
+	// List<TransactionResponseDTO> getTransactionHistoryByAccountNum(HttpServletRequest request);
 
 	public TransactionHistoryResponseDTO  getTransactions(String accountNumber, int page, int size, String sortby , String sortDirection);
 
