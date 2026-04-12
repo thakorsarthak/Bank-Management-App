@@ -1,2 +1,93 @@
 /* You can add global styles to this file, and also import other style files */
 @import "primeicons/primeicons.css";
+
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  --danger-gradient: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
+  --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.2);
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --border-light: #e2e8f0;
+  --bg-light: #f7fafc;
+  --white: #ffffff;
+}
+
+.signup-container,
+.login-container {
+  display: flex;
+  justify-content: center;
+}
+
+.signup-container .signup-form,
+.login-container .signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.signup-container .form-field,
+.login-container .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.signup-container .form-field label,
+.login-container .form-field label {
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+}
+
+.signup-container .error-message,
+.login-container .error-message {
+  color: var(--red-500);
+  font-size: 0.875rem;
+}
+
+.signup-container .form-actions,
+.login-container .form-actions {
+  margin-top: 1rem;
+}
+
+.signup-container .p-dropdown,
+.login-container .p-dropdown {
+  border-radius: 6px;
+}
+
+.signup-container .p-button,
+.login-container .p-button {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.signup-container .p-card .p-card-header,
+.login-container .p-card .p-card-header {
+  padding: 1.5rem;
+  width: 60%;
+  background: var(--surface-section);
+  border-radius: 1rem 1rem 0 0;
+}
+
+.signup-container .p-card .p-card-content,
+.login-container .p-card .p-card-content {
+  padding: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .signup-container .p-card .p-card-header,
+  .login-container .p-card .p-card-header {
+    padding: 1rem;
+  }
+
+  .signup-container .p-card .p-card-content,
+  .login-container .p-card .p-card-content {
+    padding: 1rem;
+  }
+}
