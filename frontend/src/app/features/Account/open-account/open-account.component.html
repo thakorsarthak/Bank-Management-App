@@ -113,12 +113,12 @@
         </div>
 
         <div class="form-field">
-          <label for="aadhaarNumber">Aadhaar Number</label>
-          <input id="aadhaarNumber" type="text" pInputText formControlName="aadhaarNo"
-            placeholder="Enter Aadhaar Number" maxlength="12" class="w-full"
-            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('aadhaarNo')}">
-          <small class="error-message" *ngIf="isFieldInvalid('aadhaarNo')">
-            {{ getErrorMessage('aadhaarNo') }}
+          <label for="aadharNumber">Aadhar Number</label>
+          <input id="aadharNumber" type="text" pInputText formControlName="aadharNo"
+            placeholder="Enter Aadhar Number" maxlength="12" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('aadharNo')}">
+          <small class="error-message" *ngIf="isFieldInvalid('aadharNo')">
+            {{ getErrorMessage('aadharNo') }}
           </small>
         </div>
       </div>

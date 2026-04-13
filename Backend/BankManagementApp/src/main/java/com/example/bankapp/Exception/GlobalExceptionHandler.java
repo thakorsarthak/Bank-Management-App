@@ -33,9 +33,6 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(CustomValidationException.class)
 	public ResponseEntity<GlobalAPIResponseDTO<List<FieldError>>> handleCustomValidation(CustomValidationException ex) {
 
-//		ApiError error = new ApiError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), ex.getErrors());
-//		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-
 		if (ex.getErrors() != null) {
 			return ResponseEntity.badRequest().body(new GlobalAPIResponseDTO<>(ex.getMessage(), false, ex.getErrors()));
 		}

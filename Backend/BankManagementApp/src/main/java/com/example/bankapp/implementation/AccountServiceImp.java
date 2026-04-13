@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -101,20 +103,20 @@ public class AccountServiceImp implements AccountService {
 		List<FieldError> errors = new ArrayList<>();
 
 		if (repo.existsByEmail(accountdto.getEmail())) {
-			errors.add(new FieldError("email", "Acccount with this Email is already Exist pls login"));
-			throw new RuntimeException("Email already Exist");
+			errors.add(new FieldError("Email", "Acccount with this Email is already Exist pls login"));
+			throw new CustomValidationException("Email already Exist(service)",errors);
 		}
 
 		if (repo.existsByContact(accountdto.getContact())) {
-			errors.add(new FieldError("contact", "Acccount with this Contact is already Exist pls login"));
+			errors.add(new FieldError("Contact", "Acccount with this Contact is already Exist pls login"));
 		}
 
 		if (repo.existsByAadharNo(accountdto.getAadharNo())) {
-			errors.add(new FieldError("aadharNo", "Acccount with this aadhar is already Exist pls login"));
+			errors.add(new FieldError("AadharNo", "Acccount with this aadhar is already Exist pls login"));
 		}
 
 		if (repo.existsByPanNo(accountdto.getPanNo())) {
-			errors.add(new FieldError("panNo", "Acccount with this Pan is already Exist pls login"));
+			errors.add(new FieldError("PanNo", "Acccount with this Pan is already Exist pls login"));
 		}
 
 		// System.out.println("PIN: " + accountdto.getPin());

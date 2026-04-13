@@ -75,7 +75,7 @@ export class OpenAccountComponent implements OnInit {
 
       // KYC
       panNo: ['', [Validators.required, Validators.pattern('^[A-Z]{5}[0-9]{4}[A-Z]{1}$')]], // PAN format
-      aadhaarNo: ['', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
+      aadharNo: ['', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
       branch: ['', Validators.required],
       accountType: ['', Validators.required],
       balance: [1000.0] ,
@@ -144,22 +144,22 @@ export class OpenAccountComponent implements OnInit {
         },
         error: (err) => {
           console.log(err, "error");
-          if (err.status === 400 && err.error?.errors) {
-            err.error.errors.forEach((fieldError: any) => {
+          if (err.error?.data) {
+            err.error.data.forEach((fieldError: any) => {
               if (fieldError.field === 'email') {
-                this.messageService.add({ severity: 'error', summary: 'Email Already Registered', detail: 'Please use another email' });
+                this.messageService.add({ severity: 'error', summary: `${fieldError.field}`, detail: `${fieldError.message}` });
                 this.signupForm.controls['email'].setErrors({ serverError: fieldError.message });
               }
               if (fieldError.field === 'contact') {
-                this.messageService.add({ severity: 'error', summary: 'Contact Already Registered', detail: 'Please use another contact number' });
+                this.messageService.add({ severity: 'error', summary: `${fieldError.field}`, detail: `${fieldError.message}`  });
                 this.signupForm.controls['contact'].setErrors({ serverError: fieldError.message });
               }
-              if (fieldError.field === 'aadhaarNo') {
-                this.messageService.add({ severity: 'error', summary: 'Aadhar Already Registered', detail: 'Please use another Aadhar number or Login' });
-                this.signupForm.controls['aadhaarNo'].setErrors({ serverError: fieldError.message });
+              if (fieldError.field === 'aadharNo') {
+                this.messageService.add({ severity: 'error', summary: `${fieldError.field}`, detail: `${fieldError.message}` });
+                this.signupForm.controls['aadharNo'].setErrors({ serverError: fieldError.message });
               }
                if (fieldError.field === 'panNo') {
-                this.messageService.add({ severity: 'error', summary: 'Pan Already Registered', detail: 'Please use another Pan number or Login' });
+                this.messageService.add({ severity: 'error', summary: `${fieldError.field}`, detail: `${fieldError.message}` });
                 this.signupForm.controls['panNo'].setErrors({ serverError: fieldError.message });
               }
             });
