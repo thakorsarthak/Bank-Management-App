@@ -1,92 +1,132 @@
+<section class="landing-page">
+  <section class="hero-section">
+    <div class="app-section-shell hero-shell">
+      <div class="hero-copy">
+        <span class="eyebrow">Modern Banking Experience</span>
+        <h1 class="hero-title">Banking that feels calm, secure, and beautifully simple.</h1>
+        <p class="hero-subtitle">
+          Open an account, track activity, and manage transfers through a cleaner digital experience built around trust.
+        </p>
 
-<section class="hero-section">
-  <div class="hero-container">
-    <div class="hero-content">
-      <h1 class="hero-title">Banking Made Simple</h1>
-      <p class="hero-subtitle">
-        Secure, efficient, and personalized banking solutions for your everyday needs
-      </p>
-      <div class="hero-buttons">
-        <a  routerLink="/openAccount"
-           routerlinkactive="active" class="primary-btn" >Open an Account</a>
-        <a href="#" class="secondary-btn">Learn More</a>
-      </div>
-    </div>
-    <div class="hero-image">
-      <div class="image-container">
-        <img 
-          src="https://images.pexels.com/photos/3943716/pexels-photo-3943716.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-          alt="Banking services" 
-          class="main-image"
-        />
-      </div>
-    </div>
-  </div>
-  
-  <div class="quick-actions">
-    <div class="action-card">
-      <h3>Online Banking</h3>
-      <p>Access your accounts 24/7</p>
-      <a href="#">Log In →</a>
-    </div>
-    <div class="action-card">
-      <h3>Mobile Banking</h3>
-      <p>Bank on the go with our app</p>
-      <a href="#">Download →</a>
-    </div>
-    <div class="action-card">
-      <h3>ATM Locator</h3>
-      <p>Find ATMs near you</p>
-      <a href="#">Find ATM →</a>
-    </div>
-    <div class="action-card">
-      <h3>Customer Support</h3>
-      <p>24/7 assistance</p>
-      <a href="#">Contact Us →</a>
-    </div>
-  </div>
-</section>
-<section class="features-section">
-  <div class="features-container">
-    <div class="section-header">
-      <h2>Why Choose SecureBank</h2>
-      <p>Experience banking that puts your needs first with innovative features and dedicated support</p>
-    </div>
-    
-    <div class="features-grid">
-      <p-card *ngFor="let feature of features" styleClass="feature-card">
-        <div class="icon-container">
-          <i [class]="feature.icon"></i>
+        <div class="hero-actions">
+          <p-button
+            label="Open an Account"
+            icon="pi pi-arrow-right"
+            routerLink="/openAccount"
+            routerLinkActive="active"
+            styleClass="hero-primary">
+          </p-button>
+          <a routerLink="/login" routerLinkActive="active" class="hero-secondary">
+            Existing customer login
+          </a>
         </div>
-        <h3>{{ feature.title }}</h3>
-        <p>{{ feature.description }}</p>
-      </p-card>
-    </div>
-    
-    <div class="cta-container">
-      <h3>Ready to experience better banking?</h3>
-      <p-button styleClass="cta-button" label="Open an Account Today"  routerLink="/openAccount"
-           routerlinkactive="active"></p-button>
-    </div>
-  </div>
-</section>
-<section class="testimonials-section">
-  <div class="testimonials-container">
-    <div class="section-header">
-      <h2>What Our Customers Say</h2>
-      <p>Join thousands of satisfied customers who trust SecureBank with their financial needs</p>
-    </div>
-    
-    <div class="testimonials-grid">
-      <div class="testimonial-card" *ngFor="let testimonial of testimonials">
-        <div class="quote-mark">"</div>
-        <p class="quote">{{ testimonial.quote }}</p>
-        <div class="author-info">
-          <h4>{{ testimonial.author }}</h4>
-          <p>{{ testimonial.role }}</p>
+
+        <div class="hero-metrics">
+          <div class="metric-card">
+            <strong>99.9%</strong>
+            <span>service uptime</span>
+          </div>
+          <div class="metric-card">
+            <strong>24/7</strong>
+            <span>account access</span>
+          </div>
+          <div class="metric-card">
+            <strong>256-bit</strong>
+            <span>secure encryption</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="visual-frame">
+          <img
+            src="https://images.pexels.com/photos/3943716/pexels-photo-3943716.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+            alt="Banking services"
+            class="main-image"
+          />
+          <div class="floating-summary summary-top">
+            <span class="summary-label">Monthly saving</span>
+            <strong>₹24,500</strong>
+          </div>
+          <div class="floating-summary summary-bottom">
+            <i class="pi pi-shield"></i>
+            <div>
+              <span class="summary-label">Protected by</span>
+              <strong>Prime-grade security</strong>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  
+  </section>
+
+  <section class="quick-actions app-section-shell">
+    <article class="action-card" *ngFor="let action of [
+      { title: 'Online Banking', text: 'Access your accounts, payments, and statements any time.', icon: 'pi pi-desktop' },
+      { title: 'Instant Transfers', text: 'Move money with confidence using guided secure flows.', icon: 'pi pi-send' },
+      { title: 'Smart Alerts', text: 'Stay on top of balances and unusual activity in real time.', icon: 'pi pi-bell' },
+      { title: 'Helpful Support', text: 'Get fast assistance whenever you need a human touch.', icon: 'pi pi-comments' }
+    ]">
+      <div class="action-icon">
+        <i [class]="action.icon"></i>
+      </div>
+      <h3>{{ action.title }}</h3>
+      <p>{{ action.text }}</p>
+    </article>
+  </section>
+
+  <section class="features-section">
+    <div class="app-section-shell">
+      <div class="section-header">
+        <span class="section-tag">Why customers stay</span>
+        <h2>Designed to make your day-to-day banking smoother.</h2>
+        <p>SecureBank combines intuitive digital flows with trusted banking essentials, so common tasks feel fast and reassuring.</p>
+      </div>
+
+      <div class="features-grid">
+        <p-card *ngFor="let feature of features" styleClass="feature-card">
+          <div class="icon-container">
+            <i [class]="feature.icon"></i>
+          </div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </p-card>
+      </div>
+
+      <div class="cta-container">
+        <div>
+          <span class="section-tag dark">Start in minutes</span>
+          <h3>Everything you need to get started is already in place.</h3>
+        </div>
+        <p-button
+          styleClass="cta-button"
+          label="Open an Account Today"
+          icon="pi pi-user-plus"
+          routerLink="/openAccount"
+          routerLinkActive="active">
+        </p-button>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials-section">
+    <div class="app-section-shell">
+      <div class="section-header">
+        <span class="section-tag">Customer voice</span>
+        <h2>Trusted by customers who want banking to feel easier.</h2>
+        <p>People choose SecureBank for the clarity, convenience, and confidence they get every day.</p>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+          <div class="quote-mark">"</div>
+          <p class="quote">{{ testimonial.quote }}</p>
+          <div class="author-info">
+            <h4>{{ testimonial.author }}</h4>
+            <p>{{ testimonial.role }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </section>

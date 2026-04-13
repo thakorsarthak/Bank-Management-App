@@ -146,19 +146,19 @@ export class OpenAccountComponent implements OnInit {
           console.log(err, "error");
           if (err.error?.data) {
             err.error.data.forEach((fieldError: any) => {
-              if (fieldError.field === 'email') {
+              if (fieldError.field === 'Email') {
                 this.messageService.add({ severity: 'error', summary: `${fieldError.field}`, detail: `${fieldError.message}` });
                 this.signupForm.controls['email'].setErrors({ serverError: fieldError.message });
               }
-              if (fieldError.field === 'contact') {
+              if (fieldError.field === 'Contact') {
                 this.messageService.add({ severity: 'error', summary: `${fieldError.field}`, detail: `${fieldError.message}`  });
                 this.signupForm.controls['contact'].setErrors({ serverError: fieldError.message });
               }
-              if (fieldError.field === 'aadharNo') {
+              if (fieldError.field === 'AadharNo') {
                 this.messageService.add({ severity: 'error', summary: `${fieldError.field}`, detail: `${fieldError.message}` });
                 this.signupForm.controls['aadharNo'].setErrors({ serverError: fieldError.message });
               }
-               if (fieldError.field === 'panNo') {
+               if (fieldError.field === 'PanNo') {
                 this.messageService.add({ severity: 'error', summary: `${fieldError.field}`, detail: `${fieldError.message}` });
                 this.signupForm.controls['panNo'].setErrors({ serverError: fieldError.message });
               }

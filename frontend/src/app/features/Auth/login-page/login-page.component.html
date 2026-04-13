@@ -1,58 +1,89 @@
 <p-toast />
 
 <app-public-header></app-public-header>
+
 <div class="login-container">
-    <p-card header="Login Account" [style]="{ width: '360px' , backgroundColor: '#f9f9f9'}">
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="signup-form">
-
-
-            <div class="form-field">
-                <label for="email">Email Address / Account / Contact</label>
-                <span class="p-input-icon-right w-full">
-                    <i class="pi pi-envelope" style="padding-right: 10px;"></i>
-                    <input id="email" type="email" pInputText formControlName="identifier" placeholder="Enter Your Email"
-                        class="w-full" [ngClass]="{'ng-invalid ng-dirty': ('identifier')}">
-                </span>
-                <!-- <small class="error-message" *ngIf="('email')">
-                    {{ ('email') }}
-                </small> -->
-            </div>
-
-            <div class="form-field">
-                <label for="pin">PIN</label>
-                <span class="p-input-icon-right w-full">
-                    <i class="pi pi-lock" style="padding-right: 10px;"></i>
-                    
-                    <p-password id="pin" formControlName="password" [feedback]="false" [toggleMask]="true"
-                        placeholder="Enter Your PIN" class="w-full" maxlength="18">
-                    </p-password>
-                </span>
-                <!-- <small class="error-message" *ngIf="('pin')">
-                    {{ ('pin') }}
-                </small> -->
-            </div>
-
-            <div class="form-actions">
-                <p-button type="submit" label="Login" icon="pi pi-user-plus" severity="success"
-                    [style]="{'width': '70%'}" [disabled]="loginForm.invalid"></p-button>
-            </div>
-             <div class="form-links">
-                 <a href="#" class="forgot-password"  routerLink="/resetPassword"
-            routerLinkActive="active">
-          Forgot your password?
-        </a>
-      </div>
-        </form>
-        <div class="signup-prompt">
-      <p>Don't have an account? 
-        <a href="#" class="signup-link"  routerLink="/openAccount"
-            routerLinkActive="active">
-          Create one here
-        </a>
+  <div class="login-shell">
+    <div class="login-aside">
+      <span class="login-tag">Welcome back</span>
+      <h2>Pick up your banking where you left off.</h2>
+      <p>
+        Sign in to view your dashboard, transfer funds, and stay on top of your account activity with the same PrimeNG-powered experience.
       </p>
+
+      <div class="benefit-list">
+        <div class="benefit-item">
+          <i class="pi pi-shield"></i>
+          <span>Protected login and automatic session handling</span>
+        </div>
+        <div class="benefit-item">
+          <i class="pi pi-chart-line"></i>
+          <span>Fast access to balances and transaction history</span>
+        </div>
+        <div class="benefit-item">
+          <i class="pi pi-mobile"></i>
+          <span>Responsive experience across mobile and desktop</span>
+        </div>
+      </div>
     </div>
+
+    <p-card header="Login Account" [style]="{ width: '100%' }">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="signup-form">
+        <div class="form-field">
+          <label for="email">Email Address / Account / Contact</label>
+          <span class="p-input-icon-right w-full">
+            <i class="pi pi-envelope"></i>
+            <input
+              id="email"
+              type="email"
+              pInputText
+              formControlName="identifier"
+              placeholder="Enter your email, account, or contact"
+              class="w-full"
+              [ngClass]="{'ng-invalid ng-dirty': ('identifier')}"
+            >
+          </span>
+        </div>
+
+        <div class="form-field">
+          <label for="pin">PIN</label>
+          <span class="p-input-icon-right w-full">
+            <i class="pi pi-lock"></i>
+            <p-password
+              id="pin"
+              formControlName="password"
+              [feedback]="false"
+              [toggleMask]="true"
+              placeholder="Enter your PIN"
+              class="w-full"
+              maxlength="18">
+            </p-password>
+          </span>
+        </div>
+
+        <div class="form-actions">
+          <p-button
+            type="submit"
+            label="Login"
+            icon="pi pi-sign-in"
+            severity="success"
+            [disabled]="loginForm.invalid">
+          </p-button>
+        </div>
+
+        <div class="form-links">
+          <a class="forgot-password" routerLink="/resetPassword" routerLinkActive="active">
+            Forgot your password?
+          </a>
+        </div>
+      </form>
+
+      <div class="signup-prompt">
+        <p>
+          Don't have an account?
+          <a class="signup-link" routerLink="/openAccount" routerLinkActive="active">Create one here</a>
+        </p>
+      </div>
     </p-card>
-    <div class="card flex justify-center">
-  
-</div>
+  </div>
 </div>

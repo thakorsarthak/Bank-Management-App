@@ -1,17 +1,38 @@
 .signup-container {
-  max-width: 600px;
-  margin: auto;
-  justify-content: center;
-  display: flex;
+  width: 100%;
+}
+
+.signup-container .p-card {
+  max-width: 980px;
 }
 
 .form-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 
 .form-row .form-field {
-  flex: 1;
+  min-width: 0;
+}
+
+:host ::ng-deep .p-dropdown {
+  width: 100% !important;
+}
+
+:host ::ng-deep .p-card .p-card-content {
+  position: relative;
+}
+
+:host ::ng-deep .p-card .p-card-content::before {
+  content: "Open your account in a few guided steps.";
+  display: block;
+  margin-bottom: 1.25rem;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(245, 159, 69, 0.12), rgba(59, 183, 165, 0.1));
+  color: var(--brand-800);
+  font-weight: 700;
 }
 
 :host ::ng-deep {
@@ -120,6 +141,10 @@
 }
 
 @media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
   .confirmation-content {
     padding: 1.5rem;
   }
@@ -146,9 +171,5 @@
   .confirmation-notice {
     flex-direction: column;
     text-align: center;
-  }
-
-  .signup-container {
-    margin: 1rem auto;
   }
 }

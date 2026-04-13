@@ -1,246 +1,129 @@
-.header {
-  position: fixed;
+.header-shell {
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100%;
   z-index: 1000;
-  background-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  padding: 1rem 1rem 0;
+  backdrop-filter: blur(16px);
 }
 
-.header.scrolled {
-  background-color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.header-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
-  height: 72px;
+.brand-block {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.9rem;
+  cursor: pointer;
 }
 
-.logo-container {
+.brand-mark {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--brand-gradient);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 14px 30px rgba(24, 52, 80, 0.24);
+}
+
+.brand-copy {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
 .logo {
-  font-size: 24px;
+  margin: 0;
+  color: var(--brand-900);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.brand-copy span {
+  color: var(--text-muted);
+  font-size: 0.82rem;
   font-weight: 600;
-  color: #0A2463;
-  margin: 0;
-  letter-spacing: -0.5px;
 }
 
-/* Desktop Navigation */
-.desktop-nav {
-  display: none;
-}
-
-.nav-links {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-item {
-  position: relative;
-  margin: 0 8px;
-}
-
-.nav-link {
+.header-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
-  color: #0A2463;
-  text-decoration: none;
-  padding: 8px 16px;
-  font-weight: 400;
-  font-size: 16px;
-  transition: color 0.2s ease;
+  gap: 0.75rem;
 }
 
-.nav-link:hover {
-  color: #3AAFA9;
+:host ::ng-deep .p-menubar {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 250, 243, 0.78);
+  box-shadow: 0 20px 40px rgba(24, 44, 69, 0.1);
+  backdrop-filter: blur(20px);
 }
 
-.dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: white;
-  min-width: 200px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 8px 0;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(8px);
-  transition: all 0.3s ease;
-  z-index: 100;
+:host ::ng-deep .p-menubar-root-list {
+  gap: 0.25rem;
 }
 
-.dropdown.open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+:host ::ng-deep .p-menubar .p-menuitem-link {
+  border-radius: 999px;
+  color: var(--brand-800);
+  font-weight: 700;
 }
 
-.dropdown a {
-  display: block;
-  padding: 8px 16px;
-  color: #0A2463;
-  text-decoration: none;
-  font-size: 14px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+:host ::ng-deep .p-menubar .p-menuitem-link:hover {
+  background: rgba(35, 70, 109, 0.08);
 }
 
-.dropdown a:hover {
-  background-color: #f5f9ff;
-  color: #3AAFA9;
+:host ::ng-deep .p-submenu-list {
+  border-radius: 20px;
+  border: 1px solid rgba(35, 70, 109, 0.08);
+  background: rgba(255, 255, 255, 0.96);
+  padding: 0.45rem;
 }
 
-/* Action Buttons */
-.action-buttons {
-  display: none;
+:host ::ng-deep .p-submenu-list .p-menuitem-link {
+  border-radius: 14px;
 }
 
-.login-btn, .signup-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.2s ease;
+:host ::ng-deep .nav-cta {
+  min-width: 8.75rem;
 }
 
-.login-btn {
-  color: #0A2463;
-  background-color: transparent;
-  border: 1px solid #0A2463;
-}
-
-.login-btn:hover {
-  background-color: #f0f4ff;
-}
-
-.signup-btn {
-  color: white;
-  background-color: #0A2463;
-  margin-left: 8px;
-}
-
-.signup-btn:hover {
-  background-color: #051b4d;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(10, 36, 99, 0.2);
-}
-
-/* Mobile Menu Button */
-.mobile-menu-btn {
-  display: flex;
-  background: none;
+:host ::ng-deep .nav-primary {
+  background: var(--brand-gradient);
   border: none;
-  color: #0A2463;
-  cursor: pointer;
-  padding: 8px;
 }
 
-/* Mobile Navigation */
-.mobile-nav {
-  position: fixed;
-  top: 72px;
-  left: 0;
-  width: 100%;
-  height: 0;
-  background-color: white;
-  overflow: hidden;
-  transition: height 0.3s ease;
-  z-index: 999;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+:host ::ng-deep .nav-ghost {
+  color: var(--brand-800);
+  border-color: rgba(35, 70, 109, 0.24);
+  background: rgba(255, 255, 255, 0.52);
 }
 
-.mobile-nav.open {
-  height: calc(100vh - 72px);
-  overflow-y: auto;
-}
-
-.mobile-nav-links {
-  list-style: none;
-  padding: 16px;
-  margin: 0;
-}
-
-.mobile-nav-links li {
-  margin-bottom: 16px;
-}
-
-.mobile-nav-links a {
-  display: block;
-  color: #0A2463;
-  text-decoration: none;
-  font-size: 18px;
-  padding: 8px 0;
-  font-weight: 400;
-}
-
-.mobile-action {
-  margin-top: 24px;
-}
-
-.mobile-login, .mobile-signup {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 16px;
-  text-decoration: none;
-}
-
-.mobile-login {
-  color: #0A2463;
-  background-color: transparent;
-  border: 1px solid #0A2463;
-}
-
-.mobile-signup {
-  color: white;
-  background-color: #0A2463;
-}
-
-/* Responsive Styles */
-@media (min-width: 768px) {
-  .desktop-nav {
-    display: block;
+@media (max-width: 768px) {
+  .header-shell {
+    padding: 0.75rem 0.75rem 0;
   }
-  
-  .action-buttons {
-    display: flex;
-  }
-  
-  .mobile-menu-btn {
+
+  .brand-copy span {
     display: none;
   }
-}
 
-@media (max-width: 767px) {
-  .header-container {
-    height: 64px;
+  :host ::ng-deep .p-menubar {
+    padding: 0.75rem;
   }
-  
-  .mobile-nav.open {
-    height: calc(100vh - 64px);
+
+  :host ::ng-deep .p-menubar-button {
+    border-radius: 14px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  :host ::ng-deep .nav-cta {
+    flex: 1;
+    min-width: 0;
   }
 }

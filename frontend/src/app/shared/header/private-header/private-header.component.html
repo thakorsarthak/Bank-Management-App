@@ -1,16 +1,28 @@
 <div class="private-header">
   <p-menubar [model]="items">
     <ng-template pTemplate="start">
-      <h1 class="logo">SecureBank</h1>
+      <div class="private-brand">
+        <div class="brand-pill">SB</div>
+        <div>
+          <h1 class="logo">SecureBank</h1>
+          <span class="logo-subtitle">Private banking workspace</span>
+        </div>
+      </div>
     </ng-template>
+
     <ng-template pTemplate="end">
       <div class="header-actions">
         <div class="session-timer">
-    Auto logout in: {{ remainingTime }}
-</div>
+          <i class="pi pi-clock"></i>
+          <span>Auto logout in {{ remainingTime }}</span>
+        </div>
 
-        <p-button label="Profile" severity="secondary" icon="pi pi-user" />
-        <p-button label="Logout" icon="pi pi-sign-out" severity="secondary" (onClick)="onLogout()"
+        <p-button label="Profile" severity="secondary" icon="pi pi-user" styleClass="profile-btn" />
+        <p-button
+          label="Logout"
+          icon="pi pi-sign-out"
+          severity="secondary"
+          (onClick)="onLogout()"
           styleClass="logout-btn">
         </p-button>
       </div>
