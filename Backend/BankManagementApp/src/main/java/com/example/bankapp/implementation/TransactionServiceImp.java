@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,8 +37,6 @@ import com.example.bankapp.services.JWTservices;
 import com.example.bankapp.services.NotificationService;
 import com.example.bankapp.services.TransactionService;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 @Service
 public  class TransactionServiceImp implements TransactionService {
 
@@ -60,8 +57,8 @@ public  class TransactionServiceImp implements TransactionService {
 
 	@Autowired
 	private NotificationService notificationService;
-	
-	
+
+
 	private void saveFailedTransaction(Account from, Account to, TransferRequestDTO request, TransactionStatus status,
 			String reason, String counterPartyName) {
 		Transaction failedTransaction = new Transaction();
@@ -78,15 +75,15 @@ public  class TransactionServiceImp implements TransactionService {
 
 		transactionRepo.save(failedTransaction);
 	}
-	
-	
+
+
 	@Override
 	public AdminUserTransactionCardResponseDTO cardHistory(String accountNumber) {
-		
+
 		Long total = transactionRepo.countByAccount_AccountNumber(accountNumber);
 		Long debitCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "DEBIT");
 		Long creditCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "CREDIT");
-		
+
 		Long successCount = transactionRepo
 			    .countByAccount_AccountNumberAndStatus(accountNumber, TransactionStatus.COMPLETED);
 
@@ -97,7 +94,7 @@ public  class TransactionServiceImp implements TransactionService {
 
 		System.out.println("Total debit counts: "+debitCount);
 		System.out.println("Total credit counts: "+creditCount);
-		
+
 		AdminUserTransactionCardResponseDTO response = new AdminUserTransactionCardResponseDTO(total , creditCount, debitCount,failedCount, successCount );
 		return response;
 	}
@@ -140,7 +137,7 @@ public  class TransactionServiceImp implements TransactionService {
 		return new TransactionHistoryResponseDTO(dtos, total, debitCount, creditCount, transactionsPage.getNumber(),
 				transactionsPage.getTotalPages());
 	}
-	
+
 	@Override
 	public List<Transaction> getTransactionByDateRange(String accountNumber, LocalDate fromDate, LocalDate toDate) {
 		LocalDateTime startDateTime = fromDate.atStartOfDay();
@@ -154,7 +151,7 @@ public  class TransactionServiceImp implements TransactionService {
 	public ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request) {
 
 		Optional<Account> toOptionalAcc = accountRepo.findByAccountNumber(request.getToAccountNumber());
-		
+
 		Account toAcc = toOptionalAcc.get();
 
 		Account fromAccount = accountRepo.findByAccountNumber(fromAccountNumber)
@@ -166,7 +163,7 @@ public  class TransactionServiceImp implements TransactionService {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new GlobalAPIResponseDTO<>("KYC Pending", false));
 		}
-		
+
 		//		Account toAccount = accountRepo.findByAccountNumber(request.getToAccountNumber())
 //				.orElseThrow(() -> new RuntimeException("Receiver Account does not Exist"));
 

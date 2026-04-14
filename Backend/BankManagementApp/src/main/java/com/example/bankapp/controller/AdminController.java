@@ -21,10 +21,8 @@ import com.example.bankapp.DTO.AdminDashboardResponseDTO;
 import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
 import com.example.bankapp.DTO.AdminUserTableResponseDTO;
-import com.example.bankapp.DTO.AdminUserTransactionCardResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
-import com.example.bankapp.DTO.TransactionResponseDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.enums.AccountStatus;
@@ -43,9 +41,9 @@ import lombok.RequiredArgsConstructor;
 public class AdminController {
 
 	private final AdminService adminService;
-	
+
 	private final AccountRepo accountrepo;
-	
+
 	private final TransactionService tService;
 
 	@PostMapping("/employee/addStaff")
@@ -162,22 +160,22 @@ public class AdminController {
 
 		return ResponseEntity.ok(adminService.getUserDetails(accountId));
 	}
-	
-	
+
+
 	@GetMapping("/user/{accountId}/transactionHistoryCard")
 	public ResponseEntity<?> userTransactionCard(@PathVariable Long accountId){
-		
+
 		Optional<Account> accountOp = accountrepo.findById(accountId);
-		
+
 		Account acc = accountOp.get();
-		
+
 	   //	AdminUserTransactionCardResponseDTO res =  tService.cardHistory(acc.getAccountNumber());
-		
+
 		return ResponseEntity.ok(tService.cardHistory(acc.getAccountNumber()));
-		
+
 		//return ResponseEntity.ok(null);
 	}
-	
+
 
 	@PatchMapping("/user/{accountId}/updateUser")
 	public ResponseEntity<?> updateUserStatus(@PathVariable Long accountId,

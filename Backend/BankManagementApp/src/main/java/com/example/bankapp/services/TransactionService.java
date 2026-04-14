@@ -8,11 +8,8 @@ import org.springframework.http.ResponseEntity;
 import com.example.bankapp.DTO.AdminUserTransactionCardResponseDTO;
 import com.example.bankapp.DTO.TransactionHistoryResponseDTO;
 import com.example.bankapp.DTO.TransactionReqDTO;
-import com.example.bankapp.DTO.TransactionResponseDTO;
 import com.example.bankapp.DTO.TransferRequestDTO;
 import com.example.bankapp.entity.Transaction;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 public interface TransactionService {
 
@@ -22,8 +19,8 @@ public interface TransactionService {
 	public TransactionHistoryResponseDTO  getTransactions(String accountNumber, int page, int size, String sortby , String sortDirection);
 
 	// public Page<TransactionResponseDTO> getTransactions(String accountNumber, int page, int size);
-	
-	
+
+
 	public AdminUserTransactionCardResponseDTO cardHistory(String accountNumber);
 
 		String depositAmount(TransactionReqDTO request);

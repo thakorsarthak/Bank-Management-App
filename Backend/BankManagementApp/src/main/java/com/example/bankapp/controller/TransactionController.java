@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.bankapp.DTO.AdminUserTransactionCardResponseDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.TransactionHistoryResponseDTO;
 import com.example.bankapp.DTO.TransactionReqDTO;
-import com.example.bankapp.DTO.TransactionResponseDTO;
 import com.example.bankapp.DTO.TransferRequestDTO;
 import com.example.bankapp.entity.Transaction;
 import com.example.bankapp.services.JWTservices;
