@@ -85,6 +85,7 @@
 }
 
 .dashboard-container {
+  padding-top: 100cm;
   position: relative;
   z-index: 2;
   max-width: 1240px;

@@ -29,7 +29,7 @@ public class DashboardStats {
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long id;
 
-	    // For which day this stat belongs
+	    // For which day this stats belongs
 	    @Column(nullable = false, unique = true)
 	    private LocalDate date;
 

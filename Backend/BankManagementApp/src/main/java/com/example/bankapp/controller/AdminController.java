@@ -1,5 +1,6 @@
 package com.example.bankapp.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ import com.example.bankapp.DTO.AdminEmployeeResponseDTO;
 import com.example.bankapp.DTO.AdminUserResponseDTO;
 import com.example.bankapp.DTO.AdminUserTableResponseDTO;
 import com.example.bankapp.DTO.CreateStaffDTO;
+import com.example.bankapp.DTO.DashboardCardDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.entity.Account;
@@ -29,6 +31,7 @@ import com.example.bankapp.entity.DashboardStats;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
 import com.example.bankapp.repository.AccountRepo;
+import com.example.bankapp.repository.DashboardStatsRepo;
 import com.example.bankapp.services.AdminService;
 import com.example.bankapp.services.DashboardService;
 import com.example.bankapp.services.TransactionService;
@@ -49,11 +52,18 @@ public class AdminController {
 	private final TransactionService tService;
 	
 	private final DashboardService dashboardService;
+	
+	private final DashboardStatsRepo dashboardStatsRepo;
 
 
 	@GetMapping("/dashBoardCard")
-    public DashboardStats getDashboard() {
-        return dashboardService.getTodayStats();
+    public ResponseEntity<DashboardCardDTO> getDashboard() {
+		DashboardStats stats = dashboardStatsRepo.findByDate(LocalDate.now())
+	            .orElseThrow(() -> new RuntimeException("No data found"));
+
+	    DashboardCardDTO dto = dashboardService.mapToDTO(stats);
+
+	    return ResponseEntity.ok(dto);
     }
 
     @PostMapping("/refresh")

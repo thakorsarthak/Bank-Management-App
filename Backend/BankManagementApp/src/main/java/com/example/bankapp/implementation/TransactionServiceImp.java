@@ -66,7 +66,7 @@ public class TransactionServiceImp implements TransactionService {
 
 	private static final Logger log = LoggerFactory.getLogger(TransactionServiceImp.class);
 
-	private void saveFailedTransaction(Account from, Account to, TransferRequestDTO request, TransactionStatus status,
+	private void saveFailedTransaction(Account from, Account to, TransferRequestDTO request, TransactionStatus status, TransactionDirection direction,
 			String reason, String counterPartyName) {
 		Transaction failedTransaction = new Transaction();
 		failedTransaction.setAccount(from); // Save fromAccount for audit
@@ -76,6 +76,7 @@ public class TransactionServiceImp implements TransactionService {
 		failedTransaction.setAfterbalance(from != null ? from.getBalance() : 0.0);
 		failedTransaction.setTimestamp(LocalDateTime.now());
 		failedTransaction.setDescription(reason);
+		failedTransaction.setDirection(direction);
 		failedTransaction.setStatus(status);
 		failedTransaction.setCounterPartyName(counterPartyName);
 
@@ -172,7 +173,7 @@ public class TransactionServiceImp implements TransactionService {
 				.orElseThrow(() -> new RuntimeException("Sender  does not Exist"));
 
 		if (fromAccount.getStatus().equals(AccountStatus.PENDING_KYC)) {
-			saveFailedTransaction(fromAccount, null, request, TransactionStatus.FAILED, "KYC Pending",
+			saveFailedTransaction(fromAccount, null, request, TransactionStatus.FAILED, TransactionDirection.DEBIT, "KYC Pending",
 					request.getToAccountNumber());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GlobalAPIResponseDTO<>("KYC Pending", false));
 		}
@@ -182,7 +183,7 @@ public class TransactionServiceImp implements TransactionService {
 //				.orElseThrow(() -> new RuntimeException("Receiver Account does not Exist"));
 
 		if (toOptionalAcc.isEmpty()) {
-			saveFailedTransaction(fromAccount, null, request, TransactionStatus.FAILED,
+			saveFailedTransaction(fromAccount, null, request, TransactionStatus.FAILED, TransactionDirection.DEBIT,
 					"Receiver account does not exist", request.getToAccountNumber());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new GlobalAPIResponseDTO<>("Receiver  does not exist", false));
@@ -195,7 +196,7 @@ public class TransactionServiceImp implements TransactionService {
 		Account toAccount = toOptionalAcc.get();
 
 		if (fromAccount.equals(toAccount)) {
-			saveFailedTransaction(fromAccount, toAccount, request, TransactionStatus.FAILED,
+			saveFailedTransaction(fromAccount, toAccount, request, TransactionStatus.FAILED, TransactionDirection.DEBIT,
 					"Can't transfer to same account", toAccount.getAccountHolderName());
 			List<FieldError> errors = List.of(new FieldError("toAccount",
 					"You cannot transfer to your own account " + toAccount.getAccountNumber()));
@@ -208,14 +209,14 @@ public class TransactionServiceImp implements TransactionService {
 
 		// check pin
 		if (!passwordEncoder.matches(request.getPin(), fromAccount.getPin())) {
-			saveFailedTransaction(fromAccount, toAccount,request,TransactionStatus.FAILED,"Wrong pin", toAccount.getAccountHolderName());
+			saveFailedTransaction(fromAccount, toAccount,request,TransactionStatus.FAILED, TransactionDirection.DEBIT , "Wrong pin", toAccount.getAccountHolderName());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new GlobalAPIResponseDTO<>("Incorrect PIN", false));
 		}
 
 		// check balance
 		if (fromAccount.getBalance() < request.getAmount()) {
-			saveFailedTransaction(fromAccount, toAccount, request, TransactionStatus.FAILED, "Insufficient Balance",
+			saveFailedTransaction(fromAccount, toAccount, request, TransactionStatus.FAILED,TransactionDirection.DEBIT, "Insufficient Balance",
 					toAccount.getAccountHolderName());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new GlobalAPIResponseDTO<>("Insufficient Balance", false));
@@ -246,35 +247,6 @@ public class TransactionServiceImp implements TransactionService {
 		Transaction senderTransaction = buildTransaction(fromAccount,
 				TransactionDirection.DEBIT, amount, beforeBalanceSender,
 				afterBalanceSender, description, toAccount.getAccountHolderName(), TransactionStatus.SUCCESS, now);
-		
-		// transaction record for sender
-//		Transaction transactionForSender = new Transaction();
-//		transactionForSender.setAccount(fromAccount);
-//		transactionForSender.setType("Transfer");
-//		transactionForSender.setAmount(request.getAmount());
-//		transactionForSender.setBeforebalance(beforeBalanceSender);
-//		transactionForSender.setAfterbalance(afterBalanceSender);
-//		transactionForSender.setTimestamp(now);
-//		transactionForSender
-//				.setDescription(description != null ? description : "Transfer to " + toAccount.getAccountNumber());
-//		transactionForSender.setDirection(TransactionDirection.DEBIT.name());
-//		transactionForSender.setCounterPartyName(toAccount.getAccountHolderName());
-//		transactionForSender.setStatus(TransactionStatus.SUCCESS);
-
-		// transaction record for receiver
-//		Transaction transactionForReceiver = new Transaction();
-//		transactionForReceiver.setAccount(toAccount);
-//		transactionForReceiver.setType("Transfer");
-//		transactionForReceiver.setAmount(request.getAmount());
-//		transactionForReceiver.setBeforebalance(beforeBalanceReceiver);
-//		transactionForReceiver.setAfterbalance(afterBalanceReceiver);
-//		transactionForReceiver.setTimestamp(now);
-//		transactionForReceiver
-//				.setDescription(description != null ? description : "Transfer from " + fromAccount.getAccountNumber());
-//		transactionForReceiver.setDirection(TransactionDirection.CREDIT);
-//		transactionForReceiver.setCounterPartyName(fromAccount.getAccountHolderName());
-//		transactionForReceiver.setStatus(TransactionStatus.SUCCESS);
-		
 		
 		Transaction receiverTransaction = buildTransaction(toAccount,
 				TransactionDirection.CREDIT, amount, beforeBalanceReceiver,

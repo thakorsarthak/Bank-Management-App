@@ -13,6 +13,86 @@
       </div>
     </div>
   </div>
+  <div class="mb-4">
+    <p-dropdown [options]="dashboardOptions" [(ngModel)]="selectedDashboard" placeholder="Select Dashboard Type"
+      optionLabel="label" optionValue="value" (onChange)="onDashboardChange()" styleClass="w-full">
+    </p-dropdown>
+  </div>
+  <div class="summary-grid" *ngIf="selectedDashboard === 'EMPLOYEE'">
+
+    <!-- Total Employees -->
+    <div class="summary-card total-card">
+      ...
+      <h3>Total Employees</h3>
+      <div class="summary-number">{{totalEmployees}}</div>
+    </div>
+
+    <!-- Active -->
+    <div class="summary-card total-card">
+      ...
+      <h3>Active Employees</h3>
+      <div class="summary-number">{{activeEmployee}}</div>
+    </div>
+
+    <!-- Inactive -->
+    <div class="summary-card total-card">
+      ...
+      <h3>Inactive Employees</h3>
+      <div class="summary-number">{{inActiveEmployee}}</div>
+    </div>
+
+  </div>
+  <div class="summary-grid" *ngIf="selectedDashboard === 'USER'">
+
+    <div class="summary-card total-card">
+      <h3>Total Users</h3>
+      <div class="summary-number">{{totalUsers}}</div>
+    </div>
+
+    <div class="summary-card total-card">
+      <h3>Active Users</h3>
+      <div class="summary-number">{{activeUsers}}</div>
+    </div>
+
+    <div class="summary-card total-card">
+      <h3>Inactive Users</h3>
+      <div class="summary-number">{{inActiveUsers}}</div>
+    </div>
+
+  </div>
+  <div class="summary-grid" *ngIf="selectedDashboard === 'TRANSACTION'">
+
+    <div class="summary-card total-card">
+      <h3>Total Transactions</h3>
+      <div class="summary-number">{{dashboardData?.totalTransactions}}</div>
+    </div>
+
+    <div class="summary-card credit-card">
+      <h3>Credit Transactions</h3>
+      <div class="summary-number">{{dashboardData?.totalCreditTransactions}}</div>
+    </div>
+
+    <div class="summary-card debit-card">
+      <h3>Debit Transactions</h3>
+      <div class="summary-number">{{dashboardData?.totalDebitTransactions}}</div>
+    </div>
+
+    <div class="summary-card debit-card">
+      <h3>Failed Transactions</h3>
+      <div class="summary-number">{{dashboardData?.totalFailedTransactions}}</div>
+    </div>
+
+    <div class="summary-card credit-card">
+      <h3>Credit Amount</h3>
+      <div class="summary-number">₹{{dashboardData?.totalCreditAmount}}</div>
+    </div>
+
+    <div class="summary-card debit-card">
+      <h3>Debit Amount</h3>
+      <div class="summary-number">₹{{dashboardData?.totalDebitAmount}}</div>
+    </div>
+
+  </div>
 
   <div class="dashboard-container">
 
@@ -91,15 +171,17 @@
         <!-- Status -->
         <div class="filter-field">
           <label>Status</label>
-          <p-dropdown [options]="statusOptions" [(ngModel)]="status" (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
+          <p-dropdown [options]="statusOptions" [(ngModel)]="status"
+            (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
             placeholder="Active / Inactive" appendTo="body">
           </p-dropdown>
         </div>
 
 
-         <div class="filter-field">
+        <div class="filter-field">
           <label>Branch</label>
-          <p-dropdown [options]="branchOptions" [(ngModel)]="branch" (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
+          <p-dropdown [options]="branchOptions" [(ngModel)]="branch"
+            (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
             placeholder="Select branch" appendTo="body">
           </p-dropdown>
         </div>
@@ -114,7 +196,8 @@
         <!-- Sort -->
         <div class="filter-field">
           <label>Joining Date</label>
-          <p-dropdown [options]="dateSortOptions" [(ngModel)]="dateSort" (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
+          <p-dropdown [options]="dateSortOptions" [(ngModel)]="dateSort"
+            (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
             placeholder="Sort by date" appendTo="body">
           </p-dropdown>
         </div>
@@ -261,20 +344,22 @@
             </td>
 
             <td>
-              <p-button icon="pi pi-eye" severity="secondary" *ngIf="selectedEntity === 'EMPLOYEE'" [text]="true" pTooltip="View details"
-                (click)="viewEmployee(row)">
+              <p-button icon="pi pi-eye" severity="secondary" *ngIf="selectedEntity === 'EMPLOYEE'" [text]="true"
+                pTooltip="View details" (click)="viewEmployee(row)">
               </p-button>
 
-              <p-button icon="pi pi-eye" severity="secondary" *ngIf="selectedEntity === 'USER'" [text]="true" pTooltip="View details"
-                (click)="viewUser(row)">
+              <p-button icon="pi pi-eye" severity="secondary" *ngIf="selectedEntity === 'USER'" [text]="true"
+                pTooltip="View details" (click)="viewUser(row)">
               </p-button>
 
-              <p-button icon="pi pi-ban" severity="danger" [text]="true" pTooltip="Disable employee" 
-                *ngIf="row.status === 'ACTIVE' && selectedEntity === 'EMPLOYEE'" (onClick)="updateStatus(row.employeeId, 'INACTIVE')">
+              <p-button icon="pi pi-ban" severity="danger" [text]="true" pTooltip="Disable employee"
+                *ngIf="row.status === 'ACTIVE' && selectedEntity === 'EMPLOYEE'"
+                (onClick)="updateStatus(row.employeeId, 'INACTIVE')">
               </p-button>
 
               <p-button icon="pi pi-check" severity="success" [text]="true" pTooltip="Enable employee"
-                *ngIf="row.status !== 'ACTIVE' && selectedEntity === 'EMPLOYEE'" (onClick)="updateStatus(row.employeeId, 'ACTIVE')">
+                *ngIf="row.status !== 'ACTIVE' && selectedEntity === 'EMPLOYEE'"
+                (onClick)="updateStatus(row.employeeId, 'ACTIVE')">
               </p-button>
             </td>
 
@@ -297,7 +382,8 @@
       </p-table>
 
       <!-- Employee and user Details Dialog to updateEmployee -->
-      <p-dialog responsiveLayout="scroll" header="{{selectedEntity === 'EMPLOYEE' ? 'Employee' : 'User'}} Details" [(visible)]="showEntityDialog" [modal]="true" [style]="{ width: '450px' }">
+      <p-dialog responsiveLayout="scroll" header="{{selectedEntity === 'EMPLOYEE' ? 'Employee' : 'User'}} Details"
+        [(visible)]="showEntityDialog" [modal]="true" [style]="{ width: '450px' }">
 
         <form [formGroup]="entityForm" class="edit-form">
 
@@ -308,12 +394,12 @@
               <input pInputText [value]="selectedEmployee?.employeeId" disabled />
             </div>
 
-             <div class="form-field" *ngIf="selectedEntity === 'USER'">
+            <div class="form-field" *ngIf="selectedEntity === 'USER'">
               <label>User ID</label>
               <input pInputText [value]="selectedUser?.id" disabled />
             </div>
 
-             <div class="form-field" *ngIf ="selectedEntity === 'USER'">
+            <div class="form-field" *ngIf="selectedEntity === 'USER'">
               <label>Account Number</label>
               <input pInputText [value]="selectedUser?.accountNumber" disabled />
             </div>
@@ -330,10 +416,10 @@
 
             <div class="form-field" *ngIf="selectedEntity === 'USER'">
               <label>Branch Name</label>
-              <input pInputText [value]="selectedUser?.branch"  disabled/>
+              <input pInputText [value]="selectedUser?.branch" disabled />
             </div>
 
-             <div class="form-field" *ngIf="selectedEntity === 'EMPLOYEE'">
+            <div class="form-field" *ngIf="selectedEntity === 'EMPLOYEE'">
               <label>Branch Code</label>
               <input pInputText [value]="selectedEmployee?.branchCode" disabled />
             </div>
@@ -346,24 +432,29 @@
 
             <div class="form-field">
               <label>Status</label>
-              <p-dropdown appendTo="body"  [options]="statusOptions" formControlName="status" >
+              <p-dropdown appendTo="body" [options]="statusOptions" formControlName="status">
               </p-dropdown>
             </div>
 
           </div>
 
         </form>
+        <div class="grid">
+
+        </div>
 
         <ng-template pTemplate="footer">
           <p-button label="Cancel" severity="secondary" (onClick)="closeDialog()">
           </p-button>
 
-          <p-button label="View More"  *ngIf="selectedEntity === 'USER'" [raised]="true" severity="info" (onClick)="viewMoreUser()" />
+          <p-button label="View More" *ngIf="selectedEntity === 'USER'" [raised]="true" severity="info"
+            (onClick)="viewMoreUser()" />
 
-          <p-button label="Update" *ngIf="selectedEntity === 'EMPLOYEE'" severity="success" [disabled]="entityForm.invalid" (onClick)="updateEmployee()">
+          <p-button label="Update" *ngIf="selectedEntity === 'EMPLOYEE'" severity="success"
+            [disabled]="entityForm.invalid" (onClick)="updateEmployee()">
           </p-button>
 
-          <p-button label="Update" *ngIf="selectedEntity === 'USER'" severity="success"   (onClick)="updateUser()">
+          <p-button label="Update" *ngIf="selectedEntity === 'USER'" severity="success" (onClick)="updateUser()">
           </p-button>
         </ng-template>
 

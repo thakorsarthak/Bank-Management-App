@@ -80,7 +80,7 @@ export class TransactionComponent implements OnInit {
 
   statusOptions = [
     { label: 'All Status', value: '' },
-    { label: 'Completed', value: 'completed' },
+    { label: 'Success', value: 'success' },
     { label: 'Failed', value: 'failed' },
     { label: 'Cancelled', value: 'cancelled' }
   ];
@@ -150,8 +150,7 @@ export class TransactionComponent implements OnInit {
     return date.toLocaleDateString('en-CA');
   }
 
-
-
+  
   // Call Download API
   downloadExcel() {
     if (!this.isValidDateRange()) {

@@ -40,14 +40,28 @@ import { AdminService } from '../../../core-component/services/admin.service';
 })
 export class AdminComponentComponent implements OnInit {
 
+  stats: any;
+  dashboardData: any;
   employees: Employee[] = [];
   users: any[] = [];
+  totalEmployees = 0;
+  activeEmployee: any;
+  inActiveEmployee: any;
+  totalUsers = 0;
+  activeUsers: any;
+  inActiveUsers: any;
+  dashboardEmployeeStats: any;
   totalRecords = 0;
   loading = false;
   router: Router = new Router();
 
   // FILTER MODEL
   selectedEntity!: string;
+
+  //for Card dropdown
+  selectedtype!: string;
+
+  
 
   searchName: string = '';
   status: string | null = null;
@@ -58,7 +72,13 @@ export class AdminComponentComponent implements OnInit {
   branchSortOrder: 'ASC' | 'DESC' | null = null;
   selectedBranchId: number | null = null;
 
+  dashboardOptions = [
+    { label: 'Employee', value: 'EMPLOYEE' },
+    { label: 'User', value: 'USER' },
+    { label: 'Transaction', value: 'TRANSACTION' }
+  ];
 
+  selectedDashboard: string = 'EMPLOYEE';
 
   showEntityDialog = false;
   selectedEmployee!: Employee;
@@ -69,12 +89,31 @@ export class AdminComponentComponent implements OnInit {
   entityForm!: FormGroup;
 
   constructor(
-    private adminService : AdminService,
+    private adminService: AdminService,
     private fb: FormBuilder,
     private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
+
+    this.adminService.getDashboardCard().subscribe(res => {
+      this.dashboardData = res;
+    });
+
+    this.adminService.getStats().subscribe({
+      next: (res) => {
+        this.totalEmployees = res.data.employees.total;
+        this.activeEmployee = res.data.employees.active;
+        this.inActiveEmployee = res.data.employees.inactive;
+
+        this.totalUsers = res.data.users.total;
+        this.activeUsers = res.data.users.active;
+        this.inActiveUsers = res.data.users.inactive;
+
+      }
+
+    });
+
 
     this.entityForm = this.fb.group({
       fullName: ['', Validators.required],
@@ -94,13 +133,13 @@ export class AdminComponentComponent implements OnInit {
     { label: 'Support', value: 'SUPPORT' }
   ];
 
-branchOptions = [
-  { label: 'All Branches', value: null },
-  { label: 'Ahmedabad', value: 1 },
-  { label: 'Surat', value: 2 },
-  { label: 'Mumbai', value: 3 },  
-  { label: 'Bangalore', value: 4 }
-];
+  branchOptions = [
+    { label: 'All Branches', value: null },
+    { label: 'Ahmedabad', value: 1 },
+    { label: 'Surat', value: 2 },
+    { label: 'Mumbai', value: 3 },
+    { label: 'Bangalore', value: 4 }
+  ];
 
 
   statusOptions = [
@@ -121,7 +160,16 @@ branchOptions = [
   ];
 
 
- 
+ onDashboardChange() {
+  this.clearFilters();
+
+  // Optional: change entity automatically
+  if (this.selectedDashboard === 'EMPLOYEE') {
+    this.selectedtype = 'EMPLOYEE';
+  } else if (this.selectedDashboard === 'USER') {
+    this.selectedtype = 'USER';
+  }
+}
 
   //  ENTITY CHANGE or choosing Employee/User //
 
@@ -134,19 +182,19 @@ branchOptions = [
   }
 
   loadEntities(event: any) {
-    console.log('Selected Entity:', this.selectedEntity, event); 
+    console.log('Selected Entity:', this.selectedEntity, event);
     if (this.selectedEntity === 'EMPLOYEE') {
       this.loadEmployees(event);
-    } else  {
+    } else {
       this.loadUsers(event);
     }
   }
 
 
-     // Implement user loading logic here 
+  // Implement user loading logic here 
   loadUsers(event?: any) {
     console.log('Loading users with event:', event);
-  
+
     const first = event?.first ?? 0;
     const rows = event?.rows ?? 10;
 
@@ -209,8 +257,8 @@ branchOptions = [
 
     if (this.status) params.status = this.status;
     if (this.selectedBranchId != null) {
-          params.branchId = this.selectedBranchId;
-        }
+      params.branchId = this.selectedBranchId;
+    }
 
     this.adminService.getEmployees(params).subscribe({
       next: (res) => {
@@ -235,12 +283,12 @@ branchOptions = [
     if (this.status)
       params.status = this.status;
 
-    if(this.selectedBranchId != null){
+    if (this.selectedBranchId != null) {
       params.branchId = this.selectedBranchId;
     }
 
-    if (this.branch) 
-     // params.sortField = 'branch';
+    if (this.branch)
+      // params.sortField = 'branch';
       params.branchId = this.branch;
 
     if (this.dateSort) {
@@ -270,14 +318,14 @@ branchOptions = [
     if (this.status)
       params.status = this.status;
 
-    if (this.selectedBranchId != null) 
-       params.branchId = this.selectedBranchId;
-        
+    if (this.selectedBranchId != null)
+      params.branchId = this.selectedBranchId;
 
-    if (this.branch) 
-     // params.sortField = 'branch';
+
+    if (this.branch)
+      // params.sortField = 'branch';
       params.branchId = this.branch;
-        
+
     if (this.searchName)
       params.search = this.searchName;
 
@@ -303,7 +351,7 @@ branchOptions = [
     this.status = null;
     this.designation = null;
     this.dateSort = null;
-   // this.branch = null;
+    // this.branch = null;
     // this.refeshEmployees();
     this.loadEntities({ first: 0, rows: 10 });
     this.selectedBranchId = null;
@@ -318,11 +366,11 @@ branchOptions = [
   // }
 
 
-//viewing USER details
+  //viewing USER details
   viewUser(user: any): void {
-      this.selectedUser = user;
+    this.selectedUser = user;
 
-  this.selectedUserId = user.id;
+    this.selectedUserId = user.id;
 
     this.entityForm.patchValue({
       status: this.selectedUser.status,
@@ -332,8 +380,8 @@ branchOptions = [
   }
 
   viewMoreUser() {
-  this.router.navigate(['/privateMain/adminUserDetails', this.selectedUser.id]);
-}
+    this.router.navigate(['/privateMain/adminUserDetails', this.selectedUser.id]);
+  }
 
   //  Viewing employee 
 

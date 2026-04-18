@@ -22,6 +22,14 @@ export class AdminService {
     return this.http.get<any>(`${this.apiUrl}/admin/user/getAllUser`, { params });
   }
 
+  getDashboardCard() {
+  return this.http.get(`${this.apiUrl}/admin/dashBoardCard`);
+}
+
+  getStats(): Observable<any>{
+  return this.http.get(`${this.apiUrl}/admin/employee/stats`);
+}
+
   updateEmployeeStatus(employeeId: number, payload: { status: string }) {
     return this.http.patch<GlobalAPIResponse<any>>(
       `${this.apiUrl}/admin/employee/${employeeId}/updateStatus`, payload);
@@ -39,7 +47,6 @@ export class AdminService {
       payload
     );
   }
-
 
    updateUser(accountId: number, payload: any) {
     return this.http.patch<GlobalAPIResponse<any>>(

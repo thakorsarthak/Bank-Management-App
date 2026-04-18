@@ -1,5 +1,7 @@
 @import "../../../shared/styles/account-layout-shared.css";
 @import "../../../shared/styles/management-panel-shared.css";
+@import "../../../shared/styles/account-layout-shared.css";
+@import "../../../shared/styles/account-details-shared.css";
 
 .edit-form {
   display: flex;
