@@ -87,7 +87,7 @@ public class ExcelUtil {
 
             // Type -- (debit / credit)
 
-            row.createCell(6).setCellValue(t.getDirection() != null ? t.getDirection() : "");
+            row.createCell(6).setCellValue(t.getDirection() != null ? t.getDirection().name() : "");
 
 		}
 		 for (int i = 0; i < headers.length; i++) {

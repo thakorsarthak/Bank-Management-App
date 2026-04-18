@@ -1,7 +1,7 @@
 package com.example.bankapp.enums;
 
 public enum TransactionStatus {
-	COMPLETED,
+	SUCCESS,
 	FAILED,
 	CANCELLED
 }

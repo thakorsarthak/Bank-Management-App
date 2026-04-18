@@ -3,6 +3,8 @@ package com.example.bankapp.DTO;
 import java.time.LocalDateTime;
 
 import com.example.bankapp.entity.Transaction;
+import com.example.bankapp.enums.TransactionDirection;
+import com.example.bankapp.enums.TransactionStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +30,7 @@ public class TransactionResponseDTO {
         dto.setAmount(tx.getAmount());
         dto.setBeforeBalance(tx.getBeforebalance());
         dto.setAfterBalance(tx.getAfterbalance());
-        dto.setDirection(tx.getDirection());
+        dto.setDirection(tx.getDirection().name());
         dto.setDescription(tx.getDescription());
         dto.setTimestamp(tx.getTimestamp());
        // dto.setStatus(tx.getStatus().name().toLowerCase());

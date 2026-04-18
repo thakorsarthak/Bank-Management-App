@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.logging.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +33,7 @@ import com.example.bankapp.Exception.FieldError;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.Transaction;
 import com.example.bankapp.enums.AccountStatus;
+import com.example.bankapp.enums.TransactionDirection;
 import com.example.bankapp.enums.TransactionStatus;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.TransactionRepo;
@@ -37,8 +41,10 @@ import com.example.bankapp.services.JWTservices;
 import com.example.bankapp.services.NotificationService;
 import com.example.bankapp.services.TransactionService;
 
+import lombok.Builder;
+
 @Service
-public  class TransactionServiceImp implements TransactionService {
+public class TransactionServiceImp implements TransactionService {
 
 	@Autowired
 	AccountRepo accountRepo;
@@ -58,6 +64,7 @@ public  class TransactionServiceImp implements TransactionService {
 	@Autowired
 	private NotificationService notificationService;
 
+	private static final Logger log = LoggerFactory.getLogger(TransactionServiceImp.class);
 
 	private void saveFailedTransaction(Account from, Account to, TransferRequestDTO request, TransactionStatus status,
 			String reason, String counterPartyName) {
@@ -69,49 +76,40 @@ public  class TransactionServiceImp implements TransactionService {
 		failedTransaction.setAfterbalance(from != null ? from.getBalance() : 0.0);
 		failedTransaction.setTimestamp(LocalDateTime.now());
 		failedTransaction.setDescription(reason);
-		failedTransaction.setDirection("DEBIT");
 		failedTransaction.setStatus(status);
 		failedTransaction.setCounterPartyName(counterPartyName);
 
 		transactionRepo.save(failedTransaction);
 	}
 
-
 	@Override
 	public AdminUserTransactionCardResponseDTO cardHistory(String accountNumber) {
 
 		Long total = transactionRepo.countByAccount_AccountNumber(accountNumber);
-		Long debitCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "DEBIT");
-		Long creditCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "CREDIT");
+		Long debitCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber,
+				TransactionDirection.DEBIT);
+		Long creditCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber,
+				TransactionDirection.CREDIT);
 
-		Long successCount = transactionRepo
-			    .countByAccount_AccountNumberAndStatus(accountNumber, TransactionStatus.COMPLETED);
+		Long successCount = transactionRepo.countByAccount_AccountNumberAndStatus(accountNumber,
+				TransactionStatus.SUCCESS);
 
-			Long failedCount = transactionRepo
-			    .countByAccount_AccountNumberAndStatus(accountNumber, TransactionStatus.FAILED);
+		Long failedCount = transactionRepo.countByAccount_AccountNumberAndStatus(accountNumber,
+				TransactionStatus.FAILED);
 
-			//Long pendingCount = transactionRepo.countByAccount_AccountNumberAndStatus(accountNumber, TransactionStatus.COMPLETED);
+		// Long pendingCount =
+		// transactionRepo.countByAccount_AccountNumberAndStatus(accountNumber,
+		// TransactionStatus.COMPLETED);
 
-		System.out.println("Total debit counts: "+debitCount);
-		System.out.println("Total credit counts: "+creditCount);
+		System.out.println("Total debit counts: " + debitCount);
+		System.out.println("Total credit counts: " + creditCount);
 
-		AdminUserTransactionCardResponseDTO response = new AdminUserTransactionCardResponseDTO(total , creditCount, debitCount,failedCount, successCount );
+		AdminUserTransactionCardResponseDTO response = new AdminUserTransactionCardResponseDTO(total, creditCount,
+				debitCount, failedCount, successCount);
 		return response;
 	}
 
-//	@Override
-//	public Page<TransactionResponseDTO> getTransactions(String accountNumber, int page, int size) {
-//		Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
-//
-//		 Page<Transaction> transactions =
-//	                transactionRepo.findByAccount_AccountNumber(accountNumber, pageable);
-//
-//	        // convert each Transaction to TransactionResponseDTO
-//	        return transactions.map(TransactionResponseDTO::from);
-//	}
-
-
-	//  Here Direction means ascending and decending &
+	// Here Direction means ascending and decending &
 
 	@Override
 	public TransactionHistoryResponseDTO getTransactions(String accountNumber, int page, int size, String sortFeid,
@@ -128,11 +126,13 @@ public  class TransactionServiceImp implements TransactionService {
 				.toList();
 
 		Long total = transactionRepo.countByAccount_AccountNumber(accountNumber);
-		Long debitCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "DEBIT");
-		Long creditCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber, "CREDIT");
+		Long debitCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber,
+				TransactionDirection.DEBIT);
+		Long creditCount = transactionRepo.countByAccount_AccountNumberAndDirection(accountNumber,
+				TransactionDirection.CREDIT);
 
-		System.out.println("Total debit counts: "+debitCount);
-		System.out.println("Total credit counts: "+creditCount);
+		System.out.println("Total debit counts: " + debitCount);
+		System.out.println("Total credit counts: " + creditCount);
 
 		return new TransactionHistoryResponseDTO(dtos, total, debitCount, creditCount, transactionsPage.getNumber(),
 				transactionsPage.getTotalPages());
@@ -145,6 +145,21 @@ public  class TransactionServiceImp implements TransactionService {
 		return transactionRepo.findByAccountAndDateRange(accountNumber, startDateTime, endDateTime);
 	}
 
+	private Transaction buildTransaction(Account acc, TransactionDirection direction, double amount, double before, double after,
+			String description, String counterParty, TransactionStatus status, LocalDateTime time) {
+		Transaction txn = new Transaction();
+		txn.setAccount(acc);
+		txn.setType("Transfer");
+		txn.setAmount(amount);
+		txn.setBeforebalance(before);
+		txn.setAfterbalance(after);
+		txn.setTimestamp(time);
+		txn.setDescription(description);
+		txn.setDirection(direction);
+		txn.setCounterPartyName(counterParty);
+		txn.setStatus(status);
+		return txn;
+	}
 
 	@Override
 	@Transactional
@@ -152,19 +167,18 @@ public  class TransactionServiceImp implements TransactionService {
 
 		Optional<Account> toOptionalAcc = accountRepo.findByAccountNumber(request.getToAccountNumber());
 
-		Account toAcc = toOptionalAcc.get();
 
 		Account fromAccount = accountRepo.findByAccountNumber(fromAccountNumber)
 				.orElseThrow(() -> new RuntimeException("Sender  does not Exist"));
 
-		if(fromAccount.getStatus().equals(AccountStatus.PENDING_KYC)){
-			saveFailedTransaction(fromAccount, null, request, TransactionStatus.FAILED,
-					"KYC Pending", request.getToAccountNumber());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new GlobalAPIResponseDTO<>("KYC Pending", false));
+		if (fromAccount.getStatus().equals(AccountStatus.PENDING_KYC)) {
+			saveFailedTransaction(fromAccount, null, request, TransactionStatus.FAILED, "KYC Pending",
+					request.getToAccountNumber());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GlobalAPIResponseDTO<>("KYC Pending", false));
 		}
 
-		//		Account toAccount = accountRepo.findByAccountNumber(request.getToAccountNumber())
+		// Account toAccount =
+		// accountRepo.findByAccountNumber(request.getToAccountNumber())
 //				.orElseThrow(() -> new RuntimeException("Receiver Account does not Exist"));
 
 		if (toOptionalAcc.isEmpty()) {
@@ -175,6 +189,7 @@ public  class TransactionServiceImp implements TransactionService {
 		}
 
 		double amount = request.getAmount();
+		
 		LocalDateTime now = LocalDateTime.now();
 
 		Account toAccount = toOptionalAcc.get();
@@ -182,13 +197,10 @@ public  class TransactionServiceImp implements TransactionService {
 		if (fromAccount.equals(toAccount)) {
 			saveFailedTransaction(fromAccount, toAccount, request, TransactionStatus.FAILED,
 					"Can't transfer to same account", toAccount.getAccountHolderName());
-			 List<FieldError> errors = List.of(
-				        new FieldError("toAccount" ,
-				        "You cannot transfer to your own account " + toAccount.getAccountNumber()));
+			List<FieldError> errors = List.of(new FieldError("toAccount",
+					"You cannot transfer to your own account " + toAccount.getAccountNumber()));
 
-				            throw new CustomValidationException(
-				                "Can't Transfer to same Account",
-				                errors);
+			throw new CustomValidationException("Can't Transfer to same Account", errors);
 
 //			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 //					.body(new GlobalAPIResponseDTO<>("You cannot transfer to your account", false));
@@ -196,8 +208,7 @@ public  class TransactionServiceImp implements TransactionService {
 
 		// check pin
 		if (!passwordEncoder.matches(request.getPin(), fromAccount.getPin())) {
-			saveFailedTransaction(fromAccount, toAccount, request, TransactionStatus.FAILED, "Wrong Pin",
-					toAccount.getAccountHolderName());
+			saveFailedTransaction(fromAccount, toAccount,request,TransactionStatus.FAILED,"Wrong pin", toAccount.getAccountHolderName());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new GlobalAPIResponseDTO<>("Incorrect PIN", false));
 		}
@@ -229,45 +240,58 @@ public  class TransactionServiceImp implements TransactionService {
 		accountRepo.save(toAccount);
 
 		String description = request.getDescription();
+		
 
+		
+		Transaction senderTransaction = buildTransaction(fromAccount,
+				TransactionDirection.DEBIT, amount, beforeBalanceSender,
+				afterBalanceSender, description, toAccount.getAccountHolderName(), TransactionStatus.SUCCESS, now);
+		
 		// transaction record for sender
-		Transaction transactionForSender = new Transaction();
-		transactionForSender.setAccount(fromAccount);
-		transactionForSender.setType("Transfer");
-		transactionForSender.setAmount(request.getAmount());
-		transactionForSender.setBeforebalance(beforeBalanceSender);
-		transactionForSender.setAfterbalance(afterBalanceSender);
-		transactionForSender.setTimestamp(LocalDateTime.now());
-		transactionForSender
-				.setDescription(description != null ? description : "Transfer to " + toAccount.getAccountNumber());
-		transactionForSender.setDirection("DEBIT");
-		transactionForSender.setCounterPartyName(toAccount.getAccountHolderName());
-		transactionForSender.setStatus(TransactionStatus.COMPLETED);
+//		Transaction transactionForSender = new Transaction();
+//		transactionForSender.setAccount(fromAccount);
+//		transactionForSender.setType("Transfer");
+//		transactionForSender.setAmount(request.getAmount());
+//		transactionForSender.setBeforebalance(beforeBalanceSender);
+//		transactionForSender.setAfterbalance(afterBalanceSender);
+//		transactionForSender.setTimestamp(now);
+//		transactionForSender
+//				.setDescription(description != null ? description : "Transfer to " + toAccount.getAccountNumber());
+//		transactionForSender.setDirection(TransactionDirection.DEBIT.name());
+//		transactionForSender.setCounterPartyName(toAccount.getAccountHolderName());
+//		transactionForSender.setStatus(TransactionStatus.SUCCESS);
 
 		// transaction record for receiver
-		Transaction transactionForReceiver = new Transaction();
-		transactionForReceiver.setAccount(toAccount);
-		transactionForReceiver.setType("Transfer");
-		transactionForReceiver.setAmount(request.getAmount());
-		transactionForReceiver.setBeforebalance(beforeBalanceReceiver);
-		transactionForReceiver.setAfterbalance(afterBalanceReceiver);
-		transactionForReceiver.setTimestamp(LocalDateTime.now());
-		transactionForReceiver
-				.setDescription(description != null ? description : "Transfer from " + fromAccount.getAccountNumber());
-		transactionForReceiver.setDirection("CREDIT");
-		transactionForReceiver.setCounterPartyName(fromAccount.getAccountHolderName());
-		transactionForReceiver.setStatus(TransactionStatus.COMPLETED);
+//		Transaction transactionForReceiver = new Transaction();
+//		transactionForReceiver.setAccount(toAccount);
+//		transactionForReceiver.setType("Transfer");
+//		transactionForReceiver.setAmount(request.getAmount());
+//		transactionForReceiver.setBeforebalance(beforeBalanceReceiver);
+//		transactionForReceiver.setAfterbalance(afterBalanceReceiver);
+//		transactionForReceiver.setTimestamp(now);
+//		transactionForReceiver
+//				.setDescription(description != null ? description : "Transfer from " + fromAccount.getAccountNumber());
+//		transactionForReceiver.setDirection(TransactionDirection.CREDIT);
+//		transactionForReceiver.setCounterPartyName(fromAccount.getAccountHolderName());
+//		transactionForReceiver.setStatus(TransactionStatus.SUCCESS);
+		
+		
+		Transaction receiverTransaction = buildTransaction(toAccount,
+				TransactionDirection.CREDIT, amount, beforeBalanceReceiver,
+				afterBalanceReceiver, description, fromAccount.getAccountHolderName(), TransactionStatus.SUCCESS, now);
 
-		transactionRepo.save(transactionForSender);
-		transactionRepo.save(transactionForReceiver);
+		transactionRepo.save(senderTransaction);
+		transactionRepo.save(receiverTransaction);
 
 		// Sending Notifications
-		String time = transactionForSender.getTimestamp().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
+		String time = senderTransaction.getTimestamp().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
 
 		TransactionResponseDTO dto = new TransactionResponseDTO();
 
 		String successMessage = "Transfer successful from Account " + fromAccount.getAccountNumber() + " to Account "
 				+ toAccount.getAccountNumber();
+
+		log.info("transction saved");
 
 		// Sender notification
 		NotificationRequestDTO senderNotification = new NotificationRequestDTO();

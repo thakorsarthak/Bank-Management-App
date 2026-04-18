@@ -20,7 +20,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // Apply to all endpoints
                         .allowedOrigins(
-                        "http://localhost:60001", // Angular dev server
+                        "http://localhost:60001", // Angular local server
                         "http://localhost:4200",
                         "https://bank-management-eight.vercel.app"
                         )

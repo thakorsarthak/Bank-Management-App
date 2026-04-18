@@ -2,6 +2,7 @@ package com.example.bankapp.entity;
 
 import java.time.LocalDateTime;
 
+import com.example.bankapp.enums.TransactionDirection;
 import com.example.bankapp.enums.TransactionStatus;
 
 import jakarta.persistence.Column;
@@ -38,7 +39,8 @@ public class Transaction {
 
 
 	@Column(nullable = false)
-	private String direction;// debit and credit
+	@Enumerated(EnumType.STRING)
+	private TransactionDirection direction;// debit and credit
 
 	@ManyToOne
 	@JoinColumn(name = "account_number", referencedColumnName = "account_number")
@@ -46,4 +48,5 @@ public class Transaction {
 
 	 @Enumerated(EnumType.STRING)
 	    private TransactionStatus status;
+
 }

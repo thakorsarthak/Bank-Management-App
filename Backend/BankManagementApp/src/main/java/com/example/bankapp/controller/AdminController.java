@@ -25,10 +25,12 @@ import com.example.bankapp.DTO.CreateStaffDTO;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.UpdateEmployeeRequestDTO;
 import com.example.bankapp.entity.Account;
+import com.example.bankapp.entity.DashboardStats;
 import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.enums.Designation;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.services.AdminService;
+import com.example.bankapp.services.DashboardService;
 import com.example.bankapp.services.TransactionService;
 
 import jakarta.validation.Valid;
@@ -45,6 +47,19 @@ public class AdminController {
 	private final AccountRepo accountrepo;
 
 	private final TransactionService tService;
+	
+	private final DashboardService dashboardService;
+
+
+	@GetMapping("/dashBoardCard")
+    public DashboardStats getDashboard() {
+        return dashboardService.getTodayStats();
+    }
+
+    @PostMapping("/refresh")
+    public void refreshDashboard() {
+        dashboardService.computeAndStoreStats();
+    }
 
 	@PostMapping("/employee/addStaff")
 	// @PreAuthorize("hasRole('ADMIN')") // Only admin can call
