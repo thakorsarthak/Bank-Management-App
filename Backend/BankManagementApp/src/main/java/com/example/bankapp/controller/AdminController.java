@@ -42,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor // if we are using private final instead of autowired
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN')") //Only admin can call
 public class AdminController {
 
 	private final AdminService adminService;
@@ -72,7 +72,7 @@ public class AdminController {
     }
 
 	@PostMapping("/employee/addStaff")
-	// @PreAuthorize("hasRole('ADMIN')") // Only admin can call
+	// @PreAuthorize("hasRole('ADMIN')") // Only admin can call This is for single api
 	public ResponseEntity<?> createStaff(@Valid @RequestBody CreateStaffDTO request) {
 
 	  adminService.createEmployeeOrManager(request);
@@ -145,12 +145,7 @@ public class AdminController {
 	    return ResponseEntity.ok(response) ;
 	}
 
-//	@GetMapping("/employee/getAllStaff")
-//	// @PreAuthorize("hasRole('ADMIN')")
-//	public ResponseEntity<?> getAllStaff() {
-//		List<AdminEmployeeResponseDTO> response = adminService.getAllEmployees();
-//		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee fetched sucessfuly", true, response));
-//	}
+
 
 	@PatchMapping("/employee/{employeeId}/updateStatus")
 	public ResponseEntity<?> updateAccountStatus(@PathVariable Long employeeId,
@@ -161,7 +156,7 @@ public class AdminController {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Employee updated sucessfuly !", true));
 	}
 
-	//old one swagger
+	//old one swagger api
 	@PatchMapping("/employee/{accountId}/designation")
 	public ResponseEntity<?> updateDesignation(@PathVariable Long accountId,
 			@RequestBody UpdateEmployeeRequestDTO request) {

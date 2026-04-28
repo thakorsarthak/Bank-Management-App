@@ -39,10 +39,10 @@ public class Branch {
     private String branchCode;          // 1001
 
     @Column(name = "branch_name")
-    private String branchName;          // Ahmedabad
+    private String branchName;          // Ahmedabad surat mumbai 
 
     @Column(name = "ifsc_code", length = 11)
-    private String ifscCode;            // BANK0AHM001
+    private String ifscCode;            // BANK0AHM001 
 
     @Column(nullable = false)
     private boolean active = true;
