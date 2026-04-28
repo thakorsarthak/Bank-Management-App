@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.bankapp.entity.Account;
@@ -14,6 +15,7 @@ import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.BranchRepository;
 
 @Configuration
+@Order(2)
 public class AdminBootstrap {
 
 	@Autowired
