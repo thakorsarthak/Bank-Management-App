@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-@Order(1)
+@Order(1)// it is for which bean will executed first
 public class BranchBootstrap implements CommandLineRunner{
 	
 	private final BranchRepository branchRepository;
