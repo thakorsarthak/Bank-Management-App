@@ -46,10 +46,12 @@ import com.example.bankapp.util.EmployeeSortBuilder;
 import com.example.bankapp.util.UserSortBulder;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class AdminServiceImp implements AdminService {
 
 	private final AccountRepo accountRepo;
@@ -87,7 +89,8 @@ public class AdminServiceImp implements AdminService {
 
 	}
 
-	// creating staff this method works due to  Persistence Context [hibernate session] only
+	// creating staff this method works due to Persistence Context [hibernate
+	// session] only
 	@Override
 	@Transactional
 	public void createEmployeeOrManager(CreateStaffDTO request) {
@@ -103,10 +106,9 @@ public class AdminServiceImp implements AdminService {
 			errors.add(new FieldError("email", "Employee with this email already exist"));
 		}
 
-
-	    if (!errors.isEmpty()) {
-	        throw new CustomValidationException("Validation Failed", errors); //  STOP HERE
-	    }
+		if (!errors.isEmpty()) {
+			throw new CustomValidationException("Validation Failed", errors); // STOP HERE
+		}
 
 		Branch branch = branchRepo.findByBranchCodeAndActiveTrue(request.getBranchCode())
 				.orElseThrow(() -> new CustomValidationException("Invalid Branch",
@@ -120,9 +122,9 @@ public class AdminServiceImp implements AdminService {
 		account.setRole(request.getRole());
 		account.setStatus(AccountStatus.ACTIVE);
 
-		accountRepo.save(account); // still not saved  its kind off scheduled to be inserted
+		accountRepo.save(account); // still not saved its kind off scheduled to be inserted
 
-		System.out.println(account);
+		// log.info("Created Employee: {}",account);
 
 		Employee profile = new Employee();
 		profile.setAccount(account);
@@ -135,82 +137,44 @@ public class AdminServiceImp implements AdminService {
 	}
 
 	// for adding bulk staff
-
 	@Transactional
 	@Override
 	public List<EmployeeListDTO> saveAllEmployees(List<CreateStaffDTO> staffList) {
 
-	    List<Account> accounts = staffList.stream().map(dto -> {
-	        Branch branch = branchRepo.findByBranchCodeAndActiveTrue(dto.getBranchCode())
-	            .orElseThrow(() -> new CustomValidationException("Invalid Branch",
-	                List.of(new FieldError("branchCode", "Branch not found or inactive"))));
+		List<Account> accounts = staffList.stream().map(dto -> {
+			Branch branch = branchRepo.findByBranchCodeAndActiveTrue(dto.getBranchCode())
+					.orElseThrow(() -> new CustomValidationException("Invalid Branch",
+							List.of(new FieldError("branchCode", "Branch not found or inactive"))));
 
-	        Account account = new Account();
-	        account.setAccountHolderName(dto.getFullName());
-	        account.setEmail(dto.getEmail());
-	        account.setPassword(passwordEncoder.encode(dto.getPassword()));
-	        account.setBranch(branch);
-	        account.setRole(dto.getRole());
-	        account.setStatus(AccountStatus.ACTIVE);
-	        return account;
-	    }).toList();
+			Account account = new Account();
+			account.setAccountHolderName(dto.getFullName());
+			account.setEmail(dto.getEmail());
+			account.setPassword(passwordEncoder.encode(dto.getPassword()));
+			account.setBranch(branch);
+			account.setRole(dto.getRole());
+			account.setStatus(AccountStatus.ACTIVE);
+			return account;
+		}).toList();
 
-	    List<Account> savedAccounts = accountRepo.saveAll(accounts);
+		List<Account> savedAccounts = accountRepo.saveAll(accounts);
 
-	    List<Employee> employees = new ArrayList<>();
+		List<Employee> employees = new ArrayList<>();
 
-	    for (int i = 0; i < staffList.size(); i++) {
-	        CreateStaffDTO dto = staffList.get(i);
+		for (int i = 0; i < staffList.size(); i++) {
+			CreateStaffDTO dto = staffList.get(i);
 
-	        Employee emp = new Employee();
-	        emp.setAccount(savedAccounts.get(i));
-	        emp.setFullName(dto.getFullName());
-	        emp.setBranchCode(dto.getBranchCode());
-	        emp.setJoiningDate(LocalDate.now());
-	        emp.setDesignation(dto.getDesignation());
+			Employee emp = new Employee();
+			emp.setAccount(savedAccounts.get(i));
+			emp.setFullName(dto.getFullName());
+			emp.setBranchCode(dto.getBranchCode());
+			emp.setJoiningDate(LocalDate.now());
+			emp.setDesignation(dto.getDesignation());
 
-	        employees.add(emp);
-	    }
+			employees.add(emp);
+		}
 
-	    return employeeRepo.saveAll(employees)
-	            .stream()
-	            .map(EmployeeListDTO::from)
-	            .toList();
+		return employeeRepo.saveAll(employees).stream().map(EmployeeListDTO::from).toList();
 	}
-
-
-//	@Override
-//	public List<EmployeeListDTO> saveAllEmployees(List<CreateStaffDTO> staffList) {
-//
-//		List<Employee> employees = staffList.stream().map(dto -> {
-//
-//			Branch branch = branchRepo.findByBranchCodeAndActiveTrue(dto.getBranchCode())
-//					.orElseThrow(() -> new CustomValidationException("Invalid Branch",
-//							List.of(new FieldError("branchCode", "Branch not found or inactive"))));
-//
-//			Account account = new Account();
-//
-//			account.setEmail(dto.getEmail());
-//			account.setPassword(passwordEncoder.encode(dto.getPassword()));
-//			account.setBranch(branch);
-//			account.setRole(dto.getRole());
-//			account.setStatus(AccountStatus.ACTIVE);
-//
-//
-//			Employee profile = new Employee();
-//			profile.setAccount(account);
-//			profile.setFullName(dto.getFullName());
-//			profile.setBranchCode(dto.getBranchCode());
-//			profile.setJoiningDate(LocalDate.now());
-//			profile.setDesignation(dto.getDesignation());
-//
-//			return profile;
-//		}).toList();
-//
-//		List<Employee> saved = employeeRepo.saveAll(employees);
-//		System.out.println(employees);
-//		return saved.stream().map(EmployeeListDTO::from).toList();
-//	}
 
 	// for getting employee swagger based
 	@Override
@@ -223,13 +187,11 @@ public class AdminServiceImp implements AdminService {
 	@Transactional
 	public void updateStatusEmployee(Long employeeId, AccountStatus accountStatus) {
 
-		Employee emp = employeeRepo.findById(employeeId)
-				.orElseThrow(() -> new RuntimeException("Employee not found"));
-
+		Employee emp = employeeRepo.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
 
 		List<FieldError> errors = new ArrayList<>();
 
-		//Employee employee = emp.get();
+		// Employee employee = emp.get();
 
 		// Account account = accountRepo.findById(id);
 //		if (emp.isEmpty()) {
@@ -241,21 +203,17 @@ public class AdminServiceImp implements AdminService {
 
 		AccountStatus oldStatus = acc.getStatus();
 
-		if(accountStatus == AccountStatus.PENDING_KYC || accountStatus == AccountStatus.REJECTED) {
+		if (accountStatus == AccountStatus.PENDING_KYC || accountStatus == AccountStatus.REJECTED) {
 
-			throw new  CustomValidationException("Can't change Employee to " + accountStatus);
+			throw new CustomValidationException("Can't change Employee to " + accountStatus);
 		}
 		acc.setStatus(accountStatus);
 
-		//auditLogService.log(AuditAction.EMPLOYEE_STATUS_UPDATED, null, employeeId, null, null, null);
+		// auditLogService.log(AuditAction.EMPLOYEE_STATUS_UPDATED, null, employeeId,
+		// null, null, null);
 
-		auditLogService.log(
-			    AuditAction.EMPLOYEE_STATUS_UPDATED,
-			    acc.getId(),
-			    "EMPLOYEE",
-			    oldStatus.name(),
-			    accountStatus.name()
-			);
+		auditLogService.log(AuditAction.EMPLOYEE_STATUS_UPDATED, acc.getId(), "EMPLOYEE", oldStatus.name(),
+				accountStatus.name());
 
 		accountRepo.save(acc);
 
@@ -266,7 +224,7 @@ public class AdminServiceImp implements AdminService {
 	@Transactional
 	public void updateDesignation(Long accountId, Designation designation) {
 
-		System.out.println("Inside service to update designation");
+		log.warn("Inside service to update designation");
 		Optional<Employee> employee = employeeRepo.findByAccountId(accountId);
 		if (employee.isEmpty()) {
 
@@ -275,7 +233,7 @@ public class AdminServiceImp implements AdminService {
 		}
 
 		Employee e = employee.get();
-		System.out.println("Designation changed to " + designation);
+		log.info("Designation changed to {}", designation);
 		e.setDesignation(designation);
 	}
 
@@ -283,7 +241,7 @@ public class AdminServiceImp implements AdminService {
 
 	@Override
 	public AdminEmployeeResponseDTO getEmployees(int page, int size, Long branchId, String sortField, String sortOrder,
-			AccountStatus status, Designation designation ) {
+			AccountStatus status, Designation designation) {
 
 		Pageable pageable = PageRequest.of(page, size, EmployeeSortBuilder.build(sortField, sortOrder));
 
@@ -295,17 +253,16 @@ public class AdminServiceImp implements AdminService {
 
 		specification = specification.and(AccountSpecification.hasbranch(branchId));
 
-
 		Page<Employee> empPage = employeeRepo.findAll(specification, pageable);
 
 		return AdminEmployeeResponseDTO.fromPage(empPage);
 	}
 
 	@Override
-	public AdminUserTableResponseDTO getUsers(int page, int size, Long branchId ,String sortField, String sortOrder, AccountStatus status) {
+	public AdminUserTableResponseDTO getUsers(int page, int size, Long branchId, String sortField, String sortOrder,
+			AccountStatus status) {
 
-		 Pageable pageable = PageRequest.of(page, size,
-		           UserSortBulder.build(sortField, sortOrder));
+		Pageable pageable = PageRequest.of(page, size, UserSortBulder.build(sortField, sortOrder));
 
 //		 Page<Account> accPage ;
 //
@@ -323,40 +280,23 @@ public class AdminServiceImp implements AdminService {
 //
 //		 specification = specification.and(AccountSpecification.hasbranchUser(branchId));
 
-		 Specification<Account> spec =
-		            Specification.where(AccountSpecification.hasRole(Role.USER))
-		                    .and(AccountSpecification.hasbranchUser(branchId))
-		                    .and(AccountSpecification.hasUserStatus(status));
+		Specification<Account> spec = Specification.where(AccountSpecification.hasRole(Role.USER))
+				.and(AccountSpecification.hasbranchUser(branchId)).and(AccountSpecification.hasUserStatus(status));
 
-		    Page<Account> accPage = accountRepo.findAll(spec, pageable);
+		Page<Account> accPage = accountRepo.findAll(spec, pageable);
 
-
-		    return AdminUserTableResponseDTO.fromPage(accPage);
+		return AdminUserTableResponseDTO.fromPage(accPage);
 
 	}
 
 	@Override
 	public AdminUserResponseDTO getUserDetails(Long accountId) {
 
-		Account account = accountRepo.findById(accountId)
-				.orElseThrow(( )-> new RuntimeException("User not found"));
+		Account account = accountRepo.findById(accountId).orElseThrow(() -> new RuntimeException("User not found"));
 
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-
-
-
-//	public List<AdminEmployeeResponseDTO> getAllEmployees() {
-//
-//		return employeeRepo.findAll().stream()
-//				.map(emp -> new AdminEmployeeResponseDTO(emp.getEmployeeId(), emp.getFullName(),
-//						emp.getAccount().getEmail(), emp.getBranchCode(), emp.getDesignation(),
-//						emp.getAccount().getStatus(), emp.getJoiningDate()))
-//				.toList();
-//	}
 
 	// updating
 	@Override
@@ -365,24 +305,22 @@ public class AdminServiceImp implements AdminService {
 
 //		Optional<Employee> employee = employeeRepo.findByEmployeeId(employeeId);
 
-
 //		Employee emp = employee.get();
 //		System.out.println(emp);
 
-		 Employee emp = employeeRepo.findByEmployeeId(employeeId)
-		            .orElseThrow(() -> new CustomValidationException("Employee not found"));
+		Employee emp = employeeRepo.findByEmployeeId(employeeId)
+				.orElseThrow(() -> new CustomValidationException("Employee not found"));
 
-		    Account account = emp.getAccount();
+		Account account = emp.getAccount();
 
-		if(req.getStatus() == AccountStatus.PENDING_KYC || req.getStatus() == AccountStatus.REJECTED) {
-			throw new  CustomValidationException("Can't change status to " + req.getStatus());
+		if (req.getStatus() == AccountStatus.PENDING_KYC || req.getStatus() == AccountStatus.REJECTED) {
+			throw new CustomValidationException("Can't change status to " + req.getStatus());
 		}
 
-		System.out.println(account);
+		// System.out.println(account);
 
 		Map<String, Object> oldValues = new LinkedHashMap<>();
 		Map<String, Object> newValues = new LinkedHashMap<>();
-
 
 		if (req.getFullName() != null && !req.getFullName().equals(emp.getFullName())) {
 			oldValues.put("fullName", emp.getFullName());
@@ -396,7 +334,7 @@ public class AdminServiceImp implements AdminService {
 			emp.setBranchCode(req.getBranchCode());
 		}
 
-		if (req.getDesignation() != null && !req.getDesignation().equals(emp.getDesignation()) ) {
+		if (req.getDesignation() != null && !req.getDesignation().equals(emp.getDesignation())) {
 			oldValues.put("designation", emp.getDesignation());
 			newValues.put("designation", req.getDesignation());
 			emp.setDesignation(req.getDesignation());
@@ -408,14 +346,8 @@ public class AdminServiceImp implements AdminService {
 			account.setStatus(req.getStatus());
 		}
 
-
-		if(!oldValues.isEmpty()) {
-			auditLogService.log(
-					AuditAction.EMPLOYEE_UPDATED,
-					employeeId ,
-					"EMPLOYEE",
-					oldValues,
-					newValues);
+		if (!oldValues.isEmpty()) {
+			auditLogService.log(AuditAction.EMPLOYEE_UPDATED, employeeId, "EMPLOYEE", oldValues, newValues);
 		}
 
 	}
@@ -423,14 +355,13 @@ public class AdminServiceImp implements AdminService {
 	@Override
 	public void updateUser(Long userId, AccountUpdateRequestDTO req) {
 
-		Account acc = accountRepo.findById(userId)
-				.orElseThrow(() -> new CustomValidationException("User not found"));
+		Account acc = accountRepo.findById(userId).orElseThrow(() -> new CustomValidationException("User not found"));
 
 		Map<String, Object> oldValues = new LinkedHashMap<>();
 		Map<String, Object> newValues = new LinkedHashMap<>();
 
-		if(req.getStatus() == AccountStatus.SUSPENDED ) {
-			throw new  CustomValidationException("Can't change status to " + req.getStatus() + "Its only for Staff");
+		if (req.getStatus() == AccountStatus.SUSPENDED) {
+			throw new CustomValidationException("Can't change status to " + req.getStatus() + "Its only for Staff");
 		}
 
 		if (req.getStatus() != null && !req.getStatus().equals(acc.getStatus())) {
@@ -439,27 +370,18 @@ public class AdminServiceImp implements AdminService {
 			acc.setStatus(req.getStatus());
 		}
 
-
 		NotificationRequestDTO userStatusNotification = new NotificationRequestDTO();
 		userStatusNotification.setEmail(acc.getEmail());
 		userStatusNotification.setPhone(String.valueOf(acc.getContact()));
 		userStatusNotification.setSubject(AccountStatusEmailTemplate.getSubject(req.getStatus()));
 		userStatusNotification.setMessage(
 
-				 AccountStatusEmailTemplate.getBody(
-					        req.getStatus(),
-					        acc.getAccountHolderName(),
-					        "Secure Bank",
-					        "support@mybank.com"
-					    )
-				);
+				AccountStatusEmailTemplate.getBody(req.getStatus(), acc.getAccountHolderName(), "Secure Bank",
+						"support@mybank.com"));
 		notificationService.sendTransactionNotification(userStatusNotification);
 
-		 auditLogService.log(AuditAction.USER_STATUS_UPDATED, userId,"USER", oldValues, newValues);
+		auditLogService.log(AuditAction.USER_STATUS_UPDATED, userId, "USER", oldValues, newValues);
 
 	}
-
-
-
 
 }

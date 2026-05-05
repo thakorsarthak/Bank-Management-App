@@ -22,6 +22,8 @@ import com.example.bankapp.entity.Account;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/main")
 public class MainController {
@@ -34,26 +36,28 @@ public class MainController {
 
 	// create account
 	@PostMapping("/create")
+	@Operation(summary = "For create a fresh User bank Account")
 	public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody AccountSignUpDTO account) {
 		AccountResponseDTO createAccount = accountService.createAccount(account);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createAccount);
 	}
 
 	@PostMapping("/login-account")
+	@Operation(summary = "For Log-IN User bank Account", description = "User can Login with contact , email or Account Number")
 	public ResponseEntity<?> login(@RequestBody AccountLoginDTO acc) {
 		String token = accountService.verify(acc);
 		if (!"Failed".equals(token)) {
 
-		Date expiryDate = jwtService.extractExpiration(token);
+			Date expiryDate = jwtService.extractExpiration(token);
 
 			Map<String, Object> response = new HashMap<>();
 			response.put("token", token);
 			response.put("expiresAt", expiryDate.getTime());
-			//response.put("roles" );)
+			// response.put("roles" );)
 			// return ResponseEntity.ok(new TokenResponseDTO(token));
 			return ResponseEntity.ok(response);
 		} else {
-			System.out.println("Wrong credentials");
+			System.err.println("Wrong credentials");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invaid Credentials");
 		}
 	}

@@ -41,9 +41,10 @@ import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
-
+@Slf4j
 public class AccountServiceImp implements AccountService {
 
 	@Autowired
@@ -169,13 +170,10 @@ public class AccountServiceImp implements AccountService {
 
 
 		//for branch and account type
-
 		account.setAccountType(accountType);
 	    account.setBranch(branch);
 
-		// account.setAccountType(accountdto.getAccountType());
-
-		System.out.println(account);
+		log.info("Created Account : {}", account);
 		// for address
 		Address address = new Address();
 		address.setStreet(accountdto.getAddress().getStreet());
@@ -228,7 +226,7 @@ public class AccountServiceImp implements AccountService {
 			// Step 2: Find account by identifier (email/contact/accountNo)
 			Optional<Account> optionalAcc = findByIdentifier(account.getIdentifier());
 			if (optionalAcc.isEmpty()) {
-				System.out.println("Account not found in database after authentication.");
+			  log.info("Account not found in database after authentication.");
 				return "Failed";
 			}
 
@@ -238,18 +236,20 @@ public class AccountServiceImp implements AccountService {
 
 		    Role role = acc.getRole();
 			String token = jService.generateToken(acc.getEmail(),acc.getId(), acc.getAccountNumber() , role.name());
-			System.out.println("Token [From verify]: " + token);
+			//log.info("Token [From verify]: {}",token);
 
 			String redisKey = "session:" + acc.getEmail();
 			
-			System.out.println("Saving Redis Key: " + redisKey);
-			System.out.println("Saving Token: " + token);
+			//log.info("Saving Redis Key: {}",redisKey);
+			//log.info("Saving Token: {}",token);
+			
 
 			// Step 4: Store token in Redis with TTL = 10 minutes 
 			//the ["session:"] should be same at all place where we need redis token in filter too 
 			redisTemplate.opsForValue().set("session:" + acc.getEmail(), token, 10, TimeUnit.MINUTES);
 
-			System.out.println("Redis saved token for " + redisKey);
+			
+			//log.info("Redis saved token for: {}",redisKey);
 			// Step 5: Return token
 			return token;
 
@@ -301,7 +301,7 @@ public class AccountServiceImp implements AccountService {
 		String token = jService.extractTokenFromRequest(request);
 		String accountNumber = jService.extractAccountNumber(token);
 
-		System.out.println("Inside get AccountDetails (service)");
+		log.info("Inside get AccountDetails (service)");
 
 		Optional<Account> account = repo.findByAccountNumber(accountNumber);
 
@@ -324,10 +324,10 @@ public class AccountServiceImp implements AccountService {
 		response.setBranchName(branch.getBranchName());
 		response.setIfscCode(branch.getIfscCode());
 
-		System.out.println(branch);
+		//log.info("Branch: {} ",branch);
 		response.setProductType(accountFound.getAccountType().name());
 
-		System.out.println("Details fetched succesfully :" + response);
+		//log.info("Details fetched succesfully :{}" + response);
 		return response;
 	}
 

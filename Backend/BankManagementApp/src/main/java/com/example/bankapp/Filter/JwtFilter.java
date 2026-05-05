@@ -21,8 +21,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
 	@Autowired
@@ -33,8 +35,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
-	
-	private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
+
+	// private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -44,15 +46,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		// for skipping public and swagger endpoint
 		// for skiping OPTIONs of CROS
-		if (isPublicEndpoint(requestURI) || isSwaggerEndpoint(requestURI) || "OPTIONS".equalsIgnoreCase(request.getMethod())) {
+		if (isPublicEndpoint(requestURI) || isSwaggerEndpoint(requestURI)
+				|| "OPTIONS".equalsIgnoreCase(request.getMethod())) {
 
 			filterChain.doFilter(request, response);
 			return;
 		}
-		
-		//log.debug("JwtFilter triggered for path: {}", requestURI);
-		
-		System.out.println(">> 	JwtFilter triggered for path: " + requestURI);
+
+		// log.debug("JwtFilter triggered for path: {}", requestURI);
+
+		log.info(">> 	JwtFilter triggered for path: " + requestURI);
 
 		String authHeader = request.getHeader("Authorization");
 
@@ -84,7 +87,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		String redisKey = "session:" + email;
 
 		String storedToken = redisTemplate.opsForValue().get(redisKey);
-		
+
 //		System.out.println("Extracted Email: " + email);
 //		System.out.println("Redis Key Used: " + redisKey);
 //		System.out.println("Token From Request: " + token);
@@ -92,7 +95,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		if (storedToken == null || !storedToken.equals(token)) {
 
-			System.out.println("Token not found in Redis or Token is Expired(JWT filter)");
+			System.err.println("Token not found in Redis or Token is Expired(JWT filter)");
 			unauthorized(response, "Invalid Token or Redis Session Expired(JWT filter)");
 			return;
 		}
@@ -109,22 +112,17 @@ public class JwtFilter extends OncePerRequestFilter {
 				return;
 			}
 
-
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
 					null, userDetails.getAuthorities());
 
 			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			
-			//log.info("Token + Redis authenticated successfully");
 
-			System.out.println("Token + Redis is authenticated Successfully(JWT filter)");
+			// log.info("Token + Redis authenticated successfully");
+
+			log.info("Token + Redis is authenticated Successfully(JWT filter)");
 		}
-
-		
-	
-
 
 //		// Skip JWT + Redis validation for public endpoints
 //		if (requestURI.contains("/bankapp/main/login-account") || requestURI.contains("/bankapp/main/create")

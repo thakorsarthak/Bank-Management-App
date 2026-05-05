@@ -21,12 +21,17 @@ import com.example.bankapp.DTO.ResetPinWithOtpDTO;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/account")
+@Slf4j
 public class AccountController {
+	
+
 
 	@Autowired
 	AccountService aService;
@@ -38,6 +43,7 @@ public class AccountController {
 	private RedisTemplate<String, String> redisTemplate;
 
 	@PutMapping("/updateAccount")
+	@Operation (summary = "Update User Account")
 	public ResponseEntity<AccountResponseDTO> updateAccount(@RequestBody AccountUpdateRequestDTO dto) {
 		AccountResponseDTO details = aService.updateAccountDetails(dto);
 
@@ -45,6 +51,7 @@ public class AccountController {
 	}
 
 	@PutMapping("/change-pin")
+	@Operation (summary = "To Change with previous pin" , description = "Transactional Pin")
 	public ResponseEntity<String> changePin(@RequestBody @Valid ChangePinRequestDTO changePin) {
 
 		String result = aService.changePinWithOldPin(changePin);
@@ -53,6 +60,7 @@ public class AccountController {
 	}
 
 	@PutMapping("/changePinWithOtp")
+	@Operation (summary = "To Change with OTP pin" , description = "Transactional Pin")
 	public ResponseEntity<?> resetPinWithOtp(@RequestBody ResetPinWithOtpDTO resetPin) {
 
 		return aService.ChangePinWithOtp(resetPin);
@@ -61,6 +69,7 @@ public class AccountController {
 
 
 	@PutMapping("/changePasswordWithOtp")
+	@Operation (summary = "To Change with login password with otp")
 	public ResponseEntity<?> setPasswordWithOtp(@RequestBody ResetPasswordWithOtpDTO passwordWithOtpDTO ){
 
 		return aService.ChangePasswordWithOtp(passwordWithOtpDTO);
@@ -84,6 +93,7 @@ public class AccountController {
 //	}
 
 	@GetMapping("/accountHolderName/{accountNumber}")
+	@Operation (summary = "Only get name of holder", description = "Also used while transfering money")
 	public ResponseEntity<?> getAccountHolderName(@PathVariable String accountNumber) {
 
 		return aService.getAccountHolderName(accountNumber);
@@ -107,7 +117,7 @@ public class AccountController {
 
 	@GetMapping("/accountHolderDetail")
 	public ResponseEntity<AccountResponseDTO> getAccountHolderDetails(HttpServletRequest request) {
-		System.out.println("Inside HolderDetail fetch api controller");
+		log.info("Inside HolderDetail fetch api controller");
 		AccountResponseDTO accountDetailByAccountNo = aService.getAccountDetailByAccountNo(request);
 		return ResponseEntity.ok(accountDetailByAccountNo);
 	}

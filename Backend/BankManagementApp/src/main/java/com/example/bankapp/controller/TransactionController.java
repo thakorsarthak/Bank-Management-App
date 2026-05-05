@@ -24,6 +24,7 @@ import com.example.bankapp.services.JWTservices;
 import com.example.bankapp.services.TransactionService;
 import com.example.bankapp.util.ExcelUtil;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -78,6 +79,7 @@ public class TransactionController {
 
 
 	@GetMapping("/transactionHistory")
+	@Operation (summary = "Transaction history in paginated format")
 	public ResponseEntity<GlobalAPIResponseDTO> Pagenation(HttpServletRequest request,
 			@RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size,
@@ -96,6 +98,7 @@ public class TransactionController {
 	}
 
 	@GetMapping("/downloadTransactionHistory")
+	@Operation (summary = "Transaction History in Excel")
 	public void downloadTransHistoryExcel(@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate fromDate,
 			@RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate toDate, HttpServletRequest httpRequest,
 			HttpServletResponse response) throws IOException {
