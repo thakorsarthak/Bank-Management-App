@@ -105,4 +105,3 @@ Swagger UI: `http://localhost:60000/bankapp/swagger-ui.html`
 ## 📐 Default Admin Credentials
 Email: `admin@gmail.com`
 Password: `Admin@1234`
-*(Change immediately in production)*
