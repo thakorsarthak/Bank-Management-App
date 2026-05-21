@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ import com.example.bankapp.DTO.TransactionHistoryResponseDTO;
 import com.example.bankapp.DTO.TransactionReqDTO;
 import com.example.bankapp.DTO.TransferRequestDTO;
 import com.example.bankapp.entity.Transaction;
+import com.example.bankapp.services.IdempotencyService;
 import com.example.bankapp.services.JWTservices;
 import com.example.bankapp.services.TransactionService;
 import com.example.bankapp.util.ExcelUtil;
@@ -36,6 +38,9 @@ public class TransactionController {
 
 	@Autowired
 	JWTservices jwtService;
+	
+	@Autowired
+	IdempotencyService idempotencyService;
 
 //	@GetMapping("/history/{accountNumber}")
 //	public ResponseEntity<?> transactionHistoryByAccNo(@PathVariable String accountNumber){
@@ -56,10 +61,21 @@ public class TransactionController {
 	}
 
 	@PutMapping("/transfer")
-	public ResponseEntity<?> tranferAmount(@RequestBody @Valid TransferRequestDTO dto, HttpServletRequest httpRequest) {
+	public ResponseEntity<?> tranferAmount(@RequestHeader("Idempotency-Key") String key,@RequestBody @Valid TransferRequestDTO dto, HttpServletRequest httpRequest) {
 
 		String token = jwtService.extractTokenFromRequest(httpRequest);
 		String fromAccount = jwtService.extractAccountNumber(token);
+		 // CHECK DUPLICATE
+	    if (idempotencyService.isDuplicate(key)) {
+
+	        return ResponseEntity.badRequest()
+	                .body("Duplicate Request");
+	    }
+
+	    // SAVE KEY
+	    idempotencyService.saveKey(key);
+
+	    // BUSINESS LOGIC
 
 		return transactionService.transferMoney(fromAccount, dto);
 	}

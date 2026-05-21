@@ -109,8 +109,11 @@ export class TransferMoneyComponent implements OnInit {
     //   this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Account not found in token' });
     //   return;
     // }
-
+    
+    const idempotencyKey = crypto.randomUUID();
+    
     const payload = {
+      idempotencyKey,
       toAccountNumber: this.transactionForm.value.accountNumber,
       amount: this.transactionForm.value.amount,
       pin: this.transactionForm.value.pin,
