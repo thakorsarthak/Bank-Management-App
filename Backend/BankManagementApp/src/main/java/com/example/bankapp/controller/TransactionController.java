@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +29,11 @@ import com.example.bankapp.util.ExcelUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/transaction")
+@Slf4j
 public class TransactionController {
 
 	@Autowired
@@ -41,6 +44,9 @@ public class TransactionController {
 	
 	@Autowired
 	IdempotencyService idempotencyService;
+	
+	@Autowired 
+	RedisTemplate<String, String> redisTemplate;
 
 //	@GetMapping("/history/{accountNumber}")
 //	public ResponseEntity<?> transactionHistoryByAccNo(@PathVariable String accountNumber){
@@ -63,21 +69,37 @@ public class TransactionController {
 	@PutMapping("/transfer")
 	public ResponseEntity<?> tranferAmount(@RequestHeader("Idempotency-Key") String key,@RequestBody @Valid TransferRequestDTO dto, HttpServletRequest httpRequest) {
 
-		String token = jwtService.extractTokenFromRequest(httpRequest);
-		String fromAccount = jwtService.extractAccountNumber(token);
-		 // CHECK DUPLICATE
-	    if (idempotencyService.isDuplicate(key)) {
+
+	    boolean locked = idempotencyService.lock(key);
+
+	    if (!locked) {
 
 	        return ResponseEntity.badRequest()
 	                .body("Duplicate Request");
 	    }
-
-	    // SAVE KEY
-	    idempotencyService.saveKey(key);
+		
+		String token = jwtService.extractTokenFromRequest(httpRequest);
+		String fromAccount = jwtService.extractAccountNumber(token);
+		 // CHECK DUPLICATE
+//	    if (idempotencyService.isDuplicate(key)) {
+//
+//	        return ResponseEntity.badRequest()
+//	                .body("Duplicate Request");
+//	    }
+//
+//	    // SAVE KEY
+//	    idempotencyService.saveKey(key);
+//	    log.info(key);
 
 	    // BUSINESS LOGIC
+		try {
+			return transactionService.transferMoney(fromAccount, dto);
+		} catch (Exception e) {
+			
+			  redisTemplate.delete(key);
 
-		return transactionService.transferMoney(fromAccount, dto);
+			   throw e;
+		}
 	}
 
 //	@GetMapping("/downloadTransactionHistoryBypageNation")

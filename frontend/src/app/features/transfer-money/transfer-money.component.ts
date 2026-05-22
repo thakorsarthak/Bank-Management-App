@@ -13,6 +13,7 @@ import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
 import { PrivateHeaderComponent } from '../../shared/header/private-header/private-header.component';
 import { AuthServiceService } from '../../core-component/services/auth-service.service';
 import { TransactionService } from '../../core-component/services/transaction.service';
+import { HttpHeaders } from '@angular/common/http';
 
 
 @Component({
@@ -111,9 +112,13 @@ export class TransferMoneyComponent implements OnInit {
     // }
     
     const idempotencyKey = crypto.randomUUID();
+
+    const headers = new HttpHeaders({
+  'Idempotency-Key': crypto.randomUUID()
+});
+
     
     const payload = {
-      idempotencyKey,
       toAccountNumber: this.transactionForm.value.accountNumber,
       amount: this.transactionForm.value.amount,
       pin: this.transactionForm.value.pin,
@@ -122,7 +127,7 @@ export class TransferMoneyComponent implements OnInit {
 
     this.isProcessing = true;
 
-    this.transactionService.transferMoney(payload).subscribe({
+    this.transactionService.transferMoney(payload ,  { headers }).subscribe({
       next: () => {
         this.isProcessing = false;
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Money transferred successfully' });

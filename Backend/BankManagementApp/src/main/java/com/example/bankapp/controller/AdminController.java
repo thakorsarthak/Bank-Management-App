@@ -59,9 +59,12 @@ public class AdminController {
 	@GetMapping("/dashBoardCard")
     public ResponseEntity<DashboardCardDTO> getDashboard() {
 		DashboardStats stats = dashboardStatsRepo.findByDate(LocalDate.now())
-	            .orElseThrow(() -> new RuntimeException("No data found"));
+	            .orElseThrow(()
+	            		-> new RuntimeException("No data found"));
 
 	    DashboardCardDTO dto = dashboardService.mapToDTO(stats);
+	    
+	  
 
 	    return ResponseEntity.ok(dto);
     }

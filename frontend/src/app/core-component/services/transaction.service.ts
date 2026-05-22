@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GlobalAPIResponse } from '../models/global-api-response.model';
@@ -15,8 +15,8 @@ export class TransactionService {
   
 constructor(private http: HttpClient) {}
 
-  transferMoney(payload: any) {
-    return this.http.put( `${this.apiUrl}/transaction/transfer`, payload);
+  transferMoney(payload: any , { headers }: { headers: HttpHeaders }): Observable<any> {
+    return this.http.put( `${this.apiUrl}/transaction/transfer`, payload, { headers });
   }
    getAccountHolderName(accountNumber: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/account/accountHolderName/${accountNumber}`);

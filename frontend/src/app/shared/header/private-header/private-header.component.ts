@@ -159,6 +159,7 @@ export class PrivateHeaderComponent {
       if (remaining <= 0) {
         clearInterval(this.timerInterval);
         this.remainingTime = 'Session expired';
+         this.accountService.logoutAccount();
         this.authService.logout(); // auto logout
         return;
       }

@@ -25,7 +25,7 @@ public class CorsConfig {
                         "https://bank-management-eight.vercel.app"
                         )
                         .allowedMethods("GET", "POST","PATCH", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("Authorization", "Content-Type", "Accept")
+                        .allowedHeaders("Authorization", "Content-Type", "Accept","Idempotency-Key")
                         .allowCredentials(true);
             }
         };

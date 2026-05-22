@@ -49,7 +49,7 @@ export class LoginPageComponent {
       password: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9@$!%*?&]{4,12}$')]]
     },);
   }
-  
+
   visible: boolean = false;
 
   showDialog() {
@@ -68,35 +68,41 @@ export class LoginPageComponent {
 
 
   onSubmit() {
+
     if (this.loginForm.valid) {
+
+
+     
 
       const loginData = this.loginForm.value;
 
+
       this.AccountService.loginAccount(loginData).subscribe({
         next: (res) => {
-          
+
+
           //store token and decode in authservice
-          this.authService.login(res.token, res.expiresAt);
-          
+          this.authService.login(res.token, res.expiresAt);   
+
           const role = this.authService.getRole();
           console.log("User role after login:", role);
 
-         
+
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
             detail: 'Login successful! Redirecting to dashboard...'
           });
           setTimeout(() => {
-            if(role === 'ADMIN'){
+            if (role === 'ADMIN') {
               console.log("Navigating to admin dashboard");
               this.router.navigate(['privateMain/adminDashboard']);
             }
-            if(role === 'EMPLOYEE'){
+            if (role === 'EMPLOYEE') {
               this.router.navigate(['privateMain/employeeDashboard']);
             }
-            if(role === 'USER') 
-            this.router.navigate(['privateMain/dashBoard']);
+            if (role === 'USER')
+              this.router.navigate(['privateMain/dashBoard']);
           }, 1000);
         },
         error: (err: any) => {
@@ -105,7 +111,7 @@ export class LoginPageComponent {
           if (err.status === 401 || err.status === 403) {
             errorMsg = 'Invalid email or pin. Please check your credentials.';
           }
-          this.messageService.add({ 
+          this.messageService.add({
             severity: 'error',
             summary: 'Login Failed',
             detail: errorMsg
@@ -115,10 +121,3 @@ export class LoginPageComponent {
     }
   }
 }
-
-
-
-
-
-
-
