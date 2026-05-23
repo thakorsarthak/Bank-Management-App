@@ -1,6 +1,7 @@
 package com.example.bankapp.services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,11 @@ import jakarta.servlet.http.HttpServletRequest;
 public interface AccountService {
 
 	AccountResponseDTO createAccount(AccountSignUpDTO accountDto);
+	
+	Optional<Account> findByIdentifier(String identifier);
+	
+	Map<String, Object> verify(AccountLoginDTO account,HttpServletRequest request);
+	// Account verify(Account acc);
 
 	// AccountResponseDTO getAccountDetailByAccountNo(String accountNumber);
 
@@ -39,8 +45,5 @@ public interface AccountService {
 
 	ResponseEntity<?> ChangePinWithOtp(ResetPinWithOtpDTO resestPin);
 
-	String verify(AccountLoginDTO account);
-	// Account verify(Account acc);
-
-	Optional<Account> findByIdentifier(String identifier);
+	
 }

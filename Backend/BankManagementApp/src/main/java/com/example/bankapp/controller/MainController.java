@@ -23,6 +23,9 @@ import com.example.bankapp.entity.Account;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/main")
 public class MainController {
@@ -40,24 +43,29 @@ public class MainController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(createAccount);
 	}
 
-	@Idempotent(ttl = 5)
+
 	@PostMapping("/login-account")
-	public ResponseEntity<?> login(@RequestBody AccountLoginDTO acc) {
-		String token = accountService.verify(acc);
-		if (!"Failed".equals(token)) {
-
-		Date expiryDate = jwtService.extractExpiration(token);
-
-			Map<String, Object> response = new HashMap<>();
-			response.put("token", token);
-			response.put("expiresAt", expiryDate.getTime());
-			//response.put("roles" );)
-			// return ResponseEntity.ok(new TokenResponseDTO(token));
-			return ResponseEntity.ok(response);
-		} else {
-			System.out.println("Wrong credentials");
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invaid Credentials");
-		}
+	public ResponseEntity<?> login( @RequestBody @Valid AccountLoginDTO acc,
+	        HttpServletRequest request) {
+		
+		
+		Map<String, Object> response = accountService.verify(acc, request);
+		
+		 return ResponseEntity.ok(response);
+//		if (!"Failed".equals(token)) {
+//
+//		Date expiryDate = jwtService.extractExpiration(token);
+//
+//			Map<String, Object> response = new HashMap<>();
+//			response.put("token", token);
+//			response.put("expiresAt", expiryDate.getTime());
+//			//response.put("roles" );)
+//			// return ResponseEntity.ok(new TokenResponseDTO(token));
+//			return ResponseEntity.ok(response);
+//		} else {
+//			System.out.println("Wrong credentials");
+//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invaid Credentials");
+//		}
 	}
 
 

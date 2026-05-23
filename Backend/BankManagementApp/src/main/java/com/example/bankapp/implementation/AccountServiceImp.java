@@ -2,7 +2,10 @@ package com.example.bankapp.implementation;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -11,6 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -37,8 +41,10 @@ import com.example.bankapp.enums.Role;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.BranchRepository;
 import com.example.bankapp.repository.TransactionRepo;
+import com.example.bankapp.services.AccountLockService;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.RateLimitService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -57,6 +63,12 @@ public class AccountServiceImp implements AccountService {
 
 	@Autowired
 	private BranchRepository branchRepo;
+	
+	@Autowired
+	private AccountLockService accountLockService;
+	
+	@Autowired
+	private  RateLimitService rateLimitService;
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
@@ -141,8 +153,6 @@ public class AccountServiceImp implements AccountService {
 	            List.of(new FieldError("branchCode", "Branch not found or inactive"))
 	        ));
 
-
-
 		String generatedAccountNumber = generateAccountNumber(accountdto.getBranchCode(), accountdto.getProductCode());
 
 		Account account = new Account();
@@ -211,48 +221,85 @@ public class AccountServiceImp implements AccountService {
 	}
 
 	@Override
-	public String verify(AccountLoginDTO account) {
+	public Map<String, Object> verify(AccountLoginDTO account,
+	        HttpServletRequest request) {
+		
+		 // STEP 1 — Rate limiting
+	    String ip = request.getRemoteAddr();
+
+	    if (!rateLimitService.isAllowed(ip)) {
+	    	
+	        throw new BadCredentialsException( "Too many login attempts. Try again later.");
+    	
+	    }
+		
+		// Step 2: Find account by identifier (email/contact/accountNo)
+		Optional<Account> optionalAcc = findByIdentifier(account.getIdentifier());
+		
+		if (optionalAcc.isEmpty()) {
+			  throw new RuntimeException(
+		                "Account Not Available");
+		}
+		
+		
+		 Account acc = optionalAcc.get();
+
+		    Long accountId = acc.getId();
+
+		    // STEP 3 : Checking account lock
+		    if (accountLockService.isLocked(accountId)) {
+
+		        throw new BadCredentialsException(
+		                "Account locked. Try again later."
+		        );
+		    }
+		
 		try {
-			// Step 1: Authenticate credentials
+			// Step 4: Authenticate credentials
 			Authentication authentication = authManage.authenticate(
 					new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword()));
 
-			if (!authentication.isAuthenticated()) {
-				throw new RuntimeException("Invalid credentials");
-			}
+			
+		     // STEP 5: reset failed attempt / delete login attempt
+	        accountLockService.loginSucceeded(accountId);
 
-			// Step 2: Find account by identifier (email/contact/accountNo)
-			Optional<Account> optionalAcc = findByIdentifier(account.getIdentifier());
-			if (optionalAcc.isEmpty()) {
-				System.out.println("Account not found in database after authentication.");
-				return "Failed";
-			}
-
-			Account acc = optionalAcc.get();
-
-			// Step 3: Generate JWT token
+			
+			// Step 6: Generate JWT token
 
 		    Role role = acc.getRole();
 			String token = jService.generateToken(acc.getEmail(),acc.getId(), acc.getAccountNumber() , role.name());
 			System.out.println("Token [From verify]: " + token);
 
-			String redisKey = "session:" + acc.getEmail();
+			String redisKey = "session:" + acc.getId();
 
-			System.out.println("Saving Redis Key: " + redisKey);
+		    System.out.println("Saving Redis Key: " + redisKey);
 			System.out.println("Saving Token: " + token);
+			
 
-			// Step 4: Store token in Redis with TTL = 10 minutes
-			//the ["session:"] should be same at all place where we need redis token in filter too
-			redisTemplate.opsForValue().set("session:" + acc.getEmail(), token, 10, TimeUnit.MINUTES);
+			// Step 7: Store token in Redis with TTL = 10 minutes
+			/*the ["session:"] should be same at all place where we need redis token in filter too*/
+		   redisTemplate.opsForValue().set("session:" + acc.getId(), token, 10, TimeUnit.MINUTES);
 
-			System.out.println("Redis saved token for " + redisKey);
-			// Step 5: Return token
-			return token;
+		//	System.out.println("Redis saved token for " + redisKey);
+			// Step 8: Build response
+			
+			Date expiryDate = jService.extractExpiration(token);
+			
+			Map<String, Object> response = new HashMap<>();
+			response.put("token", token);
+			response.put("expiresAt", expiryDate.getTime());
+			
+			return response;
 
 		} catch (AuthenticationException ex) {
 			System.err.println("Authentication failed for: " + account.getIdentifier());
 			System.out.println("Error: " + ex.getMessage());
-			return "Failed";
+			
+			 accountLockService.loginFailed(accountId);
+			 
+			 throw new BadCredentialsException(
+		                "Invalid credentials"
+		        );
 		}
 	}
 

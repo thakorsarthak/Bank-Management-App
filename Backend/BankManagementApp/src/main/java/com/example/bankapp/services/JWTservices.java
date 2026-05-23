@@ -93,9 +93,25 @@ public class JWTservices {
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
+	
+	
+	private Claims extractAllClaims(String token) {
+
+		return Jwts
+				.parser()
+				.verifyWith(getKey())
+				.build()
+				.parseSignedClaims(token)
+				.getPayload();
+	}
 
 	public String extractUserName(String token) {
 		return extractClaims(token, Claims::getSubject);
+	}
+	
+	public Long extractAccountId(String token) {
+		
+		return extractClaims(token ,  claims -> Long.valueOf(claims.get("accountId").toString()));
 	}
 
 	public String extractAccountNumber(String token) {
@@ -110,15 +126,7 @@ public class JWTservices {
 
 	}
 
-	private Claims extractAllClaims(String token) {
 
-		return Jwts
-				.parser()
-				.verifyWith(getKey())
-				.build()
-				.parseSignedClaims(token)
-				.getPayload();
-	}
 
 	public boolean validateToken(String token, UserDetails userDetails) {
 		final String userName = extractUserName(token);

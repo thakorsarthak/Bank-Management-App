@@ -69,7 +69,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		String userName = null;
 
-		String email = jwtService.extractUserName(token);
+		//String email = jwtService.extractUserName(token);
+		
+		Long accountId = jwtService.extractAccountId(token);
 
 		try {
 			userName = jwtService.extractUserName(token);
@@ -83,7 +85,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 
 		// 3 for Redis session now
-		String redisKey = "session:" + email;
+		String redisKey = "session:" + accountId;
 
 		String storedToken = redisTemplate.opsForValue().get(redisKey);
 
