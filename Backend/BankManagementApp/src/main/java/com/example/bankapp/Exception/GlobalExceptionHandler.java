@@ -60,6 +60,11 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ApiError> handleNull(NullPointerException ex) {
 		return ResponseEntity.badRequest().body(new ApiError(400, "Invalid data sent", null));
 	}
+	
+	 @ExceptionHandler(RuntimeException.class)
+	    public ResponseEntity<String> DuplicateRequestException(RuntimeException ex) {
+	        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+	    }
 
 //	@ExceptionHandler(CustomValidationException.class)
 //    public ResponseEntity<GlobalAPIResponseDTO<?>> handleValidation(CustomValidationException ex) {
@@ -83,10 +88,5 @@ public class GlobalExceptionHandler {
 //        );
 //
 //        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-//    }
-//
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
-//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 //    }
 //}

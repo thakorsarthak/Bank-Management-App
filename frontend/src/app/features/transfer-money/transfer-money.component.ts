@@ -42,7 +42,7 @@ export class TransferMoneyComponent implements OnInit {
 
 
   transactionForm!: FormGroup;
-  isProcessing = false;
+
   receiverName: string | null = null;
 
   ngOnInit(): void {
@@ -102,22 +102,23 @@ export class TransferMoneyComponent implements OnInit {
     this.transactionForm.reset();
   }
 
+  isProcessing = false;
+
   onSubmit(): void {
     if (this.transactionForm.invalid) return;
-    // Decoding from token
-    //const fromAccountNumber = this.authservice.getAccountNumber(); 
-    // if (!fromAccountNumber) {
-    //   this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Account not found in token' });
-    //   return;
-    // }
-    
+
+    // Prevent double click
+    if (this.isProcessing) {
+      return;
+    }
+
     const idempotencyKey = crypto.randomUUID();
 
     const headers = new HttpHeaders({
-  'Idempotency-Key': crypto.randomUUID()
-});
+      'Idempotency-Key': crypto.randomUUID()
+    });
 
-    
+
     const payload = {
       toAccountNumber: this.transactionForm.value.accountNumber,
       amount: this.transactionForm.value.amount,
@@ -127,7 +128,7 @@ export class TransferMoneyComponent implements OnInit {
 
     this.isProcessing = true;
 
-    this.transactionService.transferMoney(payload ,  { headers }).subscribe({
+    this.transactionService.transferMoney(payload, { headers }).subscribe({
       next: () => {
         this.isProcessing = false;
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Money transferred successfully' });

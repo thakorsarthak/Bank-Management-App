@@ -20,6 +20,7 @@ import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.DTO.TransactionHistoryResponseDTO;
 import com.example.bankapp.DTO.TransactionReqDTO;
 import com.example.bankapp.DTO.TransferRequestDTO;
+import com.example.bankapp.annotation.Idempotent;
 import com.example.bankapp.entity.Transaction;
 import com.example.bankapp.services.IdempotencyService;
 import com.example.bankapp.services.JWTservices;
@@ -66,40 +67,35 @@ public class TransactionController {
 				transactionService.cardHistory(accountNo)));
 	}
 
+	@Idempotent(ttl = 5)
 	@PutMapping("/transfer")
 	public ResponseEntity<?> tranferAmount(@RequestHeader("Idempotency-Key") String key,@RequestBody @Valid TransferRequestDTO dto, HttpServletRequest httpRequest) {
 
-
-	    boolean locked = idempotencyService.lock(key);
-
-	    if (!locked) {
-
-	        return ResponseEntity.badRequest()
-	                .body("Duplicate Request");
-	    }
-		
-		String token = jwtService.extractTokenFromRequest(httpRequest);
-		String fromAccount = jwtService.extractAccountNumber(token);
-		 // CHECK DUPLICATE
-//	    if (idempotencyService.isDuplicate(key)) {
+		/*this before creating a annotation idempotent*/
+//	    boolean locked = idempotencyService.lock(key);
 //
+//	    if (!locked) {
+//
+//	    	log.info("Deplicate idempodent key Used");
 //	        return ResponseEntity.badRequest()
 //	                .body("Duplicate Request");
 //	    }
-//
-//	    // SAVE KEY
-//	    idempotencyService.saveKey(key);
-//	    log.info(key);
-
+//		
+		String token = jwtService.extractTokenFromRequest(httpRequest);
+		String fromAccount = jwtService.extractAccountNumber(token);
+		
+		return transactionService.transferMoney(fromAccount, dto);
+	
 	    // BUSINESS LOGIC
-		try {
-			return transactionService.transferMoney(fromAccount, dto);
-		} catch (Exception e) {
-			
-			  redisTemplate.delete(key);
-
-			   throw e;
-		}
+//		try {
+//			return transactionService.transferMoney(fromAccount, dto);
+//		} catch (Exception e) {
+//			
+//			  redisTemplate.delete(key);
+//
+//			   throw e;
+//		}
+		
 	}
 
 //	@GetMapping("/downloadTransactionHistoryBypageNation")
@@ -153,6 +149,7 @@ public class TransactionController {
 
 	}
 
+	@Idempotent(ttl = 5)
 	@PutMapping("/deposit")
 	public ResponseEntity<String> depositAmount(@RequestBody TransactionReqDTO request) {
 		String result = transactionService.depositAmount(request);
@@ -160,6 +157,7 @@ public class TransactionController {
 		return ResponseEntity.ok(result);
 	}
 
+	@Idempotent(ttl = 5)
 	@PutMapping("/withdraw")
 	public ResponseEntity<String> withDrawAmount(@RequestBody TransactionReqDTO request) {
 		String result = transactionService.withdrawAmount(request);

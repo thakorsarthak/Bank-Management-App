@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankapp.DTO.AccountLoginDTO;
 import com.example.bankapp.DTO.AccountResponseDTO;
 import com.example.bankapp.DTO.AccountSignUpDTO;
+import com.example.bankapp.annotation.Idempotent;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
@@ -39,6 +40,7 @@ public class MainController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(createAccount);
 	}
 
+	@Idempotent(ttl = 5)
 	@PostMapping("/login-account")
 	public ResponseEntity<?> login(@RequestBody AccountLoginDTO acc) {
 		String token = accountService.verify(acc);

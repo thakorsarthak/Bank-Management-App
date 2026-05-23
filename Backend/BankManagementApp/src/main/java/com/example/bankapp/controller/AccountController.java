@@ -52,6 +52,7 @@ public class AccountController {
 		return ResponseEntity.ok(result);
 	}
 
+	// Login Password
 	@PutMapping("/changePinWithOtp")
 	public ResponseEntity<?> resetPinWithOtp(@RequestBody ResetPinWithOtpDTO resetPin) {
 

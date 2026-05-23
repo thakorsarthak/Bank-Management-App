@@ -56,10 +56,6 @@ public class AccountServiceImp implements AccountService {
 	private AuthenticationManager authManage;
 
 	@Autowired
-	private TransactionRepo Trepo;
-
-
-	@Autowired
 	private BranchRepository branchRepo;
 
 	@Autowired

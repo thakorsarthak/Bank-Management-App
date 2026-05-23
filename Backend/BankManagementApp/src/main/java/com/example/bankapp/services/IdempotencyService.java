@@ -11,15 +11,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IdempotencyService {
 
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     
     
-    public boolean lock(String key) {
+    public boolean lock(String key , long ttlMinutes) {
     	
     	String redisKey = "idempotency:" + key;
     	
     	Boolean success = 
-    			redisTemplate.opsForValue().setIfAbsent(redisKey, "PROCESSING", Duration.ofMinutes(3));
+    			redisTemplate.opsForValue()
+    			.setIfAbsent(
+    					redisKey,
+    					"PROCESSING",
+    					Duration.ofMinutes(ttlMinutes)
+    					);
     	
     	return Boolean.TRUE.equals(success);
     }

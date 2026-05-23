@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
+import com.example.bankapp.annotation.Idempotent;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.services.OtpService;
 
@@ -26,6 +27,7 @@ public class OtpController {
 	@Autowired
 	private AccountRepo accountRepo;
 
+	@Idempotent(ttl = 5)
 	@PostMapping("/send")
 	public ResponseEntity<?> send(@RequestBody Map<String, String> req) {
 
@@ -64,6 +66,7 @@ public class OtpController {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("OTP sent Successfully",true));
 	}
 
+	@Idempotent(ttl = 5)
 	@PostMapping("/verify")
 	public ResponseEntity<?> verify(@RequestBody Map<String, String> req) {
 		String email = req.get("email");
