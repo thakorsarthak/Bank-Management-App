@@ -1,5 +1,6 @@
 package com.example.bankapp.implementation;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,12 +64,12 @@ public class AccountServiceImp implements AccountService {
 
 	@Autowired
 	private BranchRepository branchRepo;
-	
+
 	@Autowired
 	private AccountLockService accountLockService;
-	
+
 	@Autowired
-	private  RateLimitService rateLimitService;
+	private RateLimitService rateLimitService;
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
@@ -110,7 +111,7 @@ public class AccountServiceImp implements AccountService {
 
 		if (repo.existsByEmail(accountdto.getEmail())) {
 			errors.add(new FieldError("Email", "Acccount with this Email is already Exist pls login"));
-			throw new CustomValidationException("Email already Exist(service)",errors);
+			throw new CustomValidationException("Email already Exist(service)", errors);
 		}
 
 		if (repo.existsByContact(accountdto.getContact())) {
@@ -133,25 +134,18 @@ public class AccountServiceImp implements AccountService {
 		}
 
 		if (!errors.isEmpty()) {
-			throw new CustomValidationException("error creating account",errors);
+			throw new CustomValidationException("error creating account", errors);
 		}
 
-
 		// 1. Validate AccountType
-	    AccountType accountType = AccountType.fromCode(accountdto.getProductCode())
-	        .orElseThrow(() -> new CustomValidationException(
-	            "Invalid Account Type",
-	            List.of(new FieldError("productCode", "Invalid account type"))
-	        ));
+		AccountType accountType = AccountType.fromCode(accountdto.getProductCode())
+				.orElseThrow(() -> new CustomValidationException("Invalid Account Type",
+						List.of(new FieldError("productCode", "Invalid account type"))));
 
-
-	    // 2. Validate Branch
-	   Branch branch = branchRepo
-	        .findByBranchCodeAndActiveTrue(accountdto.getBranchCode())
-	        .orElseThrow(() -> new CustomValidationException(
-	            "Invalid Branch",
-	            List.of(new FieldError("branchCode", "Branch not found or inactive"))
-	        ));
+		// 2. Validate Branch
+		Branch branch = branchRepo.findByBranchCodeAndActiveTrue(accountdto.getBranchCode())
+				.orElseThrow(() -> new CustomValidationException("Invalid Branch",
+						List.of(new FieldError("branchCode", "Branch not found or inactive"))));
 
 		String generatedAccountNumber = generateAccountNumber(accountdto.getBranchCode(), accountdto.getProductCode());
 
@@ -173,11 +167,10 @@ public class AccountServiceImp implements AccountService {
 		account.setRole(Role.USER);
 		account.setStatus(AccountStatus.PENDING_KYC);
 
-
-		//for branch and account type
+		// for branch and account type
 
 		account.setAccountType(accountType);
-	    account.setBranch(branch);
+		account.setBranch(branch);
 
 		// account.setAccountType(accountdto.getAccountType());
 
@@ -206,7 +199,7 @@ public class AccountServiceImp implements AccountService {
 
 	}
 
-	//Getting  Identifier for Login through email, AccointNumber and Contact
+	// Getting Identifier for Login through email, AccointNumber and Contact
 	@Override
 	public Optional<Account> findByIdentifier(String identifier) {
 		identifier = identifier.trim();
@@ -221,89 +214,85 @@ public class AccountServiceImp implements AccountService {
 	}
 
 	@Override
-	public Map<String, Object> verify(AccountLoginDTO account,
-	        HttpServletRequest request) {
-		
-		 // STEP 1 — Rate limiting
-	    String ip = request.getRemoteAddr();
+	public Map<String, Object> verify(AccountLoginDTO account, HttpServletRequest request) {
 
-	    if (!rateLimitService.isAllowed(ip)) {
-	    	
-	        throw new BadCredentialsException( "Too many login attempts. Try again later.");
-    	
-	    }
+		// STEP 1 — Rate limiting but now with Annotation
+//		String ip = request.getRemoteAddr();
+//
+//		if (!rateLimitService.isAllowed(
+//				   "rate-limit:login:" + ip,
+//				   5,
+//				   Duration.ofMinutes(10)
+//				)) {
+//
+//			throw new BadCredentialsException("Too many login attempts. Try again later.");
+//
+//		}
 		
+
 		// Step 2: Find account by identifier (email/contact/accountNo)
 		Optional<Account> optionalAcc = findByIdentifier(account.getIdentifier());
-		
+
 		if (optionalAcc.isEmpty()) {
-			  throw new RuntimeException(
-		                "Account Not Available");
+			throw new RuntimeException("Account Not Available");
 		}
-		
-		
-		 Account acc = optionalAcc.get();
 
-		    Long accountId = acc.getId();
+		Account acc = optionalAcc.get();
 
-		    // STEP 3 : Checking account lock
-		    if (accountLockService.isLocked(accountId)) {
+		Long accountId = acc.getId();
 
-		        throw new BadCredentialsException(
-		                "Account locked. Try again later."
-		        );
-		    }
-		
+		// STEP 3 : Checking account lock
+		if (accountLockService.isLocked(accountId)) {
+
+			throw new BadCredentialsException("Account locked. Try again later.");
+		}
+
 		try {
 			// Step 4: Authenticate credentials
 			Authentication authentication = authManage.authenticate(
 					new UsernamePasswordAuthenticationToken(account.getIdentifier(), account.getPassword()));
 
-			
-		     // STEP 5: reset failed attempt / delete login attempt
-	        accountLockService.loginSucceeded(accountId);
+			// STEP 5: reset failed attempt / delete login attempt
+			accountLockService.loginSucceeded(accountId);
 
-			
 			// Step 6: Generate JWT token
 
-		    Role role = acc.getRole();
-			String token = jService.generateToken(acc.getEmail(),acc.getId(), acc.getAccountNumber() , role.name());
+			Role role = acc.getRole();
+			String token = jService.generateToken(acc.getEmail(), acc.getId(), acc.getAccountNumber(), role.name());
 			System.out.println("Token [From verify]: " + token);
 
 			String redisKey = "session:" + acc.getId();
 
-		    System.out.println("Saving Redis Key: " + redisKey);
+			System.out.println("Saving Redis Key: " + redisKey);
 			System.out.println("Saving Token: " + token);
-			
 
 			// Step 7: Store token in Redis with TTL = 10 minutes
-			/*the ["session:"] should be same at all place where we need redis token in filter too*/
-		   redisTemplate.opsForValue().set("session:" + acc.getId(), token, 10, TimeUnit.MINUTES);
+			/*
+			 * the ["session:"] should be same at all place where we need redis token in
+			 * filter too
+			 */
+			redisTemplate.opsForValue().set("session:" + acc.getId(), token, 10, TimeUnit.MINUTES);
 
-		//	System.out.println("Redis saved token for " + redisKey);
+			// System.out.println("Redis saved token for " + redisKey);
 			// Step 8: Build response
-			
+
 			Date expiryDate = jService.extractExpiration(token);
-			
+
 			Map<String, Object> response = new HashMap<>();
 			response.put("token", token);
 			response.put("expiresAt", expiryDate.getTime());
-			
+
 			return response;
 
 		} catch (AuthenticationException ex) {
 			System.err.println("Authentication failed for: " + account.getIdentifier());
 			System.out.println("Error: " + ex.getMessage());
-			
-			 accountLockService.loginFailed(accountId);
-			 
-			 throw new BadCredentialsException(
-		                "Invalid credentials"
-		        );
+
+			accountLockService.loginFailed(accountId);
+
+			throw new BadCredentialsException("Invalid credentials");
 		}
 	}
-
-
 
 	@Override
 	public ResponseEntity<?> getAccountHolderName(String accountNumber) {
@@ -318,8 +307,7 @@ public class AccountServiceImp implements AccountService {
 		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Sucsess", true, name));
 	}
 
-
-	//old method extracting  holder name from token from token
+	// old method extracting holder name from token from token
 //	@Override
 //	public ResponseEntity<?> getAccountHolderN(HttpServletRequest request) {
 //
@@ -335,8 +323,6 @@ public class AccountServiceImp implements AccountService {
 //		String name = account.get().getAccountHolderName();
 //		return ResponseEntity.ok(new GlobalAPIResponseDTO<>("Success", true, name));
 //	}
-
-
 
 	@Override
 	public AccountResponseDTO getAccountDetailByAccountNo(HttpServletRequest request) {
@@ -395,12 +381,12 @@ public class AccountServiceImp implements AccountService {
 
 		Account account = byId.get();
 
-		if (!passwordEncoder.matches(changePin.getOldPin(), account.getPin())){
+		if (!passwordEncoder.matches(changePin.getOldPin(), account.getPin())) {
 
 			throw new RuntimeException("Old PIN is Incorect");
 		}
 
-		if (!passwordEncoder.matches(changePin.getNewPin(),changePin.getConfirsmPin())) {
+		if (!passwordEncoder.matches(changePin.getNewPin(), changePin.getConfirsmPin())) {
 
 			throw new RuntimeException("PIN and confirm PIN must be similar");
 		}

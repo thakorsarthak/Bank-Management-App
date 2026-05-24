@@ -3,6 +3,7 @@ package com.example.bankapp.controller;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,6 +22,7 @@ import com.example.bankapp.DTO.TransactionHistoryResponseDTO;
 import com.example.bankapp.DTO.TransactionReqDTO;
 import com.example.bankapp.DTO.TransferRequestDTO;
 import com.example.bankapp.annotation.Idempotent;
+import com.example.bankapp.annotation.RateLimited;
 import com.example.bankapp.entity.Transaction;
 import com.example.bankapp.services.IdempotencyService;
 import com.example.bankapp.services.JWTservices;
@@ -68,6 +70,12 @@ public class TransactionController {
 	}
 
 	@Idempotent(ttl = 5)
+	@RateLimited(
+		    prefix = "transfer",
+		    limit = 10,
+		    duration = 1,
+		    timeUnit = TimeUnit.HOURS
+		)
 	@PutMapping("/transfer")
 	public ResponseEntity<?> tranferAmount(@RequestHeader("Idempotency-Key") String key,@RequestBody @Valid TransferRequestDTO dto, HttpServletRequest httpRequest) {
 

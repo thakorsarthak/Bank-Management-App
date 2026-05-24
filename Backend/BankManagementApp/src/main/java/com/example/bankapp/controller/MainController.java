@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import com.example.bankapp.DTO.AccountLoginDTO;
 import com.example.bankapp.DTO.AccountResponseDTO;
 import com.example.bankapp.DTO.AccountSignUpDTO;
 import com.example.bankapp.annotation.Idempotent;
+import com.example.bankapp.annotation.RateLimited;
 import com.example.bankapp.entity.Account;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservices;
@@ -45,6 +47,12 @@ public class MainController {
 
 
 	@PostMapping("/login-account")
+	@RateLimited(
+		    prefix = "login",
+		    limit = 5,
+		    duration = 1,
+		    timeUnit = TimeUnit.MINUTES
+		)
 	public ResponseEntity<?> login( @RequestBody @Valid AccountLoginDTO acc,
 	        HttpServletRequest request) {
 		

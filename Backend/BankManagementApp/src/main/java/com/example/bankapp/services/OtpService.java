@@ -1,17 +1,21 @@
 package com.example.bankapp.services;
 
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import com.example.bankapp.DTO.NotificationEvent;
 import com.example.bankapp.config.RabbitMQConstants;
+import com.example.bankapp.entity.Account;
 import com.example.bankapp.entity.OtpRecord;
+import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.OtpRepository;
 
 @Service
@@ -25,6 +29,12 @@ public class OtpService {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
+	
+	@Autowired
+	private AccountRepo accountRepo;
+	
+	@Autowired
+	private RateLimitService rateLimitService;
 
 //	@Value("${twilio.phone.number}")
 //	private String twiliPhone;
@@ -35,6 +45,29 @@ public class OtpService {
 	}
 
 	public void sendOtp(String email, String phone) {
+		
+		Optional<Account> account  = accountRepo.findByEmail(email);
+		
+		Account acc = account.get();
+		
+		String accountId = acc.getEmail();
+		
+		String key =
+		        "otp:" + accountId;
+
+		boolean allowed =
+		        rateLimitService.isAllowed(
+		                key,
+		                3,
+		                Duration.ofMinutes(5)
+		        );
+
+		if (!allowed) {
+
+		    throw new BadCredentialsException(
+		            "Too many OTP requests"
+		    );
+		}
 
 		String otp = generateOtp();
 		LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);

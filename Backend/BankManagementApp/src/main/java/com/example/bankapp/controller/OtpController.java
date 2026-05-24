@@ -2,6 +2,7 @@ package com.example.bankapp.controller;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.annotation.Idempotent;
+import com.example.bankapp.annotation.RateLimited;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.services.OtpService;
 
@@ -28,6 +30,12 @@ public class OtpController {
 	private AccountRepo accountRepo;
 
 	@Idempotent(ttl = 5)
+	@RateLimited(
+		    prefix = "otp",
+		    limit = 3,
+		    duration = 5,
+		    timeUnit = TimeUnit.MINUTES
+		)
 	@PostMapping("/send")
 	public ResponseEntity<?> send(@RequestBody Map<String, String> req) {
 

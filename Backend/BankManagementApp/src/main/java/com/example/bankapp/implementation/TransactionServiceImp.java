@@ -1,5 +1,6 @@
 package com.example.bankapp.implementation;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.TransactionRepo;
 import com.example.bankapp.services.JWTservices;
 import com.example.bankapp.services.NotificationService;
+import com.example.bankapp.services.RateLimitService;
 import com.example.bankapp.services.TransactionService;
 
 import lombok.Builder;
@@ -53,13 +56,16 @@ public class TransactionServiceImp implements TransactionService {
 	private JWTservices jService;
 
 	@Autowired
-	AuthenticationManager authManage;
+	private AuthenticationManager authManage;
 
 	@Autowired
-	TransactionRepo transactionRepo;
+	private TransactionRepo transactionRepo;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private RateLimitService rateLimitService;
 
 	@Autowired
 	private NotificationService notificationService;
@@ -167,10 +173,30 @@ public class TransactionServiceImp implements TransactionService {
 	public ResponseEntity<?> transferMoney(String fromAccountNumber, TransferRequestDTO request) {
 
 		Optional<Account> toOptionalAcc = accountRepo.findByAccountNumber(request.getToAccountNumber());
+		
+		String key =
+		        "otp:" + fromAccountNumber;
 
+		boolean allowed =
+		        rateLimitService.isAllowed(
+		                key,
+		                3,
+		                Duration.ofMinutes(5)
+		        );
 
+		if (!allowed) {
+			
+			//return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GlobalAPIResponseDTO<>("Too many OTP requests", false));
+			throw new BadCredentialsException("Transfer limit exceeded. Try again later.");
+//		    throw new RuntimeException(
+//		            "Too many OTP requests"
+//		    );
+		}
+		
 		Account fromAccount = accountRepo.findByAccountNumber(fromAccountNumber)
 				.orElseThrow(() -> new RuntimeException("Sender  does not Exist"));
+		
+		
 
 		if (fromAccount.getStatus().equals(AccountStatus.PENDING_KYC)) {
 			saveFailedTransaction(fromAccount, null, request, TransactionStatus.FAILED, TransactionDirection.DEBIT, "KYC Pending",

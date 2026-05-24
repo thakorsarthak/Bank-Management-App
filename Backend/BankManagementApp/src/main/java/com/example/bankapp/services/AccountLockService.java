@@ -30,7 +30,7 @@ public class AccountLockService {
 		
 		Long attempts = redisTemplate.opsForValue().increment(failkey);
 		
-		//set exxpiry if first attempt
+		//set expiry if first attempt
 		if(attempts!=null && attempts == 1) {
 			redisTemplate.expire(failkey, Duration.ofMinutes(15));
 			

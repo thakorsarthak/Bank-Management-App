@@ -67,15 +67,20 @@ public class GlobalExceptionHandler {
 	        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	    }
 	 
-	 @ExceptionHandler(BadCredentialsException.class)
-	 public ResponseEntity<?> handleBadCredentials(
-	         BadCredentialsException ex
-	 ) {
-
-	     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	             .body(new ApiError(401,ex.getMessage(),null));
-	 }
-
+//	 @ExceptionHandler(BadCredentialsException.class)
+//	 public ResponseEntity<?> handleBadCredentials(
+//	         BadCredentialsException ex
+//	 ) {
+//
+//	     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//	             .body(new ApiError(401,ex.getMessage(),null));
+//	 }
+//	 
+//	 
+//	 @ExceptionHandler(RuntimeException.class)
+//	    public ResponseEntity<String> RateLimitExceededException(RuntimeException ex) {
+//	        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+//	    }
 //	@ExceptionHandler(CustomValidationException.class)
 //    public ResponseEntity<GlobalAPIResponseDTO<?>> handleValidation(CustomValidationException ex) {
 //
