@@ -22,7 +22,7 @@ import com.example.bankapp.enums.AccountStatus;
 import com.example.bankapp.implementation.TransactionServiceImp;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.TransactionRepo;
-import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.JWTservice;
 import com.example.bankapp.services.NotificationService;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,7 +41,7 @@ class TransactionServiceTest {
     private NotificationService notificationService;
 
     @Mock
-    private JWTservices jwtServices;
+    private JWTservice jwtServices;
 
     @Mock
     private AuthenticationManager authenticationManager;

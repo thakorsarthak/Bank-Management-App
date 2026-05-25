@@ -39,7 +39,7 @@ import com.example.bankapp.enums.TransactionDirection;
 import com.example.bankapp.enums.TransactionStatus;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.TransactionRepo;
-import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.JWTservice;
 import com.example.bankapp.services.NotificationService;
 import com.example.bankapp.services.RateLimitService;
 import com.example.bankapp.services.TransactionService;
@@ -53,7 +53,7 @@ public class TransactionServiceImp implements TransactionService {
 	AccountRepo accountRepo;
 
 	@Autowired
-	private JWTservices jService;
+	private JWTservice jService;
 
 	@Autowired
 	private AuthenticationManager authManage;
@@ -174,25 +174,25 @@ public class TransactionServiceImp implements TransactionService {
 
 		Optional<Account> toOptionalAcc = accountRepo.findByAccountNumber(request.getToAccountNumber());
 		
-		String key =
-		        "otp:" + fromAccountNumber;
-
-		boolean allowed =
-		        rateLimitService.isAllowed(
-		                key,
-		                3,
-		                Duration.ofMinutes(5)
-		        );
-
-		if (!allowed) {
-			
-			//return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GlobalAPIResponseDTO<>("Too many OTP requests", false));
-			throw new BadCredentialsException("Transfer limit exceeded. Try again later.");
-//		    throw new RuntimeException(
-//		            "Too many OTP requests"
-//		    );
-		}
-		
+//		String key =
+//		        "otp:" + fromAccountNumber;
+//
+//		boolean allowed =
+//		        rateLimitService.isAllowed(
+//		                key,
+//		                3,
+//		                Duration.ofMinutes(5)
+//		        );
+//
+//		if (!allowed) {
+//			
+//			//return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GlobalAPIResponseDTO<>("Too many OTP requests", false));
+//			throw new BadCredentialsException("Transfer limit exceeded. Try again later.");
+////		    throw new RuntimeException(
+////		            "Too many OTP requests"
+////		    );
+//		}
+//		
 		Account fromAccount = accountRepo.findByAccountNumber(fromAccountNumber)
 				.orElseThrow(() -> new RuntimeException("Sender  does not Exist"));
 		

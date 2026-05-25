@@ -24,8 +24,9 @@ import com.example.bankapp.DTO.TransferRequestDTO;
 import com.example.bankapp.annotation.Idempotent;
 import com.example.bankapp.annotation.RateLimited;
 import com.example.bankapp.entity.Transaction;
+import com.example.bankapp.enums.RateLimitType;
 import com.example.bankapp.services.IdempotencyService;
-import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.JWTservice;
 import com.example.bankapp.services.TransactionService;
 import com.example.bankapp.util.ExcelUtil;
 
@@ -43,7 +44,7 @@ public class TransactionController {
 	TransactionService transactionService;
 
 	@Autowired
-	JWTservices jwtService;
+	JWTservice jwtService;
 	
 	@Autowired
 	IdempotencyService idempotencyService;
@@ -72,6 +73,7 @@ public class TransactionController {
 	@Idempotent(ttl = 5)
 	@RateLimited(
 		    prefix = "transfer",
+		    type = RateLimitType.ACCOUNT,
 		    limit = 10,
 		    duration = 1,
 		    timeUnit = TimeUnit.HOURS

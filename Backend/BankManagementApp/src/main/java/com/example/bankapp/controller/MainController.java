@@ -22,8 +22,9 @@ import com.example.bankapp.DTO.AccountSignUpDTO;
 import com.example.bankapp.annotation.Idempotent;
 import com.example.bankapp.annotation.RateLimited;
 import com.example.bankapp.entity.Account;
+import com.example.bankapp.enums.RateLimitType;
 import com.example.bankapp.services.AccountService;
-import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.JWTservice;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -36,7 +37,7 @@ public class MainController {
 	AccountService accountService;
 
 	@Autowired
-	JWTservices jwtService;
+	JWTservice jwtService;
 
 	// create account
 	@PostMapping("/create")
@@ -49,6 +50,7 @@ public class MainController {
 	@PostMapping("/login-account")
 	@RateLimited(
 		    prefix = "login",
+		    type = RateLimitType.IP,
 		    limit = 5,
 		    duration = 1,
 		    timeUnit = TimeUnit.MINUTES

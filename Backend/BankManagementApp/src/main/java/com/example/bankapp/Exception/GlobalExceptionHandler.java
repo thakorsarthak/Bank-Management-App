@@ -67,6 +67,12 @@ public class GlobalExceptionHandler {
 	        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	    }
 	 
+	 
+	 @ExceptionHandler(RateLimitExceededException.class)
+	    public ResponseEntity<GlobalAPIResponseDTO> handleRateLimit(RateLimitExceededException ex) {
+	       // return new ResponseEntity<>(ex.getMessage(), HttpStatus.TOO_MANY_REQUESTS);
+	        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new GlobalAPIResponseDTO<>(ex.getMessage(), false));
+	    }
 //	 @ExceptionHandler(BadCredentialsException.class)
 //	 public ResponseEntity<?> handleBadCredentials(
 //	         BadCredentialsException ex

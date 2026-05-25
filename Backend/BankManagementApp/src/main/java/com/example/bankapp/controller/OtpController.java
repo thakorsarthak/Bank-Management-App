@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.annotation.Idempotent;
 import com.example.bankapp.annotation.RateLimited;
+import com.example.bankapp.enums.RateLimitType;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.services.OtpService;
 
@@ -32,6 +33,7 @@ public class OtpController {
 	@Idempotent(ttl = 5)
 	@RateLimited(
 		    prefix = "otp",
+		    type = RateLimitType.ACCOUNT,
 		    limit = 3,
 		    duration = 5,
 		    timeUnit = TimeUnit.MINUTES

@@ -9,8 +9,12 @@ import org.springframework.stereotype.Component;
 
 import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.Exception.GlobalExceptionHandler;
+import com.example.bankapp.Exception.RateLimitExceededException;
 import com.example.bankapp.annotation.RateLimited;
+import com.example.bankapp.enums.RateLimitType;
+import com.example.bankapp.services.JWTservice;
 import com.example.bankapp.services.RateLimitService;
+import com.twilio.jwt.Jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class RateLimitAspect {
 
 	private final RateLimitService rateLimitService;
+	
+	private final JWTservice jwtService;
 
 	private final HttpServletRequest request;
 
@@ -29,17 +35,35 @@ public class RateLimitAspect {
 			ProceedingJoinPoint joinPoint,
 			RateLimited rateLimited) 
 					throws Throwable {
+		
+		String identifier ;
+		
+		//Case 1 - IP BASED
+		if(rateLimited.type() == RateLimitType.IP) {
+			
+			identifier = request.getRemoteAddr();
 
-		String ip = request.getRemoteAddr();
-
-		if (ip.equals("0:0:0:0:0:0:0:1")) {
-			ip = "127.0.0.1";
+			if (identifier.equals("0:0:0:0:0:0:0:1")) {
+				identifier = "127.0.0.1";
+			}
+			
 		}
-
+		
+		//Case 2 -  ACCOUNT BASED
+		
+		else {
+			String token = jwtService.extractTokenFromRequest(request);
+			
+			Long accountId = jwtService.extractAccountId(token);
+			
+			 identifier =
+	                    String.valueOf(accountId);
+		}
+		
 		String redisKey = "rate-limit:" 
 							+ rateLimited.prefix()
 							+ ":" 
-							+ ip;
+							+ identifier;
 
 		Duration duration = 
 				Duration.ofMillis(
@@ -53,11 +77,10 @@ public class RateLimitAspect {
 
 		if (!allowed) {
 
-			throw new CustomValidationException("Too many requests. Try again later.");
+			throw new RateLimitExceededException("Too many requests. Try again later.");
 		}
 
 		return joinPoint.proceed();
-
 	}
 
 }

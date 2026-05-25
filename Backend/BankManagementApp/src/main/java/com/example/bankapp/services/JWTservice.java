@@ -20,7 +20,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
-public class JWTservices {
+public class JWTservice {
 
 	@Value("${jwt.secret}")
 	private String secretKey;

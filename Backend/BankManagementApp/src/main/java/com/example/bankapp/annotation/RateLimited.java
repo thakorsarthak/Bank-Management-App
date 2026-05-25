@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.concurrent.TimeUnit;
 
+import com.example.bankapp.enums.RateLimitType;
+
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RateLimited {
@@ -18,4 +20,5 @@ public @interface RateLimited {
 	
 	TimeUnit timeUnit();
 
+	RateLimitType type();
 }

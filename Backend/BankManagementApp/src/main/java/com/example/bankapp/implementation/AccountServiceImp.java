@@ -44,7 +44,7 @@ import com.example.bankapp.repository.BranchRepository;
 import com.example.bankapp.repository.TransactionRepo;
 import com.example.bankapp.services.AccountLockService;
 import com.example.bankapp.services.AccountService;
-import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.JWTservice;
 import com.example.bankapp.services.RateLimitService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,7 +57,7 @@ public class AccountServiceImp implements AccountService {
 	private AccountRepo repo;
 
 	@Autowired
-	private JWTservices jService;
+	private JWTservice jService;
 
 	@Autowired
 	private AuthenticationManager authManage;

@@ -25,12 +25,12 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.JWTservice;
 
 @ExtendWith(MockitoExtension.class)
 class JwtServiceTest {
 
-    private JWTservices jwtServices;
+    private JWTservice jwtServices;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -53,13 +53,13 @@ class JwtServiceTest {
         );
 
         // 3. Instantiate and inject both fields
-        jwtServices = new JWTservices();
+        jwtServices = new JWTservice();
 
-        var secretField = JWTservices.class.getDeclaredField("secretKey");
+        var secretField = JWTservice.class.getDeclaredField("secretKey");
         secretField.setAccessible(true);
         secretField.set(jwtServices, validSecretKey);
 
-        var redisField = JWTservices.class.getDeclaredField("redisTemplate");
+        var redisField = JWTservice.class.getDeclaredField("redisTemplate");
         redisField.setAccessible(true);
         redisField.set(jwtServices, mockRedis);
     }

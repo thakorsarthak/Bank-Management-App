@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.bankapp.services.CustomAccountDetailService;
-import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.JWTservice;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,7 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtFilter extends OncePerRequestFilter {
 
 	@Autowired
-	JWTservices jwtService;
+	JWTservice jwtService;
 
 	@Autowired
 	ApplicationContext context;
@@ -86,7 +86,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		// 3 for Redis session now
 		String redisKey = "session:" + accountId;
-
+ 
 		String storedToken = redisTemplate.opsForValue().get(redisKey);
 
 //		System.out.println("Extracted Email: " + email);
@@ -94,13 +94,15 @@ public class JwtFilter extends OncePerRequestFilter {
 //		System.out.println("Token From Request: " + token);
 //		System.out.println("Token From Redis: " + storedToken);
 
-		try {
-		    redisTemplate.opsForValue().set(redisKey, token);
-		    log.info("Redis save SUCCESS for key: {}", redisKey);
-		} catch (Exception e) {
-		    log.error("Redis save FAILED: {}", e.getMessage(), e);
-		    throw e;
-		}
+		
+		/*No need to save redis key here we are storing while Login */
+//		try {
+//		    redisTemplate.opsForValue().set(redisKey, token);
+//		    log.info("Redis save SUCCESS for key: {}", redisKey);
+//		} catch (Exception e) {
+//		    log.error("Redis save FAILED: {}", e.getMessage(), e);
+//		    throw e;
+//		}
 
 		if (storedToken == null || !storedToken.equals(token)) {
 

@@ -1,13 +1,12 @@
 package com.example.bankapp.aspect;
 
-import java.util.DuplicateFormatFlagsException;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
+import com.example.bankapp.Exception.CustomValidationException;
 import com.example.bankapp.annotation.Idempotent;
 import com.example.bankapp.services.IdempotencyService;
 
@@ -29,7 +28,7 @@ public class IdempotencyAspect {
 
 		if (key == null || key.isBlank()) {
 
-			throw new RuntimeException("Missing idempotncy key");
+			throw new CustomValidationException("Missing idempotncy key");
 		}
 
 		boolean locked = idempotencyService.lock(key, idempotent.ttl());

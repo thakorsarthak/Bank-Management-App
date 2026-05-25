@@ -26,7 +26,7 @@ import com.example.bankapp.implementation.AccountServiceImp;
 import com.example.bankapp.repository.AccountRepo;
 import com.example.bankapp.repository.BranchRepository;
 import com.example.bankapp.repository.TransactionRepo;
-import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.JWTservice;
 
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
@@ -38,7 +38,7 @@ class AccountServiceTest {
     private BranchRepository branchRepo;
 
     @Mock
-    private JWTservices jwtServices;
+    private JWTservice jwtServices;
 
     @Mock
     private AuthenticationManager authenticationManager;

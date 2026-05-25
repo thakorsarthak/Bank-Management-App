@@ -39,7 +39,7 @@ import com.example.bankapp.repository.BranchRepository;
 import com.example.bankapp.repository.EmployeeRepo;
 import com.example.bankapp.services.AdminService;
 import com.example.bankapp.services.AuditService;
-import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.JWTservice;
 import com.example.bankapp.services.NotificationService;
 import com.example.bankapp.util.AccountStatusEmailTemplate;
 import com.example.bankapp.util.EmployeeSortBuilder;
@@ -67,7 +67,7 @@ public class AdminServiceImp implements AdminService {
 
 	private final AuditService auditLogService;
 
-	private final JWTservices jService;
+	private final JWTservice jService;
 
 	private final NotificationService notificationService;
 

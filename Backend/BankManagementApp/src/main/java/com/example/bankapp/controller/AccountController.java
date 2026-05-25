@@ -19,7 +19,7 @@ import com.example.bankapp.DTO.ChangePinRequestDTO;
 import com.example.bankapp.DTO.ResetPasswordWithOtpDTO;
 import com.example.bankapp.DTO.ResetPinWithOtpDTO;
 import com.example.bankapp.services.AccountService;
-import com.example.bankapp.services.JWTservices;
+import com.example.bankapp.services.JWTservice;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -32,7 +32,7 @@ public class AccountController {
 	AccountService aService;
 
 	@Autowired
-	JWTservices jwtService;
+	JWTservice jwtService;
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
