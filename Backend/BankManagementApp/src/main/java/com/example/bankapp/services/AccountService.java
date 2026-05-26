@@ -21,6 +21,10 @@ public interface AccountService {
 
 	AccountResponseDTO createAccount(AccountSignUpDTO accountDto);
 	
+	Map<String, Object> refreshToken(
+	        String refreshToken
+	);
+	
 	Optional<Account> findByIdentifier(String identifier);
 	
 	Map<String, Object> verify(AccountLoginDTO account,HttpServletRequest request);

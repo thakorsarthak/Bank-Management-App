@@ -1,5 +1,7 @@
 package com.example.bankapp.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.bankapp.DTO.AccountResponseDTO;
 import com.example.bankapp.DTO.AccountUpdateRequestDTO;
 import com.example.bankapp.DTO.ChangePinRequestDTO;
+import com.example.bankapp.DTO.RefreshTokenRequestDTO;
 import com.example.bankapp.DTO.ResetPasswordWithOtpDTO;
 import com.example.bankapp.DTO.ResetPinWithOtpDTO;
 import com.example.bankapp.services.AccountService;
@@ -23,7 +26,9 @@ import com.example.bankapp.services.JWTservice;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/account")
 public class AccountController {
@@ -36,6 +41,16 @@ public class AccountController {
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
+	
+	
+	@PostMapping("/refresh")
+	 public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequestDTO request){
+		
+		Map<String, Object> response = aService.refreshToken(request.getRefreshToken());
+		
+		return ResponseEntity.ok(response);
+		
+	}
 
 	@PutMapping("/updateAccount")
 	public ResponseEntity<AccountResponseDTO> updateAccount(@RequestBody AccountUpdateRequestDTO dto) {
@@ -72,10 +87,12 @@ public class AccountController {
 	public ResponseEntity<?> logout(HttpServletRequest request) {
 
 		String token = jwtService.extractTokenFromRequest(request);
-		String userName = jwtService.extractUserName(token);
-		//cause we extracting email as userName
+		
+		Long accountId = jwtService.extractAccountId(token);
+		
 		System.out.println("-----> Inside logout");
-		redisTemplate.delete("session:" + userName);
+		redisTemplate.delete("session:" + accountId);
+		
 		System.err.println("---->Token deleted from Redis");
 		return ResponseEntity.ok("Logged out successfully");
 	}

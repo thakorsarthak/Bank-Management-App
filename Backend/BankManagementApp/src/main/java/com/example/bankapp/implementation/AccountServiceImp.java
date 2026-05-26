@@ -46,11 +46,13 @@ import com.example.bankapp.services.AccountLockService;
 import com.example.bankapp.services.AccountService;
 import com.example.bankapp.services.JWTservice;
 import com.example.bankapp.services.RateLimitService;
+import com.example.bankapp.services.RefreshTokenService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
-
+@Slf4j
 public class AccountServiceImp implements AccountService {
 
 	@Autowired
@@ -58,6 +60,9 @@ public class AccountServiceImp implements AccountService {
 
 	@Autowired
 	private JWTservice jService;
+
+	@Autowired
+	private RefreshTokenService refreshTokenService;
 
 	@Autowired
 	private AuthenticationManager authManage;
@@ -199,6 +204,64 @@ public class AccountServiceImp implements AccountService {
 
 	}
 
+	@Override
+	public Map<String, Object> refreshToken(String refreshToken) {
+
+		try {
+
+			// step 1- extracting accountId
+
+			Long accountId = jService.extractAccountId(refreshToken);
+
+			String email = jService.extractUserName(refreshToken);
+
+			// step 2 - validate JWT itself
+			if (!jService.validateToken(refreshToken)) {
+
+				throw new CustomValidationException("Invalid refresh token");
+			}
+
+			// step 3- validate Redis stored token
+
+			boolean valid = refreshTokenService.validRefreshToken(accountId, refreshToken);
+
+			if (!valid) {
+				throw new BadCredentialsException("Refresh Token is expired or Invalid");
+			}
+
+			// step 4 - Find Account
+			Account acc = repo.findById(accountId)
+					.orElseThrow(() -> new CustomValidationException("Account not found"));
+
+			// step 5 - generate new access token
+			String token = jService.generateToken(acc.getEmail(), acc.getId(), acc.getAccountNumber(),
+					acc.getRole().name());
+
+			// step- 6 generate new Refresh Token
+			String newRefreshToken = jService.generateRefreshToken(acc.getEmail(), acc.getId());
+
+			// step 7 - ROTATION
+			refreshTokenService.storeRefreshToken(accountId, newRefreshToken);
+
+			// step 8 - updating Redis session
+			redisTemplate.opsForValue().set("session:" + accountId, token, 10, TimeUnit.MINUTES);
+
+			// step9 - Response
+			Map<String, Object> response = new HashMap<>();
+
+			response.put("accessToken", token);
+			response.put("refreshToken", newRefreshToken);
+
+			response.put("expiresAt", jService.extractExpiration(token).getTime());
+
+			return response;
+
+		} catch (Exception e) {
+			throw new CustomValidationException("Refresh token invalid or expired");
+		}
+
+	}
+
 	// Getting Identifier for Login through email, AccointNumber and Contact
 	@Override
 	public Optional<Account> findByIdentifier(String identifier) {
@@ -228,7 +291,6 @@ public class AccountServiceImp implements AccountService {
 //			throw new BadCredentialsException("Too many login attempts. Try again later.");
 //
 //		}
-		
 
 		// Step 2: Find account by identifier (email/contact/accountNo)
 		Optional<Account> optionalAcc = findByIdentifier(account.getIdentifier());
@@ -258,10 +320,15 @@ public class AccountServiceImp implements AccountService {
 			// Step 6: Generate JWT token
 
 			Role role = acc.getRole();
-			String token = jService.generateToken(acc.getEmail(), acc.getId(), acc.getAccountNumber(), role.name());
+			String token = jService.generateToken(acc.getEmail(), accountId, acc.getAccountNumber(), role.name());
 			System.out.println("Token [From verify]: " + token);
 
-			String redisKey = "session:" + acc.getId();
+			String refreshToken = jService.generateRefreshToken(acc.getEmail(), accountId);
+
+			refreshTokenService.storeRefreshToken(accountId, refreshToken);
+			log.info("Refresh token stored for account Id :" + accountId);
+
+			String redisKey = "session:" + accountId;
 
 			System.out.println("Saving Redis Key: " + redisKey);
 			System.out.println("Saving Token: " + token);
@@ -271,16 +338,15 @@ public class AccountServiceImp implements AccountService {
 			 * the ["session:"] should be same at all place where we need redis token in
 			 * filter too
 			 */
-			redisTemplate.opsForValue().set("session:" + acc.getId(), token, 10, TimeUnit.MINUTES);
 
-			// System.out.println("Redis saved token for " + redisKey);
+			redisTemplate.opsForValue().set(redisKey, token, 10, TimeUnit.MINUTES);
+			log.info("token stored for account Id :" + accountId);
+
 			// Step 8: Build response
-
-			Date expiryDate = jService.extractExpiration(token);
-
 			Map<String, Object> response = new HashMap<>();
 			response.put("token", token);
-			response.put("expiresAt", expiryDate.getTime());
+			response.put("refreshToken", refreshToken);
+			response.put("expiresAt", jService.extractExpiration(token).getTime());
 
 			return response;
 

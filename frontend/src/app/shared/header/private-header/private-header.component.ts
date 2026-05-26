@@ -130,9 +130,10 @@ export class PrivateHeaderComponent {
   }
 
   onLogout() {
-     this.accountService.logoutAccount().subscribe({
+    this.accountService.logoutAccount().subscribe({
       next: () => {
-        console.log('Logout successful');},
+        console.log('Logout successful');
+      },
       error: (err) => {
         console.error('Logout failed', err);
       }
@@ -155,12 +156,73 @@ export class PrivateHeaderComponent {
 
       const expiresAt = this.authService.getTokenExpiry();
       const remaining = expiresAt - Date.now();
-
       if (remaining <= 0) {
+
         clearInterval(this.timerInterval);
-        this.remainingTime = 'Session expired';
-         this.accountService.logoutAccount();
-        this.authService.logout(); // auto logout
+
+        const role =
+          localStorage.getItem('role');
+
+        // NORMAL USER
+        if (role === 'USER') {
+
+          this.authService.logout();
+
+          this.router.navigate(['/']);
+
+          return;
+        }
+
+        // EMPLOYEE / ADMIN
+        const refreshToken =
+          localStorage.getItem(
+            'refreshToken'
+          );
+
+        if (!refreshToken) {
+
+          this.authService.logout();
+
+          this.router.navigate(['/']);
+
+          return;
+        }
+
+        // TRY REFRESH
+        this.accountService
+          .refreshToken(refreshToken)
+          .subscribe({
+
+           next: (response) => {
+
+  clearInterval(this.timerInterval);
+
+  localStorage.setItem(
+    'token',
+    response.accessToken
+  );
+
+  localStorage.setItem(
+    'refreshToken',
+    response.refreshToken
+  );
+
+  localStorage.setItem(
+    'expiresAt',
+    response.expiresAt.toString()
+  );
+
+  this.startCountdown();
+},
+
+            error: () => {
+
+              this.authService.logout();
+
+              this.router.navigate(['/']);
+            }
+          });
+
         return;
       }
 
@@ -180,8 +242,3 @@ export class PrivateHeaderComponent {
   }
 
 }
-
-
-
-
-

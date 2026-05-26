@@ -17,6 +17,7 @@ import { Dialog } from 'primeng/dialog';
 import { PublicHeaderComponent } from '../../../shared/header/public-header/public-header.component';
 import { AccountService } from '../../../core-component/services/account.service';
 import { AuthServiceService } from '../../../core-component/services/auth-service.service';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-login-page',
@@ -71,18 +72,19 @@ export class LoginPageComponent {
 
     if (this.loginForm.valid) {
 
-
-     
+      const headers = new HttpHeaders({
+        'Idempotency-Key': crypto.randomUUID()
+      });
 
       const loginData = this.loginForm.value;
 
 
-      this.AccountService.loginAccount(loginData).subscribe({
+      this.AccountService.loginAccount(loginData, { headers }).subscribe({
         next: (res) => {
 
 
           //store token and decode in authservice
-          this.authService.login(res.token, res.expiresAt);   
+          this.authService.login(res.token, res.expiresAt);
 
           const role = this.authService.getRole();
           console.log("User role after login:", role);
@@ -107,12 +109,10 @@ export class LoginPageComponent {
         },
         error: (err: any) => {
           console.error('Login failed', err);
-          let errorMsg = 'Login failed. Servers are down Momentarily. Please try again later.';
-          if (err.status === 401 || err.status === 403) {
-           // errorMsg = 'Invalid email or pin. Please check your credentials.';
 
-           errorMsg = err.error?.message || 'Invalid email or pin. Please check your credentials.';
-          }
+          const errorMsg =
+            err.error?.message ||
+            'Something went wrong. Please try again later.';
           this.messageService.add({
             severity: 'error',
             summary: 'Login Failed',

@@ -76,14 +76,23 @@ public class JWTservice {
 				.expiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
 				.signWith(getKey())
 				.compact();
-
-		// return Jwts.builder() .claims() .add(claims) .subject(null);
-		// return "token";
-
-	// redisTemplate.opsForValue().set("session: " + accountNumber , token, 10 , TimeUnit.MINUTES );
-
-
 	 return token;
+	}
+	
+	public String generateRefreshToken(String email, Long accountId) {
+		
+		Map<String, Object>  claims= new HashMap<>();
+		
+		claims.put("accountId", accountId);
+		
+		return Jwts.builder()
+				.claims(claims)
+				.subject(email)
+				.issuedAt(new Date())
+				.expiration( new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7))
+				.signWith(getKey())
+				.compact();
+		
 	}
 
 
@@ -132,6 +141,13 @@ public class JWTservice {
 		final String userName = extractUserName(token);
 		System.out.println("From jwtservice: "+userName);
 		return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+	}
+	
+	public boolean validateToken(
+	        String token
+	) {
+
+	    return !isTokenExpired(token);
 	}
 
 	private boolean isTokenExpired(String token) {

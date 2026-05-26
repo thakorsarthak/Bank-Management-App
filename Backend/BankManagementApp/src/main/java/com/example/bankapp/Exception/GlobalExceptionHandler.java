@@ -62,10 +62,10 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body(new ApiError(400, "Invalid data sent", null));
 	}
 	
-	 @ExceptionHandler(RuntimeException.class)
-	    public ResponseEntity<String> DuplicateRequestException(RuntimeException ex) {
-	        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-	    }
+//	 @ExceptionHandler(RuntimeException.class)
+//	    public ResponseEntity<String> DuplicateRequestException(RuntimeException ex) {
+//	        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+//	    }
 	 
 	 
 	 @ExceptionHandler(RateLimitExceededException.class)
@@ -73,16 +73,17 @@ public class GlobalExceptionHandler {
 	       // return new ResponseEntity<>(ex.getMessage(), HttpStatus.TOO_MANY_REQUESTS);
 	        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new GlobalAPIResponseDTO<>(ex.getMessage(), false));
 	    }
-//	 @ExceptionHandler(BadCredentialsException.class)
-//	 public ResponseEntity<?> handleBadCredentials(
-//	         BadCredentialsException ex
-//	 ) {
-//
-//	     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//	             .body(new ApiError(401,ex.getMessage(),null));
-//	 }
-//	 
-//	 
+	 
+	 
+	 @ExceptionHandler(BadCredentialsException.class)
+	 public ResponseEntity<?> handleBadCredentials(
+	         BadCredentialsException ex
+	 ) {
+
+	     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	             .body(new ApiError(401,ex.getMessage(),null));
+	 } 
+	 
 //	 @ExceptionHandler(RuntimeException.class)
 //	    public ResponseEntity<String> RateLimitExceededException(RuntimeException ex) {
 //	        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);

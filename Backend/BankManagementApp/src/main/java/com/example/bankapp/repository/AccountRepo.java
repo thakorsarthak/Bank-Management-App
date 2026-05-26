@@ -19,7 +19,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> , JpaSpecifica
 
 	@Override
 	long count();
-
+	
 	long countByStatus(AccountStatus status);
 
 	boolean existsByEmail(String email);

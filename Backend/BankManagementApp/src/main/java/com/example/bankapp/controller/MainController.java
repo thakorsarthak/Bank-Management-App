@@ -47,6 +47,7 @@ public class MainController {
 	}
 
 
+	@Idempotent(ttl=5)
 	@PostMapping("/login-account")
 	@RateLimited(
 		    prefix = "login",
@@ -57,7 +58,6 @@ public class MainController {
 		)
 	public ResponseEntity<?> login( @RequestBody @Valid AccountLoginDTO acc,
 	        HttpServletRequest request) {
-		
 		
 		Map<String, Object> response = accountService.verify(acc, request);
 		
