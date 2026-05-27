@@ -28,20 +28,22 @@ public class JWTservice {
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
 
-	//private String secretKey = "";
+	// private String secretKey = "";
 
 	public String extractTokenFromRequest(HttpServletRequest request) {
-	    String authHeader = request.getHeader("Authorization");
-	    System.out.println(">> AuthHeader(JWTService) " + authHeader );
+		String authHeader = request.getHeader("Authorization");
+		
+		
+		System.out.println(">> AuthHeader(JWTService) " + authHeader);
 
-	    if (authHeader != null && authHeader.startsWith("Bearer ")) {
-	        return authHeader.substring(7); // Remove "Bearer " prefix
-	    }
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			return authHeader.substring(7); // Remove "Bearer " prefix
+		}
 
-	   // throw new RuntimeException("JWT token is missing or invalid");
-	    return null;
+		// throw new RuntimeException("JWT token is missing or invalid");
+		return "JWT token is missing or invalid";
 	}
-
+	
 //	public JWTservices() {
 //
 //		try {
@@ -60,8 +62,7 @@ public class JWTservice {
 //		}
 //	}
 
-
-	public String generateToken(String email , Long id, String accountNumber , String role) {
+	public String generateToken(String email, Long id, String accountNumber, String role) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("accountId", id);
 		claims.put("accountNumber", accountNumber);
@@ -69,64 +70,45 @@ public class JWTservice {
 
 		System.out.println("Role from JWTservice: " + role);
 
-		String token = Jwts.builder()
-				.claims(claims)
-				.subject(email)
-				.issuedAt(new Date(System.currentTimeMillis()))
-				.expiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
-				.signWith(getKey())
-				.compact();
-	 return token;
+		String token = Jwts.builder().claims(claims).subject(email).issuedAt(new Date(System.currentTimeMillis()))
+				.expiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000)).signWith(getKey()).compact();
+		return token;
 	}
-	
+
 	public String generateRefreshToken(String email, Long accountId) {
-		
-		Map<String, Object>  claims= new HashMap<>();
-		
+
+		Map<String, Object> claims = new HashMap<>();
+
 		claims.put("accountId", accountId);
-		
-		return Jwts.builder()
-				.claims(claims)
-				.subject(email)
-				.issuedAt(new Date())
-				.expiration( new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7))
-				.signWith(getKey())
+
+		return Jwts.builder().claims(claims).subject(email).issuedAt(new Date())
+				.expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7)).signWith(getKey())
 				.compact();
-		
+
 	}
-
-
-
 
 	private SecretKey getKey() {
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
-	
-	
+
 	private Claims extractAllClaims(String token) {
 
-		return Jwts
-				.parser()
-				.verifyWith(getKey())
-				.build()
-				.parseSignedClaims(token)
-				.getPayload();
+		return Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload();
 	}
 
 	public String extractUserName(String token) {
 		return extractClaims(token, Claims::getSubject);
 	}
-	
+
 	public Long extractAccountId(String token) {
-		
-		return extractClaims(token ,  claims -> Long.valueOf(claims.get("accountId").toString()));
+
+		return extractClaims(token, claims -> Long.valueOf(claims.get("accountId").toString()));
 	}
 
 	public String extractAccountNumber(String token) {
-	    return extractClaims(token, claims -> claims.get("accountNumber").toString());
+		return extractClaims(token, claims -> claims.get("accountNumber").toString());
 	}
-
 
 	private <T> T extractClaims(String Token, Function<Claims, T> claimResolver) {
 
@@ -135,19 +117,15 @@ public class JWTservice {
 
 	}
 
-
-
 	public boolean validateToken(String token, UserDetails userDetails) {
 		final String userName = extractUserName(token);
-		System.out.println("From jwtservice: "+userName);
+		System.out.println("From jwtservice: " + userName);
 		return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
-	
-	public boolean validateToken(
-	        String token
-	) {
 
-	    return !isTokenExpired(token);
+	public boolean validateToken(String token) {
+
+		return !isTokenExpired(token);
 	}
 
 	private boolean isTokenExpired(String token) {
@@ -155,9 +133,9 @@ public class JWTservice {
 
 	}
 
-	  public Date extractExpiration(String token) {
-	        return extractAllClaims(token).getExpiration();
-	    }
+	public Date extractExpiration(String token) {
+		return extractAllClaims(token).getExpiration();
+	}
 
 //	private Date extractExpiration(String token) {
 //		return extractClaims(token,Claims::getExpiration );

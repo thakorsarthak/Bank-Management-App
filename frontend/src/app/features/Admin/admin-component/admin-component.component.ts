@@ -7,7 +7,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
@@ -32,7 +32,7 @@ import { AdminService } from '../../../core-component/services/admin.service';
     CalendarModule,
     ButtonModule,
     InputTextModule,
-    DropdownModule,
+    SelectModule,
     PaginatorModule, Dialog],
   templateUrl: './admin-component.component.html',
   styleUrl: './admin-component.component.css',
@@ -109,7 +109,6 @@ export class AdminComponentComponent implements OnInit {
         this.totalUsers = res.data.users.total;
         this.activeUsers = res.data.users.active;
         this.inActiveUsers = res.data.users.inactive;
-
       }
 
     });
@@ -168,6 +167,8 @@ export class AdminComponentComponent implements OnInit {
     this.selectedtype = 'EMPLOYEE';
   } else if (this.selectedDashboard === 'USER') {
     this.selectedtype = 'USER';
+  } else if(this .selectedDashboard === 'TRANSACTION') {
+    this.selectedtype = 'TRANSACTION';
   }
 }
 
@@ -185,9 +186,9 @@ export class AdminComponentComponent implements OnInit {
     console.log('Selected Entity:', this.selectedEntity, event);
     if (this.selectedEntity === 'EMPLOYEE') {
       this.loadEmployees(event);
-    } else {
-      this.loadUsers(event);
-    }
+    }  else if (this.selectedEntity === 'USER') {  // explicit check, not else
+    this.loadUsers(event);
+  }
   }
 
 

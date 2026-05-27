@@ -18,14 +18,17 @@ export class AuthServiceService {
     return !!localStorage.getItem('token');
   }
 
-  login(token: string, expiresAt: number): void {
+  login(token: string , refreshToken: string, expiresAt: number): void {
     localStorage.setItem('token', token);
+    localStorage.setItem('role', this.getRole());
+    localStorage.setItem('refreshToken', refreshToken);
     console.log("Token stored:", token);
     this.loggedInSubject.next(true);
   }
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('expiresAt');
     this.loggedInSubject.next(false);
     this.router.navigate(['/login']);

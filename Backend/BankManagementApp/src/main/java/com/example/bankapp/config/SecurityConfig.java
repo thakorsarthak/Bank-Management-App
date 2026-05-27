@@ -60,7 +60,8 @@ public class SecurityConfig {
 						.permitAll()
 						.requestMatchers(
 								"/account/changePinWithOtp",
-								"/account/changePasswordWithOtp")
+								"/account/changePasswordWithOtp",
+								"/account/refresh")
 						.permitAll()
 
 						// Admin-only endpoints

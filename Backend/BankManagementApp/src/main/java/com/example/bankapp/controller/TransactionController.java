@@ -161,7 +161,7 @@ public class TransactionController {
 
 	@Idempotent(ttl = 5)
 	@PutMapping("/deposit")
-	public ResponseEntity<String> depositAmount(@RequestBody TransactionReqDTO request) {
+	public ResponseEntity<String> depositAmount(@RequestBody TransactionReqDTO request , HttpServletRequest httpRequest) {
 		String result = transactionService.depositAmount(request);
 
 		return ResponseEntity.ok(result);
@@ -169,7 +169,7 @@ public class TransactionController {
 
 	@Idempotent(ttl = 5)
 	@PutMapping("/withdraw")
-	public ResponseEntity<String> withDrawAmount(@RequestBody TransactionReqDTO request) {
+	public ResponseEntity<String> withDrawAmount(@RequestBody TransactionReqDTO request, HttpServletRequest httpRequest) {
 		String result = transactionService.withdrawAmount(request);
 
 		return ResponseEntity.ok(result);

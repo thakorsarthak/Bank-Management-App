@@ -152,83 +152,63 @@ export class PrivateHeaderComponent {
 
 
   startCountdown() {
-    this.timerInterval = setInterval(() => {
+  // Clear any existing interval before starting a new one
+  if (this.timerInterval) {
+    clearInterval(this.timerInterval);
+  }
 
-      const expiresAt = this.authService.getTokenExpiry();
-      const remaining = expiresAt - Date.now();
-      if (remaining <= 0) {
+  this.timerInterval = setInterval(() => {
+    const expiresAt = this.authService.getTokenExpiry(); // must return number (ms)
+    const remaining = expiresAt - Date.now();
 
-        clearInterval(this.timerInterval);
+    if (remaining <= 0) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null; // prevent stale reference
 
-        const role =
-          localStorage.getItem('role');
+      const role = localStorage.getItem('role');
 
-        // NORMAL USER
-        if (role === 'USER') {
+      const refreshToken = localStorage.getItem('refreshToken');
 
-          this.authService.logout();
+  // ADD THIS
+  console.log('[Timer expired] role:', role);
+  console.log('[Timer expired] refreshToken:', refreshToken);
+  console.log('[Timer expired] full localStorage:', {...localStorage});
 
-          this.router.navigate(['/']);
-
-          return;
-        }
-
-        // EMPLOYEE / ADMIN
-        const refreshToken =
-          localStorage.getItem(
-            'refreshToken'
-          );
-
-        if (!refreshToken) {
-
-          this.authService.logout();
-
-          this.router.navigate(['/']);
-
-          return;
-        }
-
-        // TRY REFRESH
-        this.accountService
-          .refreshToken(refreshToken)
-          .subscribe({
-
-           next: (response) => {
-
-  clearInterval(this.timerInterval);
-
-  localStorage.setItem(
-    'token',
-    response.accessToken
-  );
-
-  localStorage.setItem(
-    'refreshToken',
-    response.refreshToken
-  );
-
-  localStorage.setItem(
-    'expiresAt',
-    response.expiresAt.toString()
-  );
-
-  this.startCountdown();
-},
-
-            error: () => {
-
-              this.authService.logout();
-
-              this.router.navigate(['/']);
-            }
-          });
-
+      if (role === 'USER') {
+        this.authService.logout();
+        this.router.navigate(['/']);
         return;
       }
 
+
+      
+
+      if (!refreshToken) {
+        this.authService.logout();
+        this.router.navigate(['/']);
+        return;
+      }
+
+      this.accountService.refreshToken(refreshToken).subscribe({
+        next: (response) => {
+          // Store values before restarting
+          localStorage.setItem('token', response.accessToken);
+          localStorage.setItem('refreshToken', response.refreshToken);
+          localStorage.setItem('expiresAt', String(response.expiresAt)); // ensure string
+
+          this.startCountdown(); // restart AFTER storing
+        },
+        error: () => {
+          this.authService.logout();
+          this.router.navigate(['/']);
+        }
+      });
+    } else {
       this.remainingTime = this.formatTime(remaining);
-    }, 1000);
-  }
+    }
+
+  }, 1000);
+}
 
   formatTime(ms: number): string {
     const totalSec = Math.floor(ms / 1000);
@@ -240,5 +220,6 @@ export class PrivateHeaderComponent {
   ngOnDestroy() {
     clearInterval(this.timerInterval);
   }
+
 
 }

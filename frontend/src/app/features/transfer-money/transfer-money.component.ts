@@ -112,8 +112,6 @@ export class TransferMoneyComponent implements OnInit {
       return;
     }
 
-    const idempotencyKey = crypto.randomUUID();
-
     const headers = new HttpHeaders({
       'Idempotency-Key': crypto.randomUUID()
     });

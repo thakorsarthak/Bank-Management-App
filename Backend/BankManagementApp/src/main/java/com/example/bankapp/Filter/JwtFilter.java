@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.example.bankapp.DTO.GlobalAPIResponseDTO;
 import com.example.bankapp.services.CustomAccountDetailService;
 import com.example.bankapp.services.JWTservice;
 
@@ -47,7 +48,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		if (isPublicEndpoint(requestURI) || isSwaggerEndpoint(requestURI) || "OPTIONS".equalsIgnoreCase(request.getMethod())) {
 
 			filterChain.doFilter(request, response);
-			return;
+			return ;
 		}
 
 		//log.debug("JwtFilter triggered for path: {}", requestURI);
@@ -60,7 +61,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 
-			unauthorized(response, "  Missing or invalid Authorization header (JWT filter)");
+			unauthorized(response, "Missing or invalid Authorization header (JWT filter)");
 
 			return;
 		}
@@ -111,11 +112,7 @@ public class JwtFilter extends OncePerRequestFilter {
 			return;
 		}
 
-
-
-
 		// for Authentication Context
-
 		if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
 			UserDetails userDetails = context.getBean(CustomAccountDetailService.class).loadUserByUsername(userName);
@@ -146,12 +143,12 @@ public class JwtFilter extends OncePerRequestFilter {
 	private boolean isPublicEndpoint(String url) {
 		return url.startsWith("/bankapp/main/") || url.startsWith("/bankapp/otp/")
 				|| url.startsWith("/bankapp/account/changePinWithOtp")
-				|| url.startsWith("/bankapp/account/changePasswordWithOtp");
+				|| url.startsWith("/bankapp/account/changePasswordWithOtp")
+				|| url.startsWith("/bankapp/account/refresh");
 
 	}
 
 	private boolean isSwaggerEndpoint(String url) {
-
 		return url.startsWith("/bankapp/swagger-ui") || url.startsWith("/bankapp/v3/api-docs")
 				|| url.startsWith("/bankapp/swagger-resources") || url.startsWith("/bankapp/webjars");
 	}

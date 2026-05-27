@@ -14,9 +14,15 @@
     </div>
   </div>
   <div class="mb-4">
-    <p-dropdown [options]="dashboardOptions" [(ngModel)]="selectedDashboard" placeholder="Select Dashboard Type"
-      optionLabel="label" optionValue="value" (onChange)="onDashboardChange()" styleClass="w-full">
-    </p-dropdown>
+   <p-select 
+    [options]="dashboardOptions"
+    [(ngModel)]="selectedDashboard"
+    placeholder="Select Dashboard Type"
+    optionLabel="label"
+    optionValue="value"
+    (onChange)="onDashboardChange()"
+    class="w-full">
+</p-select>
   </div>
   <div class="summary-grid" *ngIf="selectedDashboard === 'EMPLOYEE'">
 
@@ -101,9 +107,9 @@
 
       <!-- for selecting employee or user -->
       <div class="mb-3">
-        <p-dropdown [options]="entityOptions" [(ngModel)]="selectedEntity" placeholder="Select Type" optionLabel="label"
+        <p-select  [options]="entityOptions" [(ngModel)]="selectedEntity" placeholder="Select Type" optionLabel="label"
           optionValue="value" (onChange)="onEntityChange()" styleClass="w-full">
-        </p-dropdown>
+        </p-select>
 
       </div>
       <ng-template pTemplate="header">
@@ -163,27 +169,27 @@
         <!-- Designation -->
         <div class="filter-field" *ngIf="selectedEntity === 'EMPLOYEE'">
           <label>Designation</label>
-          <p-dropdown [options]="designationOptions" [(ngModel)]="designation" (onChange)="applyEmployeeFilters()"
+          <p-select [options]="designationOptions" [(ngModel)]="designation" (onChange)="applyEmployeeFilters()"
             placeholder="Select designation" appendTo="body">
-          </p-dropdown>
+          </p-select>
         </div>
 
         <!-- Status -->
         <div class="filter-field">
           <label>Status</label>
-          <p-dropdown [options]="statusOptions" [(ngModel)]="status"
+          <p-select [options]="statusOptions" [(ngModel)]="status"
             (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
             placeholder="Active / Inactive" appendTo="body">
-          </p-dropdown>
+          </p-select>
         </div>
 
 
         <div class="filter-field">
           <label>Branch</label>
-          <p-dropdown [options]="branchOptions" [(ngModel)]="branch"
+          <p-select [options]="branchOptions" [(ngModel)]="branch"
             (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
             placeholder="Select branch" appendTo="body">
-          </p-dropdown>
+          </p-select>
         </div>
 
 
@@ -196,18 +202,18 @@
         <!-- Sort -->
         <div class="filter-field">
           <label>Joining Date</label>
-          <p-dropdown [options]="dateSortOptions" [(ngModel)]="dateSort"
+          <p-select [options]="dateSortOptions" [(ngModel)]="dateSort"
             (onChange)="selectedEntity === 'EMPLOYEE' ? applyEmployeeFilters() : applyUserFilters()"
             placeholder="Sort by date" appendTo="body">
-          </p-dropdown>
+          </p-select>
         </div>
 
         <!-- Branch -->
         <!-- <div class="filter-field">
           <label>Branch</label>
-          <p-dropdown [options]="branchOptions" [(ngModel)]="branch" (onChange)="applyEmployeeFilters()"
+          <p-select [options]="branchOptions" [(ngModel)]="branch" (onChange)="applyEmployeeFilters()"
             placeholder="Select branch" appendTo="body">
-          </p-dropdown>
+          </p-select>
         </div> -->
 
         <!-- Clear -->
@@ -426,14 +432,14 @@
 
             <div class="form-field" *ngIf="selectedEntity === 'EMPLOYEE'">
               <label>Designation</label>
-              <p-dropdown [options]="designationOptions" formControlName="designation" appendTo="body">
-              </p-dropdown>
+              <p-select [options]="designationOptions" formControlName="designation" appendTo="body">
+              </p-select>
             </div>
 
             <div class="form-field">
               <label>Status</label>
-              <p-dropdown appendTo="body" [options]="statusOptions" formControlName="status">
-              </p-dropdown>
+              <p-select [options]="statusOptions" formControlName="status" appendTo="body">
+              </p-select>
             </div>
 
           </div>

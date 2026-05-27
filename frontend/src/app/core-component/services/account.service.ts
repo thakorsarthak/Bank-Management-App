@@ -21,11 +21,7 @@ constructor(private http: HttpClient) { }
   }
 
   refreshToken(refreshToken: string) {
-
-  return this.http.post<any>(
-    `${this.apiUrl}/main/refresh`,
-    { refreshToken }
-  );
+  return this.http.post<any>(`${this.apiUrl}/account/refresh`,{ refreshToken });
 }
 
   sendOtp(obj:any):Observable<any[]>{

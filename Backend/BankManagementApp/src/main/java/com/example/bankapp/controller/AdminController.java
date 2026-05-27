@@ -69,7 +69,7 @@ public class AdminController {
 	    return ResponseEntity.ok(dto);
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/refresh-Dashboard")
     public void refreshDashboard() {
         dashboardService.computeAndStoreStats();
     }

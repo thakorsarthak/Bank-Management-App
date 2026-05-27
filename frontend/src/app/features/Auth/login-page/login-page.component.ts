@@ -84,7 +84,7 @@ export class LoginPageComponent {
 
 
           //store token and decode in authservice
-          this.authService.login(res.token, res.expiresAt);
+          this.authService.login(res.token, res.refreshToken, res.expiresAt);
 
           const role = this.authService.getRole();
           console.log("User role after login:", role);
@@ -109,7 +109,7 @@ export class LoginPageComponent {
         },
         error: (err: any) => {
           console.error('Login failed', err);
-
+     
           const errorMsg =
             err.error?.message ||
             'Something went wrong. Please try again later.';

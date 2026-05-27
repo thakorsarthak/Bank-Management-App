@@ -254,7 +254,7 @@ public class AccountServiceImp implements AccountService {
 
 			response.put("expiresAt", jService.extractExpiration(token).getTime());
 
-			return response;
+		   	return response;
 
 		} catch (Exception e) {
 			throw new CustomValidationException("Refresh token invalid or expired");
