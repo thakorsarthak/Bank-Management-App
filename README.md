@@ -4,6 +4,12 @@ A production-style banking backend built with Java 21 & Spring Boot 3 —
 featuring microservices-ready architecture, event-driven notifications, 
 Redis session management, and role-based access control.
 
+Implemented JWT authentication with refresh token rotation and Redis-backed -
+session management to support secure access control, forced logout, and active session tracking.
+
+Designed event-driven OTP processing using RabbitMQ for asynchronous email -
+and SMS notifications, improving decoupling between authentication and notification workflows.
+
 ---
 
 ## 🏗️ Architecture
@@ -13,6 +19,14 @@ Redis session management, and role-based access control.
 ---
 
 ## ✅ Key Features
+
+**Focused heavily on backend reliability and security by implementing**
+- Idempotency handling for transaction safety
+- Concurrency-safe balance transfers
+- Transaction rollback strategies
+- Rate limiting and account locking mechanisms
+- Audit logging and traceability for sensitive operations
+- Global exception handling and API validation
 
 **Authentication & Security**
 - Multi-identifier login (email / phone / account number)
@@ -105,4 +119,3 @@ Swagger UI: `http://localhost:60000/bankapp/swagger-ui.html`
 ## 📐 Default Admin Credentials
 Email: `admin@gmail.com`
 Password: `Admin@1234`
-*(Change immediately in production)*
